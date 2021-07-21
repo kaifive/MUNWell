@@ -252,7 +252,7 @@ const Documentation = () => {
                                             <CCol xs="12" md="12">
                                                 <i><strong>PAYMENT INVOICING TABLE</strong></i>
                                                 <br />
-                                                The “Payment Invoicing” table displays all payment information for a delegation registered at the conference. The status column indicates whether or not a payment has been received from a delegation, and can be toggled between “Paid” or “Unpaid” via the <strong>Reverse Status</strong> option on the actions dropdown. The window column indicates the time window of a registration entry and the delegate fee and invoice total is calculated according to the conference registration settings. 
+                                                The “Payment Invoicing” table displays all payment information for a delegation registered at the conference. The status column indicates whether or not a payment has been received from a delegation, and can be toggled between “Paid” or “Unpaid” via the <strong>Reverse Status</strong> option on the actions dropdown. The window column indicates the time window of a registration entry and the delegate fee and invoice total is calculated according to the conference registration settings.
                                                 <br />
                                                 <br />
                                                 Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
@@ -337,6 +337,22 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 6}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                                <i><strong>COMMITTEE ROSTER TABLE</strong></i>
+                                                <br />
+                                                The “Committee Roster” table displays all committees that a conference currently has set up for the conference. Each committee found on the committee roster will generate its own set of subpages, <strong>Position Assignments</strong> and <strong>Individual Awards</strong>, where committee specific actions can be taken. The table additionally gives a quick overview at all committees, displaying the number of assigned positions and total positions.
+                                                <br />
+                                                <br />
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                <br />
+                                                <br />
+                                                <i><strong>COMMITTEE ROSTER ACTIONS</strong></i>
+                                                <br />
+                                                Previously submitted entries can be edited by selecting <strong>Edit</strong> from the actions dropdown or deleted by selecting <strong>Delete</strong>. 
+                                                <br />
+                                                <br />
+                                                <i><strong>ADDING NEW COMMITTEE TO ROSTER</strong></i>
+                                                <br />
+                                                Above the “Committee Roster” table, there is an <strong>Add New</strong> button that allows conference organizers to add a new committee to their conference committee roster. This will open a form where required data can be inputed. Committee positions can be custom added through the text area and should be separated by a comma, or Manuel’s default list of positions can be imported by the positions needed. 
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -355,6 +371,22 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 7}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                                <i><strong>POSITION ASSIGNMENTS TABLE</strong></i>
+                                                <br />
+                                                Each individual committee from the <strong>Committee Roster</strong> page generates a corresponding “Position Assignments” table which displays all the positions in a committee in the leftmost column. On the rightmost column, assignment, conference organizers can select a registered delegation to assign the position to.
+                                                <br />
+                                                <br />
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                <br />
+                                                <br />
+                                                <i><strong>TRIGGERED ALERTS</strong></i>
+                                                <br />
+                                                Above the “Position Assignments” table, triggered alerts will appear for delegations who are not balanced. Delegations are considered balanced when the number of allotted positions in a committee, specified on the <strong>Committee Allotments</strong> page, matches the number of assigned positions on the <strong>Position Assignments</strong> page. For each delegation that is unbalanced, a new alert will appear, indicating how many additional or reduced positions a delegation needs in order to become balanced. An <strong>Auto-Assign</strong> button additionally appears on the alert which, when clicked, automatically assigns or removes random positions until the delegation is balanced.
+                                                <br />
+                                                <br />
+                                                <i><strong>GENERATED DOCUMENTS</strong></i>
+                                                <br />
+                                                Below the “Position Assignments” table, each committee has a table of Manuel auto-generated files. The first file is a placard set for the committee, formatted using Manuel’s template file. The second file is an attendance sheet which lists all positions in a committee along with their corresponding assignments and empty space to mark a delegation's attendance status. This sheet can be reprinted for each committee session for chair usage. 
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -373,6 +405,22 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 8}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                                <i><strong>INDIVIDUAL AWARDS TABLE</strong></i>
+                                                <br />
+                                                Each individual committee from the <strong>Committee Roster</strong> page generates a corresponding “Individual Awards” table which displays all the committee awards that have been submitted. The table displays all information that will used in generating committee awards and therefore should be verified to be accurate.
+                                                <br />
+                                                <br />
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                <br />
+                                                <br />
+                                                <i><strong>INDIVIDUAL AWARDS ACTIONS</strong></i>
+                                                <br />
+                                                Previously submitted entries can be edited by selecting <strong>Edit</strong> from the actions dropdown or deleted by selecting <strong>Delete</strong>. 
+                                                <br />
+                                                <br />
+                                                <i><strong>ADDING NEW INDIVIDUAL AWARDS</strong></i>
+                                                <br />
+                                                Individual awards can be added via the <strong>Add New</strong> button. This opens a form where award information can be submitted. The delegation dropdown automatically updates according to the position that is selected to eliminate accidental errors when filling out the award submission form.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
