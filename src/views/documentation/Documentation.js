@@ -177,6 +177,27 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 2}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                                <i><strong>REGISTRATION DATA TABLE</strong></i>
+                                                <br />
+                                                The “Registration Data” table consolidates all conference registration entries into a single table. It’s filterable headers allow conference organizers to easily sort registration data, and plan accordingly.
+                                                <br />
+                                                <br />
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                <br />
+                                                <br />
+                                                <i><strong>ADDING REGISTRATION ENTRIES</strong></i>
+                                                <br />
+                                                Above the “Registration Data” table, there is an <strong>Add New</strong> button that allows conference organizers to add an entry to the table. Clicking this button opens a form of all required fields for a registration entry. Multiple contact emails can be submitted by separating individual emails with a comma.
+                                                <br />
+                                                <br />
+                                                <i><strong>REGISTRATION ENTRY ACTIONS</strong></i>
+                                                <br />
+                                                Previously submitted entries can be edited by selecting <strong>Edit</strong> from the actions dropdown or deleted by selecting <strong>Delete</strong>. Selecting <strong>Details</strong> from the actions dropdown will open a popup with more information about the registration entry.
+                                                <br />
+                                                <br />
+                                                <i><strong>COPYING FULL EMAIL LISTS</strong></i>
+                                                <br />
+                                                Above the “Registration Data” table, there is a <strong>Full Email List</strong> button that allows conference organizers to easily copy all registration entry emails.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -195,6 +216,22 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 3}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                                <i><strong>COMMITTEE ALLOTMENTS TABLE</strong></i>
+                                                <br />
+                                                The “Committee Allotments” table represents the number of positions a delegation should have in a committee. Conference organizers should use the <strong>Edit</strong> action to indicate the final number of positions a delegation should have in a committee. This number will be cross-referenced with the number of actual assigned positions for each committee to ensure that delegations are receiving the correct number of positions. Any differences will result in overhead alerts appearing on <strong>Position Assignments</strong> pages under individual committees, as well as an unbalanced tag appearing on the <strong>Position Invoicing</strong> page.
+                                                <br />
+                                                <br />
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                <br />
+                                                <br />
+                                                <i><strong>COMMITTEE DETAILS BUTTON</strong></i>
+                                                <br />
+                                                The “Committee Allotments” table headers list the abbreviations, if applicable, of a conference's committees followed by the number of assigned positions in the committee. This number is provided for conference organizers to ensure that certain committees aren’t overpopulated and balance committees according to the size of available rooms. Each committee abbreviation/name is a clickable button that opens more information regarding the committee.
+                                                <br />
+                                                <br />
+                                                <i><strong>COMMITTEE ALLOTMENT ACTIONS</strong></i>
+                                                <br />
+                                                Previously submitted entries can be edited by selecting <strong>Edit</strong> from the actions dropdown.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -213,6 +250,27 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 4}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                                <i><strong>PAYMENT INVOICING TABLE</strong></i>
+                                                <br />
+                                                The “Payment Invoicing” table displays all payment information for a delegation registered at the conference. The status column indicates whether or not a payment has been received from a delegation, and can be toggled between “Paid” or “Unpaid” via the <strong>Reverse Status</strong> option on the actions dropdown. The window column indicates the time window of a registration entry and the delegate fee and invoice total is calculated according to the conference registration settings. 
+                                                <br />
+                                                <br />
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                <br />
+                                                <br />
+                                                <i><strong>PAYMENT INVOICING ACTIONS</strong></i>
+                                                <br />
+                                                A status can be toggled between either “Paid” or “Unpaid” by selecting <strong>Reverse Status</strong> on the actions dropdown. To download a delegation’s payment invoice or payment receipt, select the corresponding item from the actions dropdown.
+                                                <br />
+                                                <br />
+                                                <i><strong>CREATING CUSTOM PAYMENT INVOICES</strong></i>
+                                                <br />
+                                                Above the “Payment Invoicing” table, there is a <strong>Custom Payment Invoice</strong> button that allows conference organizers to create individual custom payment receipts if needed. Clicking this button opens a form of required data to generate a custom position assignment invoice.
+                                                <br />
+                                                <br />
+                                                <i><strong>CREATING CUSTOM PAYMENT RECEIPTS</strong></i>
+                                                <br />
+                                                Above the “Payment Invoicing” table, there is a <strong>Custom Payment Receipt</strong> button that allows conference organizers to create individual custom payment receipts if needed. Clicking this button opens a form of required data to generate a custom position assignment invoice.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -231,6 +289,22 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 5}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                                <i><strong>POSITION INVOICING TABLE</strong></i>
+                                                <br />
+                                                The “Position Invoicing” table displays the relevant registered delegation data and its position invoicing status. A delegation’s status is determined by the number of allotted positions for each committee, versus the number of assigned positions for each committee a delegation has. Should there be no discrepancies, a delegation is marked as “Balanced” otherwise “Unbalanced”. Specific alerts will appear on individual committee <strong>Position Assignment</strong> pages if adjustments should be made in order to balance a delegation status, ensuring that all delegations receive the proper number of positions in a committee.
+                                                <br />
+                                                <br />
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                <br />
+                                                <br />
+                                                <i><strong>POSITION INVOICING ACTIONS</strong></i>
+                                                <br />
+                                                To download a delegation’s position invoice, select <strong>Download Position Invoice</strong> from the actions dropdown.
+                                                <br />
+                                                <br />
+                                                <i><strong>CREATING CUSTOM POSITION INVOICES</strong></i>
+                                                <br />
+                                                Above the “Position Invoicing” table, there is a <strong>Custom Position Invoice</strong> button that allows conference organizers to create individual custom position invoices if needed. Clicking this button opens a form of required data to generate a custom position assignment invoice.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -362,12 +436,12 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 10}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
-                                            <i><strong>DELEGATION AWARDS TABLE</strong></i>
+                                                <i><strong>DELEGATION AWARDS TABLE</strong></i>
                                                 <br />
-                                                The “Delegation Awards” table calculates a score for every delegation in the event that a conference wants to distribute delegation awards. The leftmost columns list a delegation's name and their division, allowing conference organizers to sort delegations by different delegation award divisions. The next columns list each type of award specified in the award settings on the <strong>Settings</strong> page, along with its corresponding point value, as well as the number of each award that the delegation received. The “Raw Score” of a delegation is calculated by the sum of all of their awards taking into consideration the different point values of each award. The “Per Capita Score” of a delegation is calculated by dividing a delegation’s raw score by the number of delegates in the delegation. 
+                                                The “Delegation Awards” table calculates a score for every delegation in the event that a conference wants to distribute delegation awards. The leftmost columns list a delegation's name and their division, allowing conference organizers to sort delegations by different delegation award divisions. The next columns list each type of award specified in the award settings on the <strong>Settings</strong> page, along with its corresponding point value, as well as the number of each award that the delegation received. The “Raw Score” of a delegation is calculated by the sum of all of their awards taking into consideration the different point values of each award. The “Per Capita Score” of a delegation is calculated by dividing a delegation’s raw score by the number of delegates in the delegation.
                                                 <br />
                                                 <br />
-                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table. 
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -386,19 +460,19 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 11}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
-                                            <i><strong>DOWNLOADING AWARDS</strong></i>
+                                                <i><strong>DOWNLOADING AWARDS</strong></i>
                                                 <br />
-                                                The <strong>Participation Awards</strong> page allows you to download participation awards for delegates at the conference. Two separate tables exist in order to provide multiple options for conference organizers to choose from. The “Participation Awards by Committee” table organizes participation awards by different committees, allowing for easy distribution during committee sessions. The “Participation Awards by Delegation” table organizes participation awards by different delegations, including independent delegates, allowing for easy distribution during check in. Selecting the <strong>Download</strong> button from the download column on either table will open a PDF file containing all of the participation awards using Manuel’s prebuilt participation awards template. 
+                                                The <strong>Participation Awards</strong> page allows you to download participation awards for delegates at the conference. Two separate tables exist in order to provide multiple options for conference organizers to choose from. The “Participation Awards by Committee” table organizes participation awards by different committees, allowing for easy distribution during committee sessions. The “Participation Awards by Delegation” table organizes participation awards by different delegations, including independent delegates, allowing for easy distribution during check in. Selecting the <strong>Download</strong> button from the download column on either table will open a PDF file containing all of the participation awards using Manuel’s prebuilt participation awards template.
                                                 <br />
                                                 <br />
                                                 <i><strong>CREATING CUSTOM AWARDS</strong></i>
                                                 <br />
-                                                Above the “Participation Awards by Committee” table and the “Participation Awards by Delegation” table, there is a <strong>Custom Participation Award</strong> button that allows conference organizers to create an individual custom participation award in the event of a reprint or assignment error. Clicking this button opens a form of required data to generate a custom participation award. 
+                                                Above the “Participation Awards by Committee” table and the “Participation Awards by Delegation” table, there is a <strong>Custom Participation Award</strong> button that allows conference organizers to create an individual custom participation award in the event of a reprint or assignment error. Clicking this button opens a form of required data to generate a custom participation award.
                                                 <br />
                                                 <br />
                                                 <i><strong>ADJUSTING TEMPLATE BORDERS</strong></i>
                                                 <br />
-                                                By default, Manuel template awards leave a margin of ~1.25” on all sides to account for the award being printed onto paper with a border design. If however, the paper borders exceed this margin, awards can be scaled by going to the print menu, selecting <strong>More Settings</strong>, and using the <strong>Scale (%)</strong> to scale awards to the necessary size. 
+                                                By default, Manuel template awards leave a margin of ~1.25” on all sides to account for the award being printed onto paper with a border design. If however, the paper borders exceed this margin, awards can be scaled by going to the print menu, selecting <strong>More Settings</strong>, and using the <strong>Scale (%)</strong> to scale awards to the necessary size.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
