@@ -121,6 +121,9 @@ const Dashboard = () => {
               options={{
                 tooltips: {
                   enabled: true
+                },
+                legend: {
+                  position: 'right'
                 }
               }}
             />
@@ -146,6 +149,9 @@ const Dashboard = () => {
               options={{
                 tooltips: {
                   enabled: true
+                },
+                legend: {
+                  position: 'right'
                 }
               }}
             />
@@ -175,6 +181,9 @@ const Dashboard = () => {
               options={{
                 tooltips: {
                   enabled: true
+                },
+                legend: {
+                  position: 'right'
                 }
               }}
             />
@@ -199,6 +208,9 @@ const Dashboard = () => {
               options={{
                 tooltips: {
                   enabled: true
+                },
+                legend: {
+                  position: 'right'
                 }
               }}
             />
