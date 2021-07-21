@@ -61,7 +61,7 @@ const TheHeader = () => {
           <CHeaderNavLink to="/documentation">Documentation</CHeaderNavLink>
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3" >
-          <CHeaderNavLink to="/dashboard" target="_blank">Suggestions</CHeaderNavLink>
+          <CHeaderNavLink href="https://forms.gle/qQ7tYLHjSBrACASQA" target="_blank">Suggestions</CHeaderNavLink>
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3" >
           <CHeaderNavLink to="/dashboard">
