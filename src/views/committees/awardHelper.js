@@ -1,6 +1,31 @@
 import awardData from '../../data/MockData/MockAwards'
 import committeeData from '../../data/MockData/MockCommittees'
 
+export function setField(committee) {
+    let fields = [
+        'type',
+        'position',
+        'delegation',
+        {
+            key: 'delegate1',
+            label: 'Delegate I'
+        },
+        'actions'
+    ]
+
+    if(committee.type === "Double Delegation") {
+        let field =     
+        {
+            key: 'delegate2',
+            label: 'Delegate II'
+        }
+
+        fields.splice(fields.length - 1, 0, field)
+    }
+
+    return fields
+}
+
 export function getIndex(committee) {
     let i;
     for (i = 0; i < committeeData.length; i++) {

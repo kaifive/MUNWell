@@ -27,22 +27,7 @@ import { Redirect } from 'react-router-dom'
 
 import awards from '../../data/MockData/MockAwardTypes'
 
-import { getIndex, filterAwardData, getAwardTypes, getPositions, getDelegation, exportTable } from './awardHelper'
-
-const fields = [
-    'type',
-    'position',
-    'delegation',
-    {
-        key: 'delegate1',
-        label: 'Delegate I'
-    },
-    {
-        key: 'delegate2',
-        label: 'Delegate II'
-    },
-    'actions'
-]
+import { getIndex, filterAwardData, getAwardTypes, getPositions, getDelegation, exportTable, setField } from './awardHelper'
 
 const Award = ({ match: { params: { committee } } }) => {
     const [modalAdd, setModalAdd] = useState(false)
@@ -52,6 +37,9 @@ const Award = ({ match: { params: { committee } } }) => {
     if (getIndex(committee) === null) {
         return <Redirect to={{ pathname: "/404" }} />
     }
+
+    let fields = setField(json)
+
     return (
         <>
             <CRow>
