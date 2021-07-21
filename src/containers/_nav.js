@@ -56,6 +56,12 @@ const _nav = [
   },
   {
     _tag: 'CSidebarNavItem',
+    name: 'Documentation',
+    to: '/documentation',
+    icon: 'cil-align-center',
+  },
+  {
+    _tag: 'CSidebarNavItem',
     name: 'Settings',
     to: '/settings',
     icon: 'cil-settings',
