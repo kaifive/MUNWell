@@ -48,7 +48,7 @@ const CommitteeAwards = () => {
                                     'download':
                                         (item) => (
                                             <td>
-                                                <CButton block color="primary" onClick={()=> committeeAwardsPDFLayout1(item)}>Download</CButton>
+                                                <CButton block color="primary" onClick={() => committeeAwardsPDFLayout1(item)}>Download</CButton>
                                             </td>
                                         )
                                 }}

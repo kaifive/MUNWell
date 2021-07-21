@@ -135,11 +135,11 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-date">Conference Date</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="4">
-                                                        <CInput type="date" id="conf-start" name="conf-start"/>
+                                                        <CInput type="date" id="conf-start" name="conf-start" />
                                                         <CFormText className="help-block">Start Date</CFormText>
                                                     </CCol>
                                                     <CCol xs="12" md="4">
-                                                        <CInput type="date" id="conf-end" name="conf-end"/>
+                                                        <CInput type="date" id="conf-end" name="conf-end" />
                                                         <CFormText className="help-block">End Date</CFormText>
                                                     </CCol>
                                                 </CFormGroup>

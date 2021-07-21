@@ -8,10 +8,10 @@ import {
     CDataTable,
     CRow
 } from '@coreui/react'
+import { participationAwardsPDFLayout1 } from 'src/reusable/jsPDF'
 
 import registrationData from '../../data/MockData/MockRegistration'
 import committeeData from '../../data/MockData/MockCommittees'
-import { participationAwardsPDFLayout1 } from 'src/reusable/jsPDF'
 
 const fieldsCommittee = [
     'division',
@@ -74,7 +74,7 @@ const ParticipationAwards = () => {
                         <CCardBody>
                             <CRow className="align-items-left">
                                 <CCol lg="3">
-                                <CButton block color="primary">Custom Participation Award</CButton>
+                                    <CButton block color="primary">Custom Participation Award</CButton>
                                 </CCol>
                             </CRow>
                             <br></br>

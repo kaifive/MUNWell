@@ -28,23 +28,7 @@ import { Export } from 'src/reusable'
 
 import committeeData from '../../data/MockData/MockCommittees'
 
-function exportTable() {
-    return committeeData
-}
-
-function count(string) {
-    let count = 0
-    let temp = string.split(",")
-
-    let i
-    for (i = 0; i < temp.length; i++) {
-        if (temp[i] !== '') {
-            count = count + 1
-        }
-    }
-
-    return count
-}
+import { exportTable, count } from './committeeRosterHelper'
 
 const fields = [
     'division',

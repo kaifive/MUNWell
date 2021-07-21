@@ -25,90 +25,9 @@ import {
 import { Export } from 'src/reusable'
 import { Redirect } from 'react-router-dom'
 
-import awardData from '../../data/MockData/MockAwards'
 import awards from '../../data/MockData/MockAwardTypes'
-import committeeData from '../../data/MockData/MockCommittees'
 
-function getIndex(committee) {
-    let i;
-    for (i = 0; i < committeeData.length; i++) {
-        if (committeeData[i].committee === committee) {
-            return committeeData[i]
-        }
-    }
-
-    return null
-}
-
-function filterAwardData(committee) {
-    let awards = []
-    let i;
-
-    for(i = 0; i < awardData.length; i++) {
-        if(awardData[i].committee === committee) {
-            awards.push(awardData[i])
-        }
-    }
-
-    return awards
-}
-
-function getAwardTypes(awards) {
-    let types = [<option selected value="default" disabled>Select Award Type</option>]
-
-    let i;
-    for (i = 0; i < awards.length; i++) {
-        let temp = awards[i].type
-        types[i + 1] = <option value={temp}>{temp}</option>
-    }
-
-    return types
-}
-
-function getPositions(committee) {
-    let data = [<option selected value="default" disabled>Select Position</option>]
-
-    let positions = committee.positions.split(",")
-    let assignments = committee.assignments.split(",")
-
-    let i;
-    for (i = 0; i < positions.length; i++) {
-        if(assignments[i] !== "") {
-            data[i + 1] = <option value={positions[i]}>{positions[i]}</option>
-        }
-    }
-
-    return data
-}
-
-function getDelegation(position, committee) {
-    let delegation;
-
-    let positions = committee.positions.split(",")
-    let assignments = committee.assignments.split(",")
-
-    let i;
-    for (i = 0; i < positions.length; i++) {
-        if(positions[i] === position) {
-            delegation = <option value={assignments[i]}>{assignments[i]}</option>
-        }
-    }
-
-    return delegation
-}
-
-function exportTable(committee) {
-    let data = []
-
-    let i;
-    for (i = 0; i < awardData.length; i++) {
-        if(awardData[i].committee === committee.committee) {
-            data.push(awardData[i])
-        }
-    }
-
-    return data
-}
+import { getIndex, filterAwardData, getAwardTypes, getPositions, getDelegation, exportTable } from './awardHelper'
 
 const fields = [
     'type',

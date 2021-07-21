@@ -41,8 +41,8 @@ const CommitteeAllotments = () => {
 
     function openModal(committee) {
         let i;
-        for(i = 0; i < committeeData.length; i++) {
-            if(committeeData[i].committee === committee) {
+        for (i = 0; i < committeeData.length; i++) {
+            if (committeeData[i].committee === committee) {
                 details[0] = committeeData[i].category
                 details[1] = committeeData[i].division
                 details[2] = committeeData[i].committee
@@ -143,8 +143,8 @@ const CommitteeAllotments = () => {
 
     function getAssigned(item, committee) {
         let i;
-        for(i = 0; i < allotmentData.length; i++) {
-            if(allotmentData[i].delegation === item.delegation) {
+        for (i = 0; i < allotmentData.length; i++) {
+            if (allotmentData[i].delegation === item.delegation) {
                 return allotmentData[i].allotments[committee]
             }
         }
@@ -255,15 +255,15 @@ const CommitteeAllotments = () => {
                             </CCol>
                             <CCol xs="12" md="8">
                                 <CFormGroup variant="custom-checkbox" inline>
-                                    <CInputCheckbox disabled custom id="inline-checkbox1" name="inline-checkbox1" value="option1" onClick={!division[0]} checked={division[0]}/>
+                                    <CInputCheckbox disabled custom id="inline-checkbox1" name="inline-checkbox1" value="option1" onClick={!division[0]} checked={division[0]} />
                                     <CLabel variant="custom-checkbox" htmlFor="inline-checkbox1">Middle School</CLabel>
                                 </CFormGroup>
                                 <CFormGroup variant="custom-checkbox" inline>
-                                    <CInputCheckbox disabled custom id="inline-checkbox2" name="inline-checkbox2" value="option2" onClick={!division[0]} checked={division[1]}/>
+                                    <CInputCheckbox disabled custom id="inline-checkbox2" name="inline-checkbox2" value="option2" onClick={!division[0]} checked={division[1]} />
                                     <CLabel variant="custom-checkbox" htmlFor="inline-checkbox2">High School</CLabel>
                                 </CFormGroup>
                                 <CFormGroup variant="custom-checkbox" inline>
-                                    <CInputCheckbox disabled custom id="inline-checkbox3" name="inline-checkbox3" value="option3" onClick={!division[0]} checked={division[2]}/>
+                                    <CInputCheckbox disabled custom id="inline-checkbox3" name="inline-checkbox3" value="option3" onClick={!division[0]} checked={division[2]} />
                                     <CLabel variant="custom-checkbox" htmlFor="inline-checkbox3">University</CLabel>
                                 </CFormGroup>
                             </CCol>
@@ -281,7 +281,7 @@ const CommitteeAllotments = () => {
                                 <CLabel htmlFor="committee-abbr">Committee Abbreviation</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput disabled id="committee-abbr" name="committee-abbr" placeholder="Committee Abbreviation" value={details[3]}/>
+                                <CInput disabled id="committee-abbr" name="committee-abbr" placeholder="Committee Abbreviation" value={details[3]} />
                             </CCol>
                         </CFormGroup>
                         <CFormGroup row>
@@ -289,7 +289,7 @@ const CommitteeAllotments = () => {
                                 <CLabel htmlFor="committee-chair">Committee Chair</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput disabled id="committee-chair" name="committee-chair" placeholder="Committee Chair" value={details[4]}/>
+                                <CInput disabled id="committee-chair" name="committee-chair" placeholder="Committee Chair" value={details[4]} />
                             </CCol>
                         </CFormGroup>
                         <CFormGroup row>
@@ -297,7 +297,7 @@ const CommitteeAllotments = () => {
                                 <CLabel htmlFor="committee-positions">Committee Positions</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CTextarea disabled name="committee-positions" id="committee-positions" rows="9" placeholder="Committee Positions" value={details[5]}/>
+                                <CTextarea disabled name="committee-positions" id="committee-positions" rows="9" placeholder="Committee Positions" value={details[5]} />
                             </CCol>
                         </CFormGroup>
                     </CForm>

@@ -9,7 +9,6 @@ import {
   CWidgetIcon,
   CWidgetProgress
 } from '@coreui/react'
-
 import {
   CChartBar,
   CChartDoughnut,
