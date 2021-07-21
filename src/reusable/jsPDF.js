@@ -91,16 +91,24 @@ export function attendanceSheetPDF(committee) {
     }
 
     doc.autoTable({
-        theme: "striped",
+        theme: "grid",
         startY: 1.25,
         margin: { left: 1 },
         tableWidth: 6.5,
         styles: {
             font: "times",
-            fontSize: 12
+            fontSize: 12,
+            lineColor: [0, 0, 0],
+            lineWidth: .01,
         },
         head: [['Position', 'Assignment', 'Attendance Status']],
         body: body,
+        didParseCell: function (data) {
+            if (data.cell.section === 'head') {
+                data.cell.styles.fillColor = '#ffffff'
+                data.cell.styles.textColor = '#000000'
+            }
+        },
     })
 
     doc.save(committee + " Attendance Sheet.pdf");
