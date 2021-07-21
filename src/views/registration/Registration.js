@@ -59,10 +59,7 @@ function getEmailList(registrationData) {
 }
 
 const fields = [
-  {
-    key: 'window',
-    label: 'Registration Window'
-  },
+  'window',
   'type',
   'division',
   'delegation',

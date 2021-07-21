@@ -4,7 +4,7 @@ import 'jspdf-autotable'
 import committeeData from "src/data/MockData/MockCommittees";
 import awardData from "src/data/MockData/MockAwards";
 
-import banner from '../assets/branding/Logo-TransparentWhite.png'
+import logo from '../assets/branding/Banner.png'
 import border from '../assets/awards/AwardsBorder.png'
 
 const font = "times"
@@ -121,6 +121,12 @@ export function invoicePDF(item) {
         format: [11, 8.5]
     });
 
+    let image = new Image();
+    image.src = logo;
+
+    let extension = image.src.split(".").pop().toUpperCase()
+    doc.addImage(image, extension, 6, .75, 1.5, 1.5);
+
     doc.setFont(font, "bold")
     doc.setFontSize(24)
     doc.text("PAYMENT INVOICE", 1, 1);
@@ -146,7 +152,7 @@ export function invoicePDF(item) {
 
     doc.setFont(font, "italic")
     doc.text(item.street + ",", 1, 3.15)
-    doc.text(item.city + ", " + item.state + item.zipcode, 1, 3.35)
+    doc.text(item.city + ", " + item.state + " " + item.zipcode, 1, 3.35)
 
     doc.setFont(font, "normal")
     doc.text("Invoice Number:", 5.25, 2.75)
@@ -257,13 +263,7 @@ export function invoicePDF(item) {
 
     }
 
-    let image = new Image();
-    image.src = banner;
-
-    let extension = image.src.split(".").pop().toUpperCase()
-
     image.onload = function () {
-        doc.addImage(image, extension, 6, .75, 1.5, 1.5);
         doc.save(item.delegation + " Payment Invoice.pdf");
     }
 }
@@ -274,6 +274,12 @@ export function receiptPDF(item) {
         unit: "in",
         format: [11, 8.5]
     });
+
+    let image = new Image();
+    image.src = logo;
+
+    let extension = image.src.split(".").pop().toUpperCase()
+    doc.addImage(image, extension, 6, .75, 1.5, 1.5);
 
     doc.setFont(font, "bold")
     doc.setFontSize(24)
@@ -300,7 +306,7 @@ export function receiptPDF(item) {
 
     doc.setFont(font, "italic")
     doc.text(item.street + ",", 1, 3.15)
-    doc.text(item.city + ", " + item.state + item.zipcode, 1, 3.35)
+    doc.text(item.city + ", " + item.state + " " + item.zipcode, 1, 3.35)
 
     doc.setFont(font, "normal")
     doc.text("Invoice Number:", 5.25, 2.75)
@@ -359,15 +365,90 @@ export function receiptPDF(item) {
     doc.setFont(font, "italic")
     doc.text("Conference Address", 4.25, 6.55, { align: "center" })
 
-    let image = new Image();
-    image.src = banner;
-
-    let extension = image.src.split(".").pop().toUpperCase()
-
     image.onload = function () {
-        doc.addImage(image, extension, 6, .75, 1.5, 1.5);
         doc.save(item.delegation + " Payment Receipt.pdf");
     }
+}
+
+export function positionPDF(item) {
+    const doc = new jsPDF({
+        orientation: "landscape",
+        unit: "in",
+        format: [11, 8.5]
+    });
+
+    let image = new Image();
+    image.src = logo;
+
+    let extension = image.src.split(".").pop().toUpperCase()
+    doc.addImage(image, extension, .75, .75, 1.5, 1.5);
+
+    doc.setFont(font, "bold")
+    doc.setFontSize(24)
+    doc.text("POSITION INVOICE", 2.4, 1);
+
+    doc.setFontSize(14)
+    doc.text(item.delegation, 2.4, 1.3);
+
+    doc.setFont(font, "normal")
+    doc.setFontSize(12)
+    doc.text(item.contact, 2.4, 1.55);
+
+    doc.setFont(font, "italic")
+    doc.text(item.street + ",", 2.4, 1.75);
+    doc.text(item.city + ", " + item.state + " " + item.zipcode, 2.4, 1.95);
+
+    let body = []
+
+    let i;
+    for(i = 0; i < committeeData.length; i++) {
+        let entry = []
+
+        let positions = committeeData[i].positions.split(",")
+        let assignments = committeeData[i].assignments.split(",")
+
+        let j;
+        for(j = 0; j < positions.length; j++) {
+            if(assignments[j] === item.delegation) {
+                entry[0] = committeeData[i].division + " - " + committeeData[i].category + " | " + committeeData[i].type
+                entry[1] = committeeData[i].committee
+
+                if(committeeData[i].abbreviation !== "") {
+                    entry[1] = committeeData[i].committee + " (" + committeeData[i].abbreviation + ")"
+                }
+
+                entry[2] = positions[j]
+
+                body.push(entry)
+            }
+        }
+    }
+
+    doc.autoTable({
+        theme: "grid",
+        startY: 2.4,
+        margin: { left: .75 },
+        tableWidth: 9.5,
+        styles: {
+            font: "times",
+            fontSize: 12,
+            lineColor: [0, 0, 0],
+            lineWidth: .01,
+        },
+        head: [['Committee Information', 'Committee Name', 'Position Assignment']],
+        body: body,
+        didParseCell: function (data) {
+            if (data.cell.section === 'head') {
+                data.cell.styles.fillColor = '#ffffff'
+                data.cell.styles.textColor = '#000000'
+            }
+        },
+    })
+
+    image.onload = function () {
+        doc.save(item.delegation + " Position Invoice.pdf");
+    }
+
 }
 
 export function committeeAwardsPDFLayout1(item) {

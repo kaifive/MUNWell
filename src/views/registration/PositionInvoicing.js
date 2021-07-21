@@ -13,7 +13,7 @@ import {
   CDropdownItem,
   CRow
 } from '@coreui/react'
-
+import { positionPDF } from 'src/reusable/jsPDF'
 import registrationData from '../../data/MockData/MockRegistration'
 
 import { getStatus } from './positionInvoicingHelper'
@@ -76,7 +76,7 @@ const PositionInvoicing = () => {
                             Select Action
                           </CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem>Download Position Invoice</CDropdownItem>
+                            <CDropdownItem onClick={() => positionPDF(item)}>Download Position Invoice</CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </td>
