@@ -14,8 +14,8 @@ import {
 
 import CIcon from '@coreui/icons-react'
 
-import banner from '../assets/branding/Picture1.png'
-import logo from '../assets/branding/Logo.png'
+import banner from '../assets/branding/Banner-TransparentWhite.svg'
+import logo from '../assets/branding/Logo-TransparentWhite.png'
 
 // sidebar nav config
 import navigation from './_nav'
@@ -34,7 +34,7 @@ const TheSidebar = () => {
           className="c-sidebar-brand-full"
           name="logo-negative"
           src={banner}
-          height={35}
+          height={70}
         />
         <CIcon
           className="c-sidebar-brand-minimized"
@@ -44,7 +44,6 @@ const TheSidebar = () => {
         />
       </CSidebarBrand>
       <CSidebarNav>
-
         <CCreateElement
           items={navigation}
           components={{

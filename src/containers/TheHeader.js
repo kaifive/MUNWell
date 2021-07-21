@@ -15,6 +15,8 @@ import CIcon from '@coreui/icons-react'
 // routes config
 import routes from '../routes'
 
+import white from '../assets/branding/White.svg'
+
 const TheHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector(state => state.sidebarShow)
@@ -41,8 +43,9 @@ const TheHeader = () => {
         className="ml-3 d-md-down-none"
         onClick={toggleSidebar}
       />
-      <CHeaderBrand className="mx-auto d-lg-none" to="/">
-        <CIcon name="logo" height="48" alt="Logo" />
+
+      <CHeaderBrand className="mx-auto d-lg-none">
+        <CIcon src={white} height="48" />
       </CHeaderBrand>
 
       <CHeaderNav className="d-md-down-none mr-auto">
@@ -54,7 +57,7 @@ const TheHeader = () => {
       </CHeaderNav>
 
       <CHeaderNav className="px-3">
-      <CHeaderNavItem className="px-3" >
+        <CHeaderNavItem className="px-3" >
           <CHeaderNavLink to="/dashboard">Documentation</CHeaderNavLink>
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3" >

@@ -4,7 +4,7 @@ import 'jspdf-autotable'
 import committeeData from "src/data/MockData/MockCommittees";
 import awardData from "src/data/MockData/MockAwards";
 
-import banner from '../assets/branding/Picture1.png'
+import banner from '../assets/branding/Logo-TransparentWhite.png'
 import border from '../assets/awards/AwardsBorder.png'
 
 const font = "times"
