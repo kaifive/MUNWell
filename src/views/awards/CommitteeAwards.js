@@ -42,7 +42,7 @@ const CommitteeAwards = () => {
                                 hover
                                 striped
                                 sorter
-                                itemsPerPage={10}
+                                itemsPerPage={50}
                                 pagination
                                 scopedSlots={{
                                     'download':

@@ -71,7 +71,7 @@ const PaymentInvoicing = () => {
                 hover
                 striped
                 sorter
-                itemsPerPage={50}
+                itemsPerPage={10}
                 pagination
                 scopedSlots={{
                   'status':

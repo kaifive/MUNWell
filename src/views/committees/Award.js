@@ -62,7 +62,7 @@ const Award = ({ match: { params: { committee } } }) => {
                                 hover
                                 striped
                                 sorter
-                                itemsPerPage={10}
+                                itemsPerPage={50}
                                 pagination
                                 scopedSlots={{
                                     'actions':
