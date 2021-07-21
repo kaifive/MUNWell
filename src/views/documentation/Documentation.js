@@ -331,6 +331,19 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 9}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                                <i><strong>DOWNLOADING AWARDS</strong></i>
+                                                <br />
+                                                The <strong>Committee Awards</strong> page allows you to download awards submitted on the <strong>Individual Awards</strong> page for each of the committees. Selecting the <strong>Download</strong> button from the download column will open a PDF file containing all of the committee’s awards using Manuel’s prebuilt committee awards template.
+                                                <br />
+                                                <br />
+                                                <i><strong>CREATING CUSTOM AWARDS</strong></i>
+                                                <br />
+                                                Above the “Committee Awards” table, there is a <strong>Custom Committee Award</strong> button that allows conference organizers to create an individual custom committee award in the event of a reprint or assignment error. Clicking this button opens a form of required data to generate a custom committee award.
+                                                <br />
+                                                <br />
+                                                <i><strong>ADJUSTING TEMPLATE BORDERS</strong></i>
+                                                <br />
+                                                By default, Manuel template awards leave a margin of ~1.25” on all sides to account for the award being printed onto paper with a border design. If however, the paper borders exceed this margin, awards can be scaled by going to the print menu, selecting <strong>More Settings</strong>, and using the <strong>Scale (%)</strong> to scale awards to the necessary size.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -349,6 +362,12 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 10}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                            <i><strong>DELEGATION AWARDS TABLE</strong></i>
+                                                <br />
+                                                The “Delegation Awards” table calculates a score for every delegation in the event that a conference wants to distribute delegation awards. The leftmost columns list a delegation's name and their division, allowing conference organizers to sort delegations by different delegation award divisions. The next columns list each type of award specified in the award settings on the <strong>Settings</strong> page, along with its corresponding point value, as well as the number of each award that the delegation received. The “Raw Score” of a delegation is calculated by the sum of all of their awards taking into consideration the different point values of each award. The “Per Capita Score” of a delegation is calculated by dividing a delegation’s raw score by the number of delegates in the delegation. 
+                                                <br />
+                                                <br />
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table. 
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -367,6 +386,19 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 11}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
+                                            <i><strong>DOWNLOADING AWARDS</strong></i>
+                                                <br />
+                                                The <strong>Participation Awards</strong> page allows you to download participation awards for delegates at the conference. Two separate tables exist in order to provide multiple options for conference organizers to choose from. The “Participation Awards by Committee” table organizes participation awards by different committees, allowing for easy distribution during committee sessions. The “Participation Awards by Delegation” table organizes participation awards by different delegations, including independent delegates, allowing for easy distribution during check in. Selecting the <strong>Download</strong> button from the download column on either table will open a PDF file containing all of the participation awards using Manuel’s prebuilt participation awards template. 
+                                                <br />
+                                                <br />
+                                                <i><strong>CREATING CUSTOM AWARDS</strong></i>
+                                                <br />
+                                                Above the “Participation Awards by Committee” table and the “Participation Awards by Delegation” table, there is a <strong>Custom Participation Award</strong> button that allows conference organizers to create an individual custom participation award in the event of a reprint or assignment error. Clicking this button opens a form of required data to generate a custom participation award. 
+                                                <br />
+                                                <br />
+                                                <i><strong>ADJUSTING TEMPLATE BORDERS</strong></i>
+                                                <br />
+                                                By default, Manuel template awards leave a margin of ~1.25” on all sides to account for the award being printed onto paper with a border design. If however, the paper borders exceed this margin, awards can be scaled by going to the print menu, selecting <strong>More Settings</strong>, and using the <strong>Scale (%)</strong> to scale awards to the necessary size. 
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -463,7 +495,7 @@ const Documentation = () => {
                                             <CCol xs="12" md="12">
                                                 <i><strong>MANUEL SUGGESTIONS</strong></i>
                                                 <br />
-                                                Have a recommendation for the Manuel development team? Fill out the <strong>Suggestions</strong> form located on the overhead navigation bar for any issues you may have encountered or future features you want to see implemented. 
+                                                Have a recommendation for the Manuel development team? Fill out the <strong>Suggestions</strong> form located on the overhead navigation bar for any issues you may have encountered or future features you want to see implemented.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
