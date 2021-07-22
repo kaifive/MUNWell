@@ -12,24 +12,32 @@ const loading = (
 const TheLayout = React.lazy(() => import('./containers/TheLayout'));
 
 // Pages
-const Login = React.lazy(() => import('./views/pages/login/Login'));
-const Register = React.lazy(() => import('./views/pages/register/Register'));
-const Page404 = React.lazy(() => import('./views/pages/page404/Page404'));
-const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
+const PageNotFound = React.lazy(() => import('./views/pages/page404/Page404'));
 
 class App extends Component {
   render() {
     return (
       <HashRouter>
-          <React.Suspense fallback={loading}>
-            <Switch>
-              <Route exact path="/login" name="Login Page" render={props => <Login {...props}/>} />
-              <Route exact path="/register" name="Register Page" render={props => <Register {...props}/>} />
-              <Route exact path="/404" name="Page 404" render={props => <Page404 {...props}/>} />
-              <Route exact path="/500" name="Page 500" render={props => <Page500 {...props}/>} />
-              <Route path="/" name="Home" render={props => <TheLayout {...props}/>} />
-            </Switch>
-          </React.Suspense>
+        <React.Suspense fallback={loading}>
+          <Switch>
+            <Route exact path="/" name="Home" render={props => <TheLayout {...props} />} />
+            <Route exact path="/dashboard" name="Dashboard" render={props => <TheLayout {...props} />} />
+            <Route exact path="/documentation" name="Documentation" render={props => <TheLayout {...props} />} />
+            <Route exact path="/settings" name="Settings" render={props => <TheLayout {...props} />} />
+            <Route exact path="/registration/registration-data" name="Registration Data" render={props => <TheLayout {...props} />} />
+            <Route exact path="/registration/committee-allotments" name="Committee Allotments" render={props => <TheLayout {...props} />} />
+            <Route exact path="/registration/payment-invoicing" name="Payment Invoicing" render={props => <TheLayout {...props} />} />
+            <Route exact path="/registration/position-invoicing" name="Position Invoicing" render={props => <TheLayout {...props} />} />
+            <Route exact path="/committees/committee-roster" name="Committee Roster" render={props => <TheLayout {...props} />} />
+            <Route exact path="/committees/:committee" name="Committee Position Assignments" render={props => <TheLayout {...props} />} />
+            <Route exact path="/award/:committee" name="Committee Individual Awards" render={props => <TheLayout {...props} />} />
+            <Route exact path="/awards/committee-awards" name="Committee Awards" render={props => <TheLayout {...props} />} />
+            <Route exact path="/awards/delegation-awards" name="Delegation Awards" render={props => <TheLayout {...props} />} />
+            <Route exact path="/awards/participation-awards" name="Participation Awards" render={props => <TheLayout {...props} />} />
+
+            <Route path="*" name="Page 404" render={props => <PageNotFound {...props} />} />
+          </Switch>
+        </React.Suspense>
       </HashRouter>
     );
   }
