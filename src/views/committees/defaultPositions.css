@@ -1,0 +1,9 @@
+#defaultPosition {
+    border: none;
+    background-color: inherit;
+    cursor: pointer;
+}
+
+#defaultPosition:hover {
+    text-decoration: underline;
+}
