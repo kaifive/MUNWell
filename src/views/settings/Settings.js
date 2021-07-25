@@ -69,10 +69,60 @@ const fieldsLicense = [
     'actions'
 ]
 
+let header = ""
+
 const Settings = () => {
     const [accordion, setAccordion] = useState()
+
     const [modalAwards, setModalAwards] = useState(false)
     const [modalLicense, setModalLicense] = useState(false)
+
+    const [awardsState, setAwardsState] = useState({
+        awardType: '',
+        awardValue: ''
+    })
+
+    const [licenseState, setLicenseState] = useState({
+        productKey: '',
+    })
+
+    function openAwardsModal() {
+        setAwardsState({
+            awardType: '',
+            awardValue: ''
+        })
+
+        header = "Add Award Type"
+
+        setModalAwards(!modalAwards)
+    }
+
+    function openLicenseModal() {
+        setLicenseState({
+            productKey: ''
+        })
+
+        setModalLicense(!modalLicense)
+    }
+
+    function addAwards() {
+        setModalAwards(false)
+    }
+
+    function editAwards(item) {
+        setAwardsState({
+            awardType: item.type,
+            awardValue: item.value
+        })
+
+        header = "Edit Award Type"
+
+        setModalAwards(!modalAwards)
+    }
+
+    function addLicense() {
+        setModalLicense(false)
+    }
 
     return (
         <>
@@ -364,7 +414,7 @@ const Settings = () => {
                                         <CCardBody>
                                             <CRow className="align-items-left">
                                                 <CCol lg="2">
-                                                    <CButton block color="primary" onClick={() => setModalAwards(!modalAwards)}>Add New</CButton>
+                                                    <CButton block color="primary" onClick={() => openAwardsModal()}>Add New</CButton>
                                                 </CCol>
                                             </CRow>
                                             <br></br>
@@ -385,13 +435,12 @@ const Settings = () => {
                                                                         Select Action
                                                                     </CDropdownToggle>
                                                                     <CDropdownMenu>
-                                                                        <CDropdownItem>Edit</CDropdownItem>
+                                                                        <CDropdownItem onClick={() => editAwards(item)}>Edit</CDropdownItem>
                                                                         <CDropdownItem>Delete</CDropdownItem>
                                                                     </CDropdownMenu>
                                                                 </CDropdown>
                                                             </td>
                                                         ),
-
                                                 }}
                                             />
                                         </CCardBody>
@@ -412,7 +461,7 @@ const Settings = () => {
                                         <CCardBody>
                                             <CRow className="align-items-left">
                                                 <CCol lg="3">
-                                                    <CButton block color="primary" onClick={() => setModalLicense(!modalLicense)}>Upload License</CButton>
+                                                    <CButton block color="primary" onClick={() => openLicenseModal()}>Upload License</CButton>
                                                 </CCol>
                                             </CRow>
                                             <br></br>
@@ -462,7 +511,7 @@ const Settings = () => {
 
             <CModal show={modalAwards} onClose={setModalAwards} size="lg">
                 <CModalHeader>
-                    <CModalTitle>Add Award Type</CModalTitle>
+                    <CModalTitle>{header}</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
@@ -471,7 +520,12 @@ const Settings = () => {
                                 <CLabel htmlFor="award-type">Award Type</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput id="award-type" name="award-type" placeholder="Award Type" />
+                                <CInput name="awardType" placeholder="Award Type" value={awardsState.awardType} onChange={e => {
+                                    const val = e.target.value
+                                    setAwardsState(prevState => {
+                                        return { ...prevState, awardType: val }
+                                    });
+                                }} />
                             </CCol>
                         </CFormGroup>
                         <CFormGroup row>
@@ -479,14 +533,19 @@ const Settings = () => {
                                 <CLabel htmlFor="award-value">Point Value</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput type="number" id="award-value" name="award-value" placeholder="Point Value" />
+                                <CInput type="number" name="awardValue" placeholder="Point Value" value={awardsState.awardValue} onChange={e => {
+                                    const val = e.target.value
+                                    setAwardsState(prevState => {
+                                        return { ...prevState, awardValue: val }
+                                    });
+                                }} />
                             </CCol>
                         </CFormGroup>
                     </CForm>
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setModalAwards(false)}>Cancel</CButton>
-                    <CButton color="primary" onClick={() => setModalAwards(false)}>Submit</CButton>
+                    <CButton color="primary" onClick={() => addAwards()}>Submit</CButton>
                 </CModalFooter>
             </CModal>
 
@@ -498,17 +557,22 @@ const Settings = () => {
                     <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
                         <CFormGroup row>
                             <CCol md="3">
-                                <CLabel htmlFor="license-file">License File</CLabel>
+                                <CLabel htmlFor="license-file">License Product Key</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInputFile id="license-file" name="license-file" />
+                                <CInput type="text" name="productKey" placeholder="Manuel License Product Key" value={licenseState.productKey} onChange={e => {
+                                    const val = e.target.value
+                                    setLicenseState(prevState => {
+                                        return { ...prevState, productKey: val }
+                                    })
+                                }} />
                             </CCol>
                         </CFormGroup>
                     </CForm>
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setModalLicense(false)}>Cancel</CButton>
-                    <CButton color="primary" onClick={() => setModalLicense(false)}>Submit</CButton>
+                    <CButton color="primary" onClick={() => addLicense()}>Submit</CButton>
                 </CModalFooter>
             </CModal>
         </>

@@ -29,8 +29,50 @@ import awards from '../../data/MockData/MockAwardTypes'
 
 import { getIndex, filterAwardData, getAwardTypes, getPositions, getDelegation, exportTable, setField } from './awardHelper'
 
+let header = ""
+
 const Award = ({ match: { params: { committee } } }) => {
     const [modalAdd, setModalAdd] = useState(false)
+
+    const [awardsState, setAwardsState] = useState({
+        type: '',
+        position: '',
+        delegation: '',
+        delegate1: '',
+        delegate2: ''
+    })
+
+    function openModal() {
+        setAwardsState({
+            type: '',
+            position: '',
+            delegation: '',
+            delegate1: '',
+            delegate2: ''
+        })
+
+        header = "Add Award"
+
+        setModalAdd(!modalAdd)
+    }
+
+    function addAwards() {
+        setModalAdd(false)
+    }
+
+    function editAwards(item) {
+        setAwardsState({
+            type: item.type,
+            position: item.position,
+            delegation: item.delegation,
+            delegate1: item.delegate1,
+            delegate2: item.delegate2
+        })
+
+        header = "Edit Award"
+
+        setModalAdd(!modalAdd)
+    }
 
     let json = getIndex(committee)
 
@@ -52,7 +94,7 @@ const Award = ({ match: { params: { committee } } }) => {
                         <CCardBody>
                             <CRow className="align-items-left">
                                 <CCol lg="3">
-                                    <CButton block color="primary" onClick={() => setModalAdd(!modalAdd)}>Add New</CButton>
+                                    <CButton block color="primary" onClick={() => openModal()}>Add New</CButton>
                                 </CCol>
                             </CRow>
                             <br></br>
@@ -73,7 +115,7 @@ const Award = ({ match: { params: { committee } } }) => {
                                                         Select Action
                                                     </CDropdownToggle>
                                                     <CDropdownMenu>
-                                                        <CDropdownItem>Edit</CDropdownItem>
+                                                    <CDropdownItem onClick={() => editAwards(item)}>Edit</CDropdownItem>
                                                         <CDropdownItem>Delete</CDropdownItem>
                                                     </CDropdownMenu>
                                                 </CDropdown>
@@ -89,7 +131,7 @@ const Award = ({ match: { params: { committee } } }) => {
 
             <CModal show={modalAdd} onClose={setModalAdd} size="lg">
                 <CModalHeader>
-                    <CModalTitle>Add Position</CModalTitle>
+                    <CModalTitle>{header}</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
@@ -98,7 +140,12 @@ const Award = ({ match: { params: { committee } } }) => {
                                 <CLabel htmlFor="award-type">Award Type</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CSelect custom name="select" id="award-type">
+                                <CSelect custom name="awardType" value={awardsState.type} onChange={e => {
+                                    const val = e.target.value
+                                    setAwardsState(prevState => {
+                                        return { ...prevState, type: val }
+                                    });
+                                }}>
                                     {getAwardTypes(awards)}
                                 </CSelect>
                             </CCol>
@@ -108,7 +155,12 @@ const Award = ({ match: { params: { committee } } }) => {
                                 <CLabel htmlFor="award-pos">Position</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CSelect custom name="select" id="award-pos">
+                                <CSelect custom name="awardPos" value={awardsState.position} onChange={e => {
+                                    const val = e.target.value
+                                    setAwardsState(prevState => {
+                                        return { ...prevState, position: val }
+                                    });
+                                }}>
                                     {getPositions(json)}
                                 </CSelect>
                             </CCol>
@@ -119,7 +171,7 @@ const Award = ({ match: { params: { committee } } }) => {
                             </CCol>
                             <CCol xs="12" md="8">
                                 <CSelect custom name="select" id="award-delegation" disabled>
-                                    {getDelegation("position 1", json)}
+                                    {getDelegation(awardsState.position, json)}
                                 </CSelect>
                             </CCol>
                         </CFormGroup>
@@ -128,22 +180,32 @@ const Award = ({ match: { params: { committee } } }) => {
                                 <CLabel htmlFor="award-del1">Delegate I Name</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput id="award-del1" name="award-del1" placeholder="Delegate I Name" />
+                                <CInput name="awardDel1" placeholder="Delegate I Name" value={awardsState.delegate1} onChange={e => {
+                                    const val = e.target.value
+                                    setAwardsState(prevState => {
+                                        return { ...prevState, delegate1: val }
+                                    });
+                                }} />
                             </CCol>
                         </CFormGroup>
-                        <CFormGroup row>
+                        <CFormGroup row hidden={!json.type.includes("Double Delegation")}>
                             <CCol md="3">
                                 <CLabel htmlFor="award-del2">Delegate II Name</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput id="award-del2" name="award-del2" placeholder="Delegate II Name" />
+                                <CInput name="awardDel2" placeholder="Delegate II Name" value={awardsState.delegate2} onChange={e => {
+                                    const val = e.target.value
+                                    setAwardsState(prevState => {
+                                        return { ...prevState, delegate2: val }
+                                    });
+                                }} />
                             </CCol>
                         </CFormGroup>
                     </CForm>
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setModalAdd(false)}>Cancel</CButton>
-                    <CButton color="primary" onClick={() => setModalAdd(false)}>Submit</CButton>
+                    <CButton color="primary" onClick={() => addAwards()}>Submit</CButton>
                 </CModalFooter>
             </CModal>
 

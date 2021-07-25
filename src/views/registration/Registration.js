@@ -28,6 +28,8 @@ import { Export } from 'src/reusable'
 
 import registrationData from '../../data/MockData/MockRegistration'
 
+import { exportTable, getEmailList } from './registrationHelper'
+
 const getBadge = label => {
   switch (label) {
     case 'Paid': return 'success'
@@ -38,24 +40,6 @@ const getBadge = label => {
     case 'Late': return 'danger'
     default: return 'primary'
   }
-}
-
-function exportTable() {
-  let data = registrationData
-
-  return data
-}
-
-function getEmailList(registrationData) {
-  let emailList = ""
-  let i;
-  for (i = 0; i < registrationData.length; i++) {
-    emailList = emailList + registrationData[i].email + ",\n"
-  }
-
-  emailList = emailList.substring(0, emailList.length - 2)
-
-  return emailList
 }
 
 const fields = [
@@ -69,76 +53,98 @@ const fields = [
   'actions'
 ]
 
-let details = ['window', 'type', 'division', 'delegation', "street", "city", "state", "zip", 'contact', 'email', 'phone', 'delegates']
-let status;
-let header;
-let registrationWindow = [true, false, false, false]
-let dropdown = [true, false, false]
-let checkboxes = [false, false, false]
+let header = ""
+let status = false;
 
 const Registration = () => {
   const [modal, setModal] = useState(false)
   const [modalEmail, setModalEmail] = useState(false)
 
-  function openModal(item, modalType) {
-    if (modalType === "Add") {
-      details = ['Delegation Window', 'Delegation Type', 'Delegation Division', 'Delegation Name', "Street", "City", "State", "Zip Code", 'Contact Name', 'Contact Email', 'Contact Phone Number', 'Number of Delegates']
+  const [registrationState, setRegistrationState] = useState({
+    type: '',
+    division: '',
+    delegation: '',
+    street: '',
+    city: '',
+    state: '',
+    zipcode: '',
+    contact: '',
+    email: '',
+    phone: '',
+    delegates: '',
+    status: '',
+    window: ''
+  })
 
-      status = false;
-      registrationWindow = [true, false, false, false]
-      dropdown = [true, false, false]
-      checkboxes = [false, false, false]
-      header = "Add Registration Entry"
-    } else {
-      details[0] = item.window
-      details[1] = item.type
-      details[2] = item.division
-      details[3] = item.delegation
-      details[4] = item.street
-      details[5] = item.city
-      details[6] = item.state
-      details[7] = item.zipcode
-      details[8] = item.contact
-      details[9] = item.email
-      details[10] = item.phone
-      details[11] = item.delegates
+  function openModal() {
+    setRegistrationState({
+      type: '',
+      division: '',
+      delegation: '',
+      street: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      contact: '',
+      email: '',
+      phone: '',
+      delegates: '',
+      status: '',
+      window: ''
+    })
 
-      if (details[0] === "Early") {
-        registrationWindow = [false, true, false, false]
-      } else if (details[0] === "Regular") {
-        registrationWindow = [false, false, true, false]
-      } else if (details[0] === "Late") {
-        registrationWindow = [false, false, false, true]
-      }
+    header = "Add Registration Entry"
+    status = false;
 
-      if (details[1] === "Delegation") {
-        dropdown = [false, true, false]
-      } else {
-        dropdown = [false, false, true]
-      }
+    setModal(!modal)
+  }
 
-      checkboxes = [false, false, false]
+  function addRegistration() {
+    setModal(false)
+  }
 
-      if (details[2].includes("Middle School")) {
-        checkboxes[0] = true
-      }
+  function editRegistration(item) {
+    setRegistrationState({
+      type: item.type,
+      division: item.division,
+      delegation: item.delegation,
+      street: item.street,
+      city: item.city,
+      state: item.state,
+      zipcode: item.zipcode,
+      contact: item.contact,
+      email: item.email,
+      phone: item.phone,
+      delegates: item.delegates,
+      status: item.status,
+      window: item.window
+    })
 
-      if (details[2].includes("High School")) {
-        checkboxes[1] = true
-      }
+    header = "Edit " + item.delegation
+    status = false;
 
-      if (details[2].includes("University")) {
-        checkboxes[2] = true
-      }
+    setModal(!modal)
+  }
 
-      if (modalType === "Details") {
-        status = true;
-        header = details[3] + " - Registration Data Details"
-      } else if (modalType === "Edit") {
-        status = false;
-        header = details[3] + " - Edit Registration Data"
-      }
-    }
+  function detailsRegistration(item) {
+    setRegistrationState({
+      type: item.type,
+      division: item.division,
+      delegation: item.delegation,
+      street: item.street,
+      city: item.city,
+      state: item.state,
+      zipcode: item.zipcode,
+      contact: item.contact,
+      email: item.email,
+      phone: item.phone,
+      delegates: item.delegates,
+      status: item.status,
+      window: item.window
+    })
+
+    header = item.delegation + " Details"
+    status = true;
 
     setModal(!modal)
   }
@@ -155,7 +161,7 @@ const Registration = () => {
             <CCardBody>
               <CRow className="align-items-left">
                 <CCol lg="3">
-                  <CButton block color="primary" onClick={() => openModal("", "Add")}>Add New</CButton>
+                  <CButton block color="primary" onClick={() => openModal()}>Add New</CButton>
                 </CCol>
                 <CCol lg="3">
                   <CButton block color="secondary" onClick={() => setModalEmail(!modalEmail)}>Email List</CButton>
@@ -187,8 +193,8 @@ const Registration = () => {
                             Select Action
                           </CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => openModal(item, "Details")}>Details</CDropdownItem>
-                            <CDropdownItem onClick={() => openModal(item, "Edit")}>Edit</CDropdownItem>
+                            <CDropdownItem onClick={() => detailsRegistration(item)}>Details</CDropdownItem>
+                            <CDropdownItem onClick={() => editRegistration(item)}>Edit</CDropdownItem>
                             <CDropdownItem>Delete</CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
@@ -206,17 +212,22 @@ const Registration = () => {
           <CModalTitle>{header}</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CForm className="form-horizontal">
+          <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
             <CFormGroup row>
               <CCol md="3">
                 <CLabel htmlFor="regi-time">Registration Time Window</CLabel>
               </CCol>
               <CCol xs="12" md="8">
-                <CSelect disabled={status} custom name="select" id="regi-time">
-                  <option selected={registrationWindow[0]} hidden value="default">Select Registration Time Window</option>
-                  <option selected={registrationWindow[1]} value="Early">Early Registration</option>
-                  <option selected={registrationWindow[2]} value="Regular">Regular Registration</option>
-                  <option selected={registrationWindow[3]} value="Late">Late Registration</option>
+                <CSelect custom name="regiTime" disabled={status} value={registrationState.window} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, window: val }
+                  });
+                }}>
+                  <option value="" disabled>Select Registration Time Window</option>
+                  <option value="Early">Early Registration</option>
+                  <option value="Regular">Regular Registration</option>
+                  <option value="Late">Late Registration</option>
                 </CSelect>
               </CCol>
             </CFormGroup>
@@ -225,10 +236,15 @@ const Registration = () => {
                 <CLabel htmlFor="regi-type">Delegation Type</CLabel>
               </CCol>
               <CCol xs="12" md="8">
-                <CSelect disabled={status} custom name="select" id="regi-type">
-                  <option selected={dropdown[0]} hidden value="default">Select Delgation Type</option>
-                  <option selected={dropdown[1]} value="Delegation">Delegation</option>
-                  <option selected={dropdown[2]} value="Independent">Independent</option>
+                <CSelect custom name="regiTime" disabled={status} value={registrationState.type} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, type: val }
+                  });
+                }}>
+                  <option value="" disabled>Select Delegation Type</option>
+                  <option value="Delegation">Delegation</option>
+                  <option value="Independent">Independent</option>
                 </CSelect>
               </CCol>
             </CFormGroup>
@@ -238,15 +254,87 @@ const Registration = () => {
               </CCol>
               <CCol xs="12" md="8">
                 <CFormGroup variant="custom-checkbox" inline>
-                  <CInputCheckbox disabled={status} custom id="inline-checkbox1" name="inline-checkbox1" value="option1" onClick={!checkboxes[0]} checked={checkboxes[0]} />
+                  <CInputCheckbox custom disabled={status} id="inline-checkbox1" name="middleSchool" checked={(registrationState.division.includes("Middle School"))} onChange={e => {
+                    const middleSchool = e.target.checked
+                    const highSchool = (registrationState.division.includes("High School"))
+                    const university = (registrationState.division.includes("University"))
+
+                    let val = ''
+
+                    if (middleSchool) {
+                      val = val + "Middle School, "
+                    }
+
+                    if (highSchool) {
+                      val = val + "High School, "
+                    }
+
+                    if (university) {
+                      val = val + "University, "
+                    }
+
+                    val = val.substring(0, val.length - 2)
+
+                    setRegistrationState(prevState => {
+                      return { ...prevState, division: val }
+                    })
+                  }} />
                   <CLabel variant="custom-checkbox" htmlFor="inline-checkbox1">Middle School</CLabel>
                 </CFormGroup>
                 <CFormGroup variant="custom-checkbox" inline>
-                  <CInputCheckbox disabled={status} custom id="inline-checkbox2" name="inline-checkbox2" value="option2" onClick={!checkboxes[1]} checked={checkboxes[1]} />
+                  <CInputCheckbox custom disabled={status} id="inline-checkbox2" name="highSchool" checked={(registrationState.division.includes("High School"))} onChange={e => {
+                    const middleSchool = (registrationState.division.includes("Middle School"))
+                    const highSchool = e.target.checked
+                    const university = (registrationState.division.includes("University"))
+
+                    let val = ''
+
+                    if (middleSchool) {
+                      val = val + "Middle School, "
+                    }
+
+                    if (highSchool) {
+                      val = val + "High School, "
+                    }
+
+                    if (university) {
+                      val = val + "University, "
+                    }
+
+                    val = val.substring(0, val.length - 2)
+
+                    setRegistrationState(prevState => {
+                      return { ...prevState, division: val }
+                    })
+                  }} />
                   <CLabel variant="custom-checkbox" htmlFor="inline-checkbox2">High School</CLabel>
                 </CFormGroup>
                 <CFormGroup variant="custom-checkbox" inline>
-                  <CInputCheckbox disabled={status} custom id="inline-checkbox3" name="inline-checkbox3" value="option3" onClick={!checkboxes[2]} checked={checkboxes[2]} />
+                  <CInputCheckbox custom disabled={status} id="inline-checkbox3" name="middleSchool" checked={(registrationState.division.includes("University"))} onChange={e => {
+                    const middleSchool = (registrationState.division.includes("Middle School"))
+                    const highSchool = (registrationState.division.includes("High School"))
+                    const university = e.target.checked
+
+                    let val = ''
+
+                    if (middleSchool) {
+                      val = val + "Middle School, "
+                    }
+
+                    if (highSchool) {
+                      val = val + "High School, "
+                    }
+
+                    if (university) {
+                      val = val + "University, "
+                    }
+
+                    val = val.substring(0, val.length - 2)
+
+                    setRegistrationState(prevState => {
+                      return { ...prevState, division: val }
+                    })
+                  }} />
                   <CLabel variant="custom-checkbox" htmlFor="inline-checkbox3">University</CLabel>
                 </CFormGroup>
               </CCol>
@@ -256,7 +344,12 @@ const Registration = () => {
                 <CLabel htmlFor="regi-delegation-name">Delegation Name</CLabel>
               </CCol>
               <CCol xs="12" md="8">
-                <CInput disabled={status} id="regi-delegation-name" name="regi-delegation-name" placeholder={details[3]} />
+                <CInput disabled={status} name="regiDelegationName" placeholder="Delegation Name" value={registrationState.delegation} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, delegation: val }
+                  });
+                }} />
               </CCol>
             </CFormGroup>
             <CFormGroup row>
@@ -264,19 +357,39 @@ const Registration = () => {
                 <CLabel htmlFor="regi-addr">Delegation Address</CLabel>
               </CCol>
               <CCol xs="12" md="8">
-                <CInput disabled={status} id="regi-street" name="regi-street" placeholder={details[4]} />
+                <CInput disabled={status} name="regiStreet" placeholder="Street" value={registrationState.street} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, street: val }
+                  });
+                }} />
               </CCol>
             </CFormGroup>
             <CFormGroup row>
               <CCol md="3"></CCol>
               <CCol xs="12" md="3">
-                <CInput disabled={status} id="regi-city" name="regi-city" placeholder={details[5]} />
+                <CInput disabled={status} name="regiCity" placeholder="City" value={registrationState.city} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, city: val }
+                  });
+                }} />
               </CCol>
               <CCol xs="12" md="2">
-                <CInput disabled={status} id="regi-state" name="regi-state" placeholder={details[6]} />
+                <CInput disabled={status} name="regiState" placeholder="State" value={registrationState.state} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, state: val }
+                  });
+                }} />
               </CCol>
               <CCol xs="12" md="3">
-                <CInput disabled={status} id="regi-postal" name="regi-postal" placeholder={details[7]} />
+                <CInput disabled={status} name="regiZip" placeholder="Zip Code" value={registrationState.zipcode} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, zipcode: val }
+                  });
+                }} />
               </CCol>
             </CFormGroup>
             <CFormGroup row>
@@ -284,7 +397,12 @@ const Registration = () => {
                 <CLabel htmlFor="regi-contact-name">Contact Name</CLabel>
               </CCol>
               <CCol xs="12" md="8">
-                <CInput disabled={status} id="regi-contact-name" name="regi-contact-name" placeholder={details[8]} />
+                <CInput disabled={status} name="regiContact" placeholder="Contact Name" value={registrationState.contact} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, contact: val }
+                  });
+                }} />
               </CCol>
             </CFormGroup>
             <CFormGroup row>
@@ -292,7 +410,12 @@ const Registration = () => {
                 <CLabel htmlFor="regi-email">Contact Email</CLabel>
               </CCol>
               <CCol xs="12" md="8">
-                <CInput disabled={status} id="regi-email" name="regi-email" placeholder={details[9]} />
+                <CInput disabled={status} name="regiEmail" placeholder="Contact Email" value={registrationState.email} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, email: val }
+                  });
+                }} />
               </CCol>
             </CFormGroup>
             <CFormGroup row>
@@ -300,7 +423,12 @@ const Registration = () => {
                 <CLabel htmlFor="regi-phone">Contact Phone Number</CLabel>
               </CCol>
               <CCol xs="12" md="8">
-                <CInput disabled={status} id="regi-phone" name="regi-phone" placeholder={details[10]} />
+                <CInput disabled={status} name="regiPhone" placeholder="Phone Number" value={registrationState.phone} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, phone: val }
+                  });
+                }} />
               </CCol>
             </CFormGroup>
             <CFormGroup row>
@@ -308,18 +436,23 @@ const Registration = () => {
                 <CLabel htmlFor="regi-delegates">Number of Delegates</CLabel>
               </CCol>
               <CCol xs="12" md="8">
-                <CInput disabled={status} type="number" id="regi-delegates" name="regi-delegates" placeholder={details[11]} />
+                <CInput disabled={status} type="number" name="regiDelegates" placeholder="Number of Delegates" value={registrationState.delegates} onChange={e => {
+                  const val = e.target.value
+                  setRegistrationState(prevState => {
+                    return { ...prevState, delegates: val }
+                  });
+                }} />
               </CCol>
             </CFormGroup>
           </CForm>
         </CModalBody>
         <CModalFooter>
-          <CButton color="secondary" onClick={() => setModal(false)}>Close</CButton>
-          <CButton color="primary" onClick={() => setModal(false)}>Save</CButton>
+          <CButton color="secondary" onClick={() => setModal(false)}>Cancel</CButton>
+          <CButton color="primary" onClick={() => addRegistration()}>Submit</CButton>
         </CModalFooter>
       </CModal>
 
-      <CModal show={modalEmail} onClose={setModalEmail} size="lg">
+      <CModal show={modalEmail} onClose={() => setModalEmail} size="lg">
         <CModalHeader>
           <CModalTitle>Full Registration Email List</CModalTitle>
         </CModalHeader>

@@ -41,6 +41,22 @@ const fieldsButtons = [
 const Committee = ({ match: { params: { committee } } }) => {
     const [modalAdd, setModalAdd] = useState(false)
 
+    const [positionState, setPositionState] = useState({
+        position: ''
+    })
+
+    function openModal() {
+        setPositionState({
+            position: ''
+        })
+
+        setModalAdd(!modalAdd)
+    }
+
+    function addPosition() {
+        setModalAdd(false)
+    }
+
     let json = getIndex(committee)
 
     if (getIndex(committee) === null) {
@@ -61,7 +77,7 @@ const Committee = ({ match: { params: { committee } } }) => {
                         <CCardBody>
                             <CRow className="align-items-left">
                                 <CCol lg="3">
-                                    <CButton block color="primary" onClick={() => setModalAdd(!modalAdd)}>Add New</CButton>
+                                    <CButton block color="primary" onClick={() => openModal()}>Add New</CButton>
                                 </CCol>
                             </CRow>
                             <br></br>
@@ -140,14 +156,19 @@ const Committee = ({ match: { params: { committee } } }) => {
                                 <CLabel htmlFor="new-position">New Position</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput id="new-position" name="new-position" placeholder="New Position" />
+                                <CInput name="newPosition" placeholder="New Position" value={positionState.position} onChange={e => {
+                                    const val = e.target.value
+                                    setPositionState(prevState => {
+                                        return { ...prevState, position: val }
+                                    });
+                                }} />
                             </CCol>
                         </CFormGroup>
                     </CForm>
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setModalAdd(false)}>Cancel</CButton>
-                    <CButton color="primary" onClick={() => setModalAdd(false)}>Submit</CButton>
+                    <CButton color="primary" onClick={() => addPosition()}>Submit</CButton>
                 </CModalFooter>
             </CModal>
         </>

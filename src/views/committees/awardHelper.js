@@ -51,7 +51,7 @@ export function filterAwardData(committee) {
 }
 
 export function getAwardTypes(awards) {
-    let types = [<option selected value="default" disabled>Select Award Type</option>]
+    let types = [<option value="" disabled>Select Award Type</option>]
 
     let i;
     for (i = 0; i < awards.length; i++) {
@@ -63,7 +63,7 @@ export function getAwardTypes(awards) {
 }
 
 export function getPositions(committee) {
-    let data = [<option selected value="default" disabled>Select Position</option>]
+    let data = [<option value="" disabled>Select Position</option>]
 
     let positions = committee.positions.split(",")
     let assignments = committee.assignments.split(",")
@@ -83,6 +83,10 @@ export function getDelegation(position, committee) {
 
     let positions = committee.positions.split(",")
     let assignments = committee.assignments.split(",")
+
+    if(position === "") {
+        return <option value="">Select Position First</option>
+    }
 
     let i;
     for (i = 0; i < positions.length; i++) {

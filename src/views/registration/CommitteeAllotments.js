@@ -30,49 +30,42 @@ import registrationData from '../../data/MockData/MockRegistration'
 import committeeData from '../../data/MockData/MockCommittees'
 import allotmentData from '../../data/MockData/MockAllotments'
 
-let details = ["Category", "Division", "Name", "Abbreviation", "Chair", "Positions"]
-
 const CommitteeAllotments = () => {
-    const fields = getFields()
     const [modal, setModal] = useState(false)
 
-    let category = [false, false, false, false]
-    let division = [false, false, false]
+    const fields = getFields()
+
+    const [committeeState, setCommitteeState] = useState({
+        division: '',
+        category: '',
+        type: '',
+        committee: '',
+        abbreviation: '',
+        chair: '',
+        positions: '',
+        assignments: ''
+    })
 
     function openModal(committee) {
+        let item;
+
         let i;
-        for (i = 0; i < committeeData.length; i++) {
-            if (committeeData[i].committee === committee) {
-                details[0] = committeeData[i].category
-                details[1] = committeeData[i].division
-                details[2] = committeeData[i].committee
-                details[3] = committeeData[i].abbreviation
-                details[4] = committeeData[i].name
-                details[5] = committeeData[i].positions
+        for(i = 0; i < committeeData.length; i++) {
+            if(committeeData[i].committee === committee) {
+                item = committeeData[i]
             }
-        }
+        } 
 
-        if (details[0] === "General Assembly") {
-            category = [true, false, false, false]
-        } else if (details[0] === "Specialized Agency") {
-            category = [false, true, false, false]
-        } else if (details[0] === "Crisis Committee") {
-            category = [false, false, true, false]
-        } else {
-            category = [false, false, false, true]
-        }
-
-        if (details[1].includes("Middle School")) {
-            division[0] = true;
-        }
-
-        if (details[1].includes("High School")) {
-            division[1] = true;
-        }
-
-        if (details[2].includes("University")) {
-            division[2] = true;
-        }
+        setCommitteeState({
+            division: item.division,
+            category: item.category,
+            type: item.type,
+            committee: item.committee,
+            abbreviation: item.abbreviation,
+            chair: item.chair,
+            positions: item.positions,
+            assignments: item.assignments
+        })
 
         setModal(!modal)
     }
@@ -232,20 +225,43 @@ const CommitteeAllotments = () => {
 
             <CModal show={modal} onClose={setModal} size="lg">
                 <CModalHeader>
-                    <CModalTitle>{details[2]}</CModalTitle>
+                    <CModalTitle>{committeeState.committee}</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
-                    <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
+                    <CForm>
                         <CFormGroup row>
                             <CCol md="3">
                                 <CLabel htmlFor="committee-category">Committee Category</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CSelect disabled custom name="select" id="committee-category">
-                                    <option defaultValue={category[0]} value="ga">General Assembly</option>
-                                    <option defaultValue={category[1]} value="sa">Specialized Agency</option>
-                                    <option defaultValue={category[2]} value="cc">Crisis Committee</option>
-                                    <option defaultValue={category[3]} value="other">Other</option>
+                                <CSelect disabled={true} custom name="committeeCategory" value={committeeState.category} onChange={e => {
+                                    const val = e.target.value
+                                    setCommitteeState(prevState => {
+                                        return { ...prevState, category: val }
+                                    });
+                                }}>
+                                    <option value="" disabled>Select Committee Category</option>
+                                    <option value="General Assembly">General Assembly</option>
+                                    <option value="Specialized Agency">Specialized Agency</option>
+                                    <option value="Crisis Committee">Crisis Committee</option>
+                                    <option value="Other">Other</option>
+                                </CSelect>
+                            </CCol>
+                        </CFormGroup>
+                        <CFormGroup row>
+                            <CCol md="3">
+                                <CLabel htmlFor="committee-type">Committee Type</CLabel>
+                            </CCol>
+                            <CCol xs="12" md="8">
+                                <CSelect disabled={true} custom name="committeeType" value={committeeState.type} onChange={e => {
+                                    const val = e.target.value
+                                    setCommitteeState(prevState => {
+                                        return { ...prevState, type: val }
+                                    });
+                                }}>
+                                    <option value="" disabled>Select Committee Type</option>
+                                    <option value="Single Delegation">Single Delegation</option>
+                                    <option value="Double Delegation">Double Delegation</option>
                                 </CSelect>
                             </CCol>
                         </CFormGroup>
@@ -255,15 +271,87 @@ const CommitteeAllotments = () => {
                             </CCol>
                             <CCol xs="12" md="8">
                                 <CFormGroup variant="custom-checkbox" inline>
-                                    <CInputCheckbox disabled custom id="inline-checkbox1" name="inline-checkbox1" value="option1" onClick={!division[0]} checked={division[0]} />
+                                    <CInputCheckbox disabled={true} custom id="inline-checkbox1" name="middleSchool" checked={(committeeState.division.includes("Middle School"))} onChange={e => {
+                                        const middleSchool = e.target.checked
+                                        const highSchool = (committeeState.division.includes("High School"))
+                                        const university = (committeeState.division.includes("University"))
+
+                                        let val = ''
+
+                                        if (middleSchool) {
+                                            val = val + "Middle School, "
+                                        }
+
+                                        if (highSchool) {
+                                            val = val + "High School, "
+                                        }
+
+                                        if (university) {
+                                            val = val + "University, "
+                                        }
+
+                                        val = val.substring(0, val.length - 2)
+
+                                        setCommitteeState(prevState => {
+                                            return { ...prevState, division: val }
+                                        })
+                                    }} />
                                     <CLabel variant="custom-checkbox" htmlFor="inline-checkbox1">Middle School</CLabel>
                                 </CFormGroup>
                                 <CFormGroup variant="custom-checkbox" inline>
-                                    <CInputCheckbox disabled custom id="inline-checkbox2" name="inline-checkbox2" value="option2" onClick={!division[0]} checked={division[1]} />
+                                    <CInputCheckbox disabled={true} custom id="inline-checkbox2" name="highSchool" checked={(committeeState.division.includes("High School"))} onChange={e => {
+                                        const middleSchool = (committeeState.division.includes("Middle School"))
+                                        const highSchool = e.target.checked
+                                        const university = (committeeState.division.includes("University"))
+
+                                        let val = ''
+
+                                        if (middleSchool) {
+                                            val = val + "Middle School, "
+                                        }
+
+                                        if (highSchool) {
+                                            val = val + "High School, "
+                                        }
+
+                                        if (university) {
+                                            val = val + "University, "
+                                        }
+
+                                        val = val.substring(0, val.length - 2)
+
+                                        setCommitteeState(prevState => {
+                                            return { ...prevState, division: val }
+                                        })
+                                    }} />
                                     <CLabel variant="custom-checkbox" htmlFor="inline-checkbox2">High School</CLabel>
                                 </CFormGroup>
                                 <CFormGroup variant="custom-checkbox" inline>
-                                    <CInputCheckbox disabled custom id="inline-checkbox3" name="inline-checkbox3" value="option3" onClick={!division[0]} checked={division[2]} />
+                                    <CInputCheckbox disabled={true} custom id="inline-checkbox3" name="middleSchool" checked={(committeeState.division.includes("University"))} onChange={e => {
+                                        const middleSchool = (committeeState.division.includes("Middle School"))
+                                        const highSchool = (committeeState.division.includes("High School"))
+                                        const university = e.target.checked
+
+                                        let val = ''
+
+                                        if (middleSchool) {
+                                            val = val + "Middle School, "
+                                        }
+
+                                        if (highSchool) {
+                                            val = val + "High School, "
+                                        }
+
+                                        if (university) {
+                                            val = val + "University, "
+                                        }
+
+                                        val = val.substring(0, val.length - 2)
+
+                                        setCommitteeState(prevState => {
+                                            return { ...prevState, division: val }
+                                        })
+                                    }} />
                                     <CLabel variant="custom-checkbox" htmlFor="inline-checkbox3">University</CLabel>
                                 </CFormGroup>
                             </CCol>
@@ -273,7 +361,12 @@ const CommitteeAllotments = () => {
                                 <CLabel htmlFor="committee-name">Committee Name</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput disabled id="committee-name" name="committee-name" placeholder="Committee Name" value={details[2]} />
+                                <CInput disabled={true} name="committeeName" placeholder="Committee Name" value={committeeState.committee} onChange={e => {
+                                    const val = e.target.value
+                                    setCommitteeState(prevState => {
+                                        return { ...prevState, committee: val }
+                                    });
+                                }} />
                             </CCol>
                         </CFormGroup>
                         <CFormGroup row>
@@ -281,7 +374,12 @@ const CommitteeAllotments = () => {
                                 <CLabel htmlFor="committee-abbr">Committee Abbreviation</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput disabled id="committee-abbr" name="committee-abbr" placeholder="Committee Abbreviation" value={details[3]} />
+                                <CInput disabled={true} name="committeeAbbr" placeholder="Committee Abbreviation" value={committeeState.abbreviation} onChange={e => {
+                                    const val = e.target.value
+                                    setCommitteeState(prevState => {
+                                        return { ...prevState, abbreviation: val }
+                                    });
+                                }} />
                             </CCol>
                         </CFormGroup>
                         <CFormGroup row>
@@ -289,7 +387,12 @@ const CommitteeAllotments = () => {
                                 <CLabel htmlFor="committee-chair">Committee Chair</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput disabled id="committee-chair" name="committee-chair" placeholder="Committee Chair" value={details[4]} />
+                                <CInput disabled={true} name="committeeChair" placeholder="Committee Chair" value={committeeState.chair} onChange={e => {
+                                    const val = e.target.value
+                                    setCommitteeState(prevState => {
+                                        return { ...prevState, chair: val }
+                                    });
+                                }} />
                             </CCol>
                         </CFormGroup>
                         <CFormGroup row>
@@ -297,7 +400,12 @@ const CommitteeAllotments = () => {
                                 <CLabel htmlFor="committee-positions">Committee Positions</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CTextarea disabled name="committee-positions" id="committee-positions" rows="9" placeholder="Committee Positions" value={details[5]} />
+                                <CTextarea disabled={true} name="committeePositions" rows="9" placeholder="Committee Positions" value={committeeState.positions} onChange={e => {
+                                    const val = e.target.value
+                                    setCommitteeState(prevState => {
+                                        return { ...prevState, positions: val }
+                                    });
+                                }} />
                             </CCol>
                         </CFormGroup>
                     </CForm>

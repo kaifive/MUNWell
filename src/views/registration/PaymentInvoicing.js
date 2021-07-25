@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   CBadge,
   CButton,
@@ -46,6 +46,95 @@ const fields = [
 ]
 
 const PaymentInvoicing = () => {
+  const [modalInvoice, setModalInvoice] = useState(false)
+  const [modalReceipt, setModalReceipt] = useState(false)
+
+  const [dataState, setDataState] = useState({
+    type: '',
+    division: '',
+    delegation: '',
+    street: '',
+    city: '',
+    state: '',
+    zipcode: '',
+    contact: '',
+    email: '',
+    phone: '',
+    window: ''
+  })
+
+  function generateInvoice() {
+    setDataState({
+      type: '',
+      division: '',
+      delegation: '',
+      street: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      contact: '',
+      email: '',
+      phone: '',
+      window: ''
+    })
+
+    setModalInvoice(false)
+  }
+
+  function cancelInvoice() {
+    setDataState({
+      type: '',
+      division: '',
+      delegation: '',
+      street: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      contact: '',
+      email: '',
+      phone: '',
+      window: ''
+    })
+
+    setModalInvoice(false)
+  }
+
+  function generateReceipt() {
+    setDataState({
+      type: '',
+      division: '',
+      delegation: '',
+      street: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      contact: '',
+      email: '',
+      phone: '',
+      window: ''
+    })
+
+    setModalReceipt(false)
+  }
+
+  function cancelReceipt() {
+    setDataState({
+      type: '',
+      division: '',
+      delegation: '',
+      street: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      contact: '',
+      email: '',
+      phone: '',
+      window: ''
+    })
+
+    setModalReceipt(false)
+  }
+
   return (
     <>
       <CRow>
@@ -58,10 +147,10 @@ const PaymentInvoicing = () => {
             <CCardBody>
               <CRow className="align-items-left">
                 <CCol lg="3">
-                  <CButton block color="primary">Custom Payment Invoice</CButton>
+                  <CButton block color="primary" onClick={() => setModalInvoice(!modalInvoice)}>Custom Payment Invoice</CButton>
                 </CCol>
                 <CCol lg="3">
-                  <CButton block color="primary">Custom Payment Receipt</CButton>
+                  <CButton block color="primary" onClick={() => setModalReceipt(!modalReceipt)}>Custom Payment Receipt</CButton>
                 </CCol>
               </CRow>
               <br></br>

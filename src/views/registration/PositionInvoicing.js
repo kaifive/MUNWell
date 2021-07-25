@@ -14,6 +14,7 @@ import {
   CRow
 } from '@coreui/react'
 import { positionPDF } from 'src/reusable/jsPDF'
+
 import registrationData from '../../data/MockData/MockRegistration'
 
 import { getStatus } from './positionInvoicingHelper'
