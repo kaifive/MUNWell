@@ -30,6 +30,7 @@
     "classnames": "^2.2.6",
     "core-js": "^3.9.1",
     "enzyme": "^3.11.0",
+    "glightbox": "^3.0.9",
     "jest-canvas-mock": "^2.3.1",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.15",

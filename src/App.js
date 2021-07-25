@@ -13,6 +13,7 @@ const TheLayout = React.lazy(() => import('./containers/TheLayout'));
 
 // Pages
 const PageNotFound = React.lazy(() => import('./views/pages/page404/Page404'));
+const Home = React.lazy(() => import('./views/pages/home/Home'));
 
 class App extends Component {
   render() {
@@ -20,7 +21,7 @@ class App extends Component {
       <HashRouter>
         <React.Suspense fallback={loading}>
           <Switch>
-            <Route exact path="/" name="Home" render={props => <TheLayout {...props} />} />
+            <Route exact path="/" name="Home" render={props => <Home {...props} />} />
             <Route exact path="/dashboard" name="Dashboard" render={props => <TheLayout {...props} />} />
             <Route exact path="/documentation" name="Documentation" render={props => <TheLayout {...props} />} />
             <Route exact path="/settings" name="Settings" render={props => <TheLayout {...props} />} />
