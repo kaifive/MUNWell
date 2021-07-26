@@ -1,6 +1,7 @@
 import registrationData from '../../data/MockData/MockRegistration'
 import awardData from '../../data/MockData/MockAwards'
 import awardTypes from '../../data/MockData/MockAwardTypes'
+import committeeData from 'src/data/MockData/MockCommittees';
 
 export function exportTable() {
     let data = []
@@ -77,7 +78,25 @@ export function getRawScore(item) {
 }
 
 export function getPerCapitaScore(item) {
-    return (getRawScore(item) / item.delegates).toFixed(5)
+    let delegations = 0
+
+    let i;
+    for (i = 0; i < committeeData.length; i++) {
+        let assignments = committeeData[i].assignments.split(",")
+
+        let j;
+        for (j = 0; j < assignments.length; j++) {
+            if (assignments[j] === item.delegation) {
+                delegations = delegations + 1;
+            }
+        }
+    }
+
+    let calculated = (getRawScore(item) / delegations).toFixed(5)
+
+    let score = isNaN(calculated) ? "0.00000" : calculated
+
+    return score
 }
 
 export function getScopedSlots(committeeData) {

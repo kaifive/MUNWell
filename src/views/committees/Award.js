@@ -170,7 +170,7 @@ const Award = ({ match: { params: { committee } } }) => {
                                 <CLabel htmlFor="award-delegation">Delegation</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CSelect custom name="select" id="award-delegation" disabled>
+                                <CSelect custom name="select" id="award-delegation">
                                     {getDelegation(awardsState.position, json)}
                                 </CSelect>
                             </CCol>

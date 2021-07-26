@@ -300,12 +300,7 @@ const Documentation = () => {
                                                 <i><strong>POSITION INVOICING ACTIONS</strong></i>
                                                 <br />
                                                 To download a delegation’s position invoice, select <strong>Download Position Invoice</strong> from the actions dropdown.
-                                                <br />
-                                                <br />
-                                                <i><strong>CREATING CUSTOM POSITION INVOICES</strong></i>
-                                                <br />
-                                                Above the “Position Invoicing” table, there is a <strong>Custom Position Invoice</strong> button that allows conference organizers to create individual custom position invoices if needed. Clicking this button opens a form of required data to generate a custom position assignment invoice.
-                                            </CCol>
+                                                </CCol>
                                         </CCardBody>
                                     </CCollapse>
                                 </CCard>
@@ -486,7 +481,7 @@ const Documentation = () => {
                                             <CCol xs="12" md="12">
                                                 <i><strong>DELEGATION AWARDS TABLE</strong></i>
                                                 <br />
-                                                The “Delegation Awards” table calculates a score for every delegation in the event that a conference wants to distribute delegation awards. The leftmost columns list a delegation's name and their division, allowing conference organizers to sort delegations by different delegation award divisions. The next columns list each type of award specified in the award settings on the <strong>Settings</strong> page, along with its corresponding point value, as well as the number of each award that the delegation received. The “Raw Score” of a delegation is calculated by the sum of all of their awards taking into consideration the different point values of each award. The “Per Capita Score” of a delegation is calculated by dividing a delegation’s raw score by the number of delegates in the delegation.
+                                                The “Delegation Awards” table calculates a score for every delegation in the event that a conference wants to distribute delegation awards. The leftmost columns list a delegation's name and their division, allowing conference organizers to sort delegations by different delegation award divisions. The next columns list each type of award specified in the award settings on the <strong>Settings</strong> page, along with its corresponding point value, as well as the number of each award that the delegation received. The “Raw Score” of a delegation is calculated by the sum of all of their awards taking into consideration the different point values of each award. The “Per Capita Score” of a delegation is calculated by dividing a delegation’s raw score by the number of delegations/number of assigned positions a delegation has.
                                                 <br />
                                                 <br />
                                                 Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.

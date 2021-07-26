@@ -46,18 +46,14 @@ const PositionInvoicing = () => {
               Position Assignment Invoicing Data
             </CCardHeader>
             <CCardBody>
-              <CRow className="align-items-left">
-                <CCol lg="3">
-                  <CButton block color="primary">Custom Position Invoice</CButton>
-                </CCol>
-              </CRow>
-              <br></br>
               <CDataTable
                 items={registrationData}
                 fields={fields}
                 hover
                 striped
                 sorter
+                tableFilter
+                itemsPerPageSelect
                 itemsPerPage={10}
                 pagination
                 scopedSlots={{

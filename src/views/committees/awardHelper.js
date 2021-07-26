@@ -1,3 +1,4 @@
+import registrationData from 'src/data/MockData/MockRegistration'
 import awardData from '../../data/MockData/MockAwards'
 import committeeData from '../../data/MockData/MockCommittees'
 
@@ -70,16 +71,15 @@ export function getPositions(committee) {
 
     let i;
     for (i = 0; i < positions.length; i++) {
-        if (assignments[i] !== "") {
             data[i + 1] = <option value={positions[i]}>{positions[i]}</option>
-        }
+        
     }
 
     return data
 }
 
 export function getDelegation(position, committee) {
-    let delegation;
+    let delegation = getAllDelegations()
 
     let positions = committee.positions.split(",")
     let assignments = committee.assignments.split(",")
@@ -90,12 +90,14 @@ export function getDelegation(position, committee) {
 
     let i;
     for (i = 0; i < positions.length; i++) {
-        if (positions[i] === position) {
+        if (positions[i] === position && assignments[i] !== "") {
             delegation = <option value={assignments[i]}>{assignments[i]}</option>
+            return delegation
         }
     }
 
     return delegation
+
 }
 
 export function exportTable(committee) {
@@ -109,4 +111,16 @@ export function exportTable(committee) {
     }
 
     return data
+}
+
+function getAllDelegations() {
+    let delegations = [<option value="">Select Delegation</option>]
+
+    let i;
+    for(i = 0; i < registrationData.length; i++) {
+        let temp = registrationData[i].delegation
+        delegations.push(<option value={temp}>{temp}</option>)
+    }
+
+    return delegations
 }
