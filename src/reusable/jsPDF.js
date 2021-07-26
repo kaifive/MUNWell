@@ -5,7 +5,10 @@ import committeeData from "src/data/MockData/MockCommittees";
 import awardData from "src/data/MockData/MockAwards";
 
 import logo from '../assets/branding/Banner.png'
-import border from '../assets/awards/AwardsBorder.png'
+
+import { participationLayout1, committeeLayout1 } from "./awardLayouts";
+import { receiptLayout } from "./receiptLayout";
+import { invoiceLayout } from "./invoiceLayout";
 
 const font = "times"
 
@@ -121,151 +124,9 @@ export function invoicePDF(item) {
         format: [11, 8.5]
     });
 
-    let image = new Image();
-    image.src = logo;
+    invoiceLayout(doc, item)
 
-    let extension = image.src.split(".").pop().toUpperCase()
-    doc.addImage(image, extension, 6, .75, 1.5, 1.5);
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(24)
-    doc.text("PAYMENT INVOICE", 1, 1);
-
-    doc.setFontSize(14)
-    doc.text("Conference Name", 1, 1.3);
-
-    doc.setFont(font, "normal")
-    doc.setFontSize(12)
-    doc.text("Organization", 1, 1.55);
-
-    doc.setFont(font, "italic")
-    doc.text("12660 Marcum Ct.,", 1, 1.75);
-    doc.text("Fairfax, VA 22033", 1, 1.95);
-
-    doc.setFont(font, "bold")
-    doc.text("BILL TO:", 1, 2.45)
-    doc.text("INVOICE SUMMARY:", 5.25, 2.45)
-
-    doc.setFont(font, "normal")
-    doc.text(item.contact, 1, 2.75)
-    doc.text(item.delegation, 1, 2.95)
-
-    doc.setFont(font, "italic")
-    doc.text(item.street + ",", 1, 3.15)
-    doc.text(item.city + ", " + item.state + " " + item.zipcode, 1, 3.35)
-
-    doc.setFont(font, "normal")
-    doc.text("Invoice Number:", 5.25, 2.75)
-    doc.text("Invoice Date:", 5.25, 2.95)
-
-    let today = new Date()
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0');
-    var yyyy = today.getFullYear();
-
-    today = mm + '/' + dd + '/' + yyyy;
-
-    let invoiceNumber = item.id
-
-    while (invoiceNumber.length < 5) {
-        invoiceNumber = "0" + invoiceNumber;
-    }
-
-    doc.text("#" + invoiceNumber, 7.5, 2.75, { align: "right" })
-
-    doc.text(today, 7.5, 2.95, { align: "right" })
-
-    doc.setLineWidth(.01);
-    doc.line(1, 3.65, 7.5, 3.65)
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(24)
-    doc.text("INVOICE TOTAL", 1, 4);
-
-    let delFee = item.delegates * 20
-    let schoolFee = 0
-
-    let body = [[item.delegates, 'Delegate Fee - ' + item.window + ' Registration Rate', '$20.00', '$' + delFee.toFixed(2)]]
-
-    if (item.type === "Delegation") {
-        schoolFee = 30
-        body[1] = ['1', 'School Fee - ' + item.window + ' Registration Rate', '$30.00', '$30.00']
-    }
-
-    body[body.length] = ['', '', '', '']
-    body[body.length] = ['', '', 'Total:', "$" + (delFee + schoolFee).toFixed(2)]
-
-    doc.text("$" + (delFee + schoolFee).toFixed(2), 7.5, 4, { align: "right" });
-
-    doc.line(1, 4.12, 7.5, 4.12)
-
-    doc.autoTable({
-        theme: "plain",
-        startY: 4.25,
-        margin: { left: 1 },
-        tableWidth: 6.5,
-        styles: {
-            font: "times",
-            fontSize: 12
-        },
-        columnStyles: {
-            0: {
-                halign: 'center',
-            },
-            1: {
-                halign: 'left',
-            },
-            2: {
-                halign: 'right',
-            },
-            3: {
-                halign: 'right',
-            }
-        },
-        head: [['QTY', 'Description', 'Unit Price', 'Amount']],
-        body: body,
-        didParseCell: function (data) {
-            if (data.row.index === 0 && data.cell.section === 'head') {
-                if (data.column.index === 0) {
-                    data.cell.styles.halign = "center"
-                } else if (data.column.index === 1) {
-                    data.cell.styles.halign = "left"
-                } else {
-                    data.cell.styles.halign = "right"
-                }
-            }
-
-            if (data.row.index === body.length - 1 && data.column.index === 2) {
-                data.cell.styles.fontStyle = 'bold';
-            }
-        },
-    })
-
-    let termsAndConditions = [[]]
-
-    if (termsAndConditions[0].length > 0) {
-        doc.setFont(font, "bold")
-        doc.setFontSize(12)
-        doc.text("TERMS AND CONDITIONS:", 1, 6.25)
-
-        doc.autoTable({
-            theme: "plain",
-            startY: 6.35,
-            margin: { left: 1 },
-            tableWidth: 6.5,
-            styles: {
-                font: "times",
-                fontSize: 12,
-                cellPadding: 0,
-            },
-            body: termsAndConditions
-        })
-
-    }
-
-    image.onload = function () {
-        doc.save(item.delegation + " Payment Invoice.pdf");
-    }
+    doc.save(item.delegation + " Payment Invoice.pdf");
 }
 
 export function receiptPDF(item) {
@@ -275,99 +136,8 @@ export function receiptPDF(item) {
         format: [11, 8.5]
     });
 
-    let image = new Image();
-    image.src = logo;
-
-    let extension = image.src.split(".").pop().toUpperCase()
-    doc.addImage(image, extension, 6, .75, 1.5, 1.5);
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(24)
-    doc.text("PAYMENT RECEIPT", 1, 1);
-
-    doc.setFontSize(14)
-    doc.text("Conference Name", 1, 1.3);
-
-    doc.setFont(font, "normal")
-    doc.setFontSize(12)
-    doc.text("Organization", 1, 1.55);
-
-    doc.setFont(font, "italic")
-    doc.text("12660 Marcum Ct.,", 1, 1.75);
-    doc.text("Fairfax, VA 22033", 1, 1.95);
-
-    doc.setFont(font, "bold")
-    doc.text("RECEIPT FOR:", 1, 2.45)
-    doc.text("INVOICE SUMMARY:", 5.25, 2.45)
-
-    doc.setFont(font, "normal")
-    doc.text(item.contact, 1, 2.75)
-    doc.text(item.delegation, 1, 2.95)
-
-    doc.setFont(font, "italic")
-    doc.text(item.street + ",", 1, 3.15)
-    doc.text(item.city + ", " + item.state + " " + item.zipcode, 1, 3.35)
-
-    doc.setFont(font, "normal")
-    doc.text("Invoice Number:", 5.25, 2.75)
-    doc.text("Invoice Total:", 5.25, 2.95)
-
-    let invoiceNumber = item.id
-
-    while (invoiceNumber.length < 5) {
-        invoiceNumber = "0" + invoiceNumber;
-    }
-
-    let delFee = item.delegates * 20
-    let schoolFee = 0
-    let paymentOf = "Conference Abbreviation - \n\t" + item.delegates + " Delegates"
-
-    if (item.type === "Delegation") {
-        schoolFee = 30
-        paymentOf = paymentOf + " & School Fee"
-    }
-
-    paymentOf = paymentOf + " on " + item.window + " Registration Rate"
-
-    doc.text("#" + invoiceNumber, 7.5, 2.75, { align: "right" })
-    doc.text("$" + (delFee + schoolFee).toFixed(2), 7.5, 2.95, { align: "right" })
-
-    let paymentInfo = [["Delegation", item.delegation], [], ["Received From", item.contact], [], ["For Payment of", paymentOf], [], ["Received By", "Khai Nguyen | Conference Abbreviation Secretary-General"]]
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(12)
-    doc.text("TERMS AND CONDITIONS:", 1, 3.85)
-
-    doc.autoTable({
-        theme: "plain",
-        startY: 3.95,
-        margin: { left: 1 },
-        tableWidth: 6.5,
-        styles: {
-            font: "times",
-            fontSize: 12,
-            cellPadding: 0,
-            cellWidth: 'auto',
-        },
-        body: paymentInfo,
-        didParseCell: function (data) {
-            if (data.column.index === 0) {
-                data.cell.styles.fontStyle = 'bold';
-            }
-        },
-    })
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(12)
-    doc.text("Thank you for your payment.", 4.25, 6.15, { align: "center" })
-    doc.text("We look forward to seeing you at Conference Abbreviation!", 4.25, 6.35, { align: "center" })
-
-    doc.setFont(font, "italic")
-    doc.text("Conference Address", 4.25, 6.55, { align: "center" })
-
-    image.onload = function () {
-        doc.save(item.delegation + " Payment Receipt.pdf");
-    }
+    receiptLayout(doc, item)
+    doc.save(item.delegation + " Payment Receipt.pdf");
 }
 
 export function positionPDF(item) {
@@ -473,63 +243,8 @@ export function committeeAwardsPDFLayout1(item) {
             let j;
             for (j = 0; j < nameCount; j++) {
                 award = true;
-                doc.setFont(font, "bold")
-                doc.setFontSize(33)
-                doc.text("Chantilly High School Model United Nations", 5.5, 1.25, { align: "center" })
 
-                doc.setFont(font, "italic")
-                doc.setFontSize(14)
-                doc.text("presents the award of", 5.5, 1.65, { align: "center" })
-
-                doc.setFont(font, "bold")
-                doc.setFontSize(30)
-                doc.text(awardData[i].type, 5.5, 2.2, { align: "center" })
-
-                doc.setFont(font, "italic")
-                doc.setFontSize(14)
-                doc.text("to", 5.5, 2.6, { align: "center" })
-
-                doc.setFont(font, "bold")
-                doc.setFontSize(24)
-                doc.text(names[j], 5.5, 3.05, { align: "center" })
-
-                doc.setFont(font, "italic")
-                doc.setFontSize(14)
-                doc.text("representing", 5.5, 3.45, { align: "center" })
-
-                doc.setFont(font, "bold")
-                doc.setFontSize(20)
-                doc.text(awardData[i].position, 5.5, 3.9, { align: "center" })
-
-                doc.setFont(font, "italic")
-                doc.setFontSize(14)
-                doc.text("from", 5.5, 4.3, { align: "center" })
-
-                doc.setFont(font, "bold")
-                doc.setFontSize(20)
-                doc.text(awardData[i].delegation, 5.5, 4.8, { align: "center" })
-
-                doc.setFont(font, "italic")
-                doc.setFontSize(14)
-                doc.text("in", 5.5, 5.2, { align: "center" })
-
-                doc.setFont(font, "bold")
-                doc.setFontSize(20)
-                doc.text(awardData[i].committee, 5.5, 5.6, { align: "center" })
-
-                doc.setLineWidth(.01);
-                doc.line(1.5, 6.75, 4.5, 6.75)
-                doc.line(6.5, 6.75, 9.5, 6.75)
-
-                doc.setFont(font, "normal")
-                doc.setFontSize(14)
-                doc.text("Khai Nguyen", 3, 7, { align: "center" })
-                doc.text("Khai Nguyen", 8, 7, { align: "center" })
-
-                doc.setFont(font, "italic")
-                doc.setFontSize(12)
-                doc.text("Conference Abbreviation Secretary-General", 3, 7.25, { align: "center" })
-                doc.text("Committee Chair", 8, 7.25, { align: "center" })
+                committeeLayout1(doc, awardData[i].type, awardData[i].committee, awardData[i].position, names[j], awardData[i].delegation)
 
                 doc.addPage()
             }
@@ -553,67 +268,18 @@ export function participationAwardsPDFLayout1(item, type) {
         format: [11, 8.5]
     });
 
-    let image = new Image();
-    image.src = border;
-
-    let extension = image.src.split(".").pop().toUpperCase()
-
     if (type === "Committee") {
         let positions = item.positions.split(",")
         let assignments = item.assignments.split(",")
 
         let i;
         for (i = 0; i < positions.length; i++) {
-            doc.addImage(image, extension, .15, .15, 10.7, 8.2);
+            if (assignments[i] !== "") {
+                participationLayout1(doc, item.committee, positions[i], assignments[i])
 
-            doc.setFont(font, "bold")
-            doc.setFontSize(36)
-            doc.text("CERTIFICATE OF PARTICIPATION", 5.5, 1.75, { align: "center" })
-
-            doc.setFont(font, "normal")
-            doc.setFontSize(14)
-            doc.text("Conference Name recognizes the delegation of", 5.5, 2.25, { align: "center" })
-
-            doc.setFont(font, "bold")
-            doc.setFontSize(30)
-            doc.text(positions[i], 5.5, 2.85, { align: "center" })
-
-            doc.setFont(font, "normal")
-            doc.setFontSize(14)
-            doc.text("a delegate of", 5.5, 3.35, { align: "center" })
-
-            doc.setFont(font, "bold")
-            doc.setFontSize(24)
-            doc.text(assignments[i], 5.5, 3.95, { align: "center" })
-
-            doc.setFont(font, "normal")
-            doc.setFontSize(14)
-            doc.text("for successfully participating at Conference Abbreviation in the", 5.5, 4.55, { align: "center" })
-
-            doc.setFont(font, "bold")
-            doc.setFontSize(20)
-            doc.text(item.committee, 5.5, 5.15, { align: "center" })
-
-            doc.setFont(font, "italic")
-            doc.setFontSize(12)
-            doc.text("01/01/2012 - 01/03/2012", 5.5, 5.75, { align: "center" })
-
-            doc.setLineWidth(.01);
-            doc.line(1.5, 6.75, 4.5, 6.75)
-            doc.line(6.5, 6.75, 9.5, 6.75)
-
-            doc.setFont(font, "normal")
-            doc.setFontSize(14)
-            doc.text("Khai Nguyen", 3, 7, { align: "center" })
-            doc.text("Khai Nguyen", 8, 7, { align: "center" })
-
-            doc.setFont(font, "italic")
-            doc.setFontSize(12)
-            doc.text("Conference Abbreviation Secretary-General", 3, 7.25, { align: "center" })
-            doc.text("Committee Chair", 8, 7.25, { align: "center" })
-
-            if (i !== positions.length - 1) {
-                doc.addPage();
+                if (i !== positions.length - 1) {
+                    doc.addPage();
+                }
             }
         }
 
@@ -627,55 +293,9 @@ export function participationAwardsPDFLayout1(item, type) {
             let j;
             for (j = 0; j < assignments.length; j++) {
                 if (assignments[j] === item.delegation) {
-                    doc.addImage(image, extension, .15, .15, 10.7, 8.2);
+                    participationLayout1(doc, committeeData[i].committee, positions[j], assignments[j])
 
-                    doc.setFont(font, "bold")
-                    doc.setFontSize(36)
-                    doc.text("CERTIFICATE OF PARTICIPATION", 5.5, 1.75, { align: "center" })
-
-                    doc.setFont(font, "normal")
-                    doc.setFontSize(14)
-                    doc.text("Conference Name recognizes the delegation of", 5.5, 2.25, { align: "center" })
-
-                    doc.setFont(font, "bold")
-                    doc.setFontSize(30)
-                    doc.text(positions[j], 5.5, 2.85, { align: "center" })
-
-                    doc.setFont(font, "normal")
-                    doc.setFontSize(14)
-                    doc.text("a delegate of", 5.5, 3.35, { align: "center" })
-
-                    doc.setFont(font, "bold")
-                    doc.setFontSize(24)
-                    doc.text(assignments[j], 5.5, 3.95, { align: "center" })
-
-                    doc.setFont(font, "normal")
-                    doc.setFontSize(14)
-                    doc.text("for successfully participating at Conference Abbreviation in the", 5.5, 4.55, { align: "center" })
-
-                    doc.setFont(font, "bold")
-                    doc.setFontSize(20)
-                    doc.text(committeeData[i].committee, 5.5, 5.15, { align: "center" })
-
-                    doc.setFont(font, "italic")
-                    doc.setFontSize(12)
-                    doc.text("01/01/2012 - 01/03/2012", 5.5, 5.75, { align: "center" })
-
-                    doc.setLineWidth(.01);
-                    doc.line(1.5, 6.75, 4.5, 6.75)
-                    doc.line(6.5, 6.75, 9.5, 6.75)
-
-                    doc.setFont(font, "normal")
-                    doc.setFontSize(14)
-                    doc.text("Khai Nguyen", 3, 7, { align: "center" })
-                    doc.text("Khai Nguyen", 8, 7, { align: "center" })
-
-                    doc.setFont(font, "italic")
-                    doc.setFontSize(12)
-                    doc.text("Conference Abbreviation Secretary-General", 3, 7.25, { align: "center" })
-                    doc.text("Committee Chair", 8, 7.25, { align: "center" })
-
-                    doc.addPage()
+                    doc.addPage();
                 }
             }
         }
@@ -688,143 +308,32 @@ export function participationAwardsPDFLayout1(item, type) {
 }
 
 export function customCommitteeAwardLayout1(item) {
-    let type = item.type
-    let committee = item.committee
-    let position = item.position
-    let delegate = item.delegate
-    let delegation = item.delegation
-
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
         format: [11, 8.5]
     });
 
-    doc.setFont(font, "bold")
-    doc.setFontSize(33)
-    doc.text("Chantilly High School Model United Nations", 5.5, 1.25, { align: "center" })
+    committeeLayout1(doc, item.type, item.committee, item.position, item.delegate, item.delegation)
 
-    doc.setFont(font, "italic")
-    doc.setFontSize(14)
-    doc.text("presents the award of", 5.5, 1.65, { align: "center" })
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(30)
-    doc.text(type, 5.5, 2.2, { align: "center" })
-
-    doc.setFont(font, "italic")
-    doc.setFontSize(14)
-    doc.text("to", 5.5, 2.6, { align: "center" })
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(24)
-    doc.text(delegate, 5.5, 3.05, { align: "center" })
-
-    doc.setFont(font, "italic")
-    doc.setFontSize(14)
-    doc.text("representing", 5.5, 3.45, { align: "center" })
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(20)
-    doc.text(position, 5.5, 3.9, { align: "center" })
-
-    doc.setFont(font, "italic")
-    doc.setFontSize(14)
-    doc.text("from", 5.5, 4.3, { align: "center" })
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(20)
-    doc.text(delegation, 5.5, 4.8, { align: "center" })
-
-    doc.setFont(font, "italic")
-    doc.setFontSize(14)
-    doc.text("in", 5.5, 5.2, { align: "center" })
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(20)
-    doc.text(committee, 5.5, 5.6, { align: "center" })
-
-    doc.setLineWidth(.01);
-    doc.line(1.5, 6.75, 4.5, 6.75)
-    doc.line(6.5, 6.75, 9.5, 6.75)
-
-    doc.setFont(font, "normal")
-    doc.setFontSize(14)
-    doc.text("Khai Nguyen", 3, 7, { align: "center" })
-    doc.text("Khai Nguyen", 8, 7, { align: "center" })
-
-    doc.setFont(font, "italic")
-    doc.setFontSize(12)
-    doc.text("Conference Abbreviation Secretary-General", 3, 7.25, { align: "center" })
-    doc.text("Committee Chair", 8, 7.25, { align: "center" })
-
-    doc.save(delegate + " Custom Award.pdf");
+    doc.save(item.delegate + " Custom Award.pdf");
 }
 
 export function customParticipationAwardLayout1(item) {
-    let type = item.type
-    let committee = item.committee
-    let position = item.position
-    let delegate = item.delegate
-    let delegation = item.delegation
-
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
         format: [11, 8.5]
     });
 
-    let image = new Image();
-    image.src = border;
+    participationLayout1(doc, item.committee, item.position, item.delegation)
 
-    let extension = image.src.split(".").pop().toUpperCase()
-    doc.addImage(image, extension, .15, .15, 10.7, 8.2);
+    doc.save(item.delegate + " Custom Award.pdf");
+}
 
-    doc.setFont(font, "bold")
-    doc.setFontSize(36)
-    doc.text("CERTIFICATE OF PARTICIPATION", 5.5, 1.75, { align: "center" })
+export function customPaymentReceipt(item) {
 
-    doc.setFont(font, "normal")
-    doc.setFontSize(14)
-    doc.text("Conference Name recognizes the delegation of", 5.5, 2.25, { align: "center" })
 
-    doc.setFont(font, "bold")
-    doc.setFontSize(30)
-    doc.text(position, 5.5, 2.85, { align: "center" })
 
-    doc.setFont(font, "normal")
-    doc.setFontSize(14)
-    doc.text("a delegate of", 5.5, 3.35, { align: "center" })
 
-    doc.setFont(font, "bold")
-    doc.setFontSize(24)
-    doc.text(delegation, 5.5, 3.95, { align: "center" })
-
-    doc.setFont(font, "normal")
-    doc.setFontSize(14)
-    doc.text("for successfully participating at Conference Abbreviation in the", 5.5, 4.55, { align: "center" })
-
-    doc.setFont(font, "bold")
-    doc.setFontSize(20)
-    doc.text(committee, 5.5, 5.15, { align: "center" })
-
-    doc.setFont(font, "italic")
-    doc.setFontSize(12)
-    doc.text("01/01/2012 - 01/03/2012", 5.5, 5.75, { align: "center" })
-
-    doc.setLineWidth(.01);
-    doc.line(1.5, 6.75, 4.5, 6.75)
-    doc.line(6.5, 6.75, 9.5, 6.75)
-
-    doc.setFont(font, "normal")
-    doc.setFontSize(14)
-    doc.text("Khai Nguyen", 3, 7, { align: "center" })
-    doc.text("Khai Nguyen", 8, 7, { align: "center" })
-
-    doc.setFont(font, "italic")
-    doc.setFontSize(12)
-    doc.text("Conference Abbreviation Secretary-General", 3, 7.25, { align: "center" })
-    doc.text("Committee Chair", 8, 7.25, { align: "center" })
-
-    doc.save(delegate + " Custom Award.pdf");
 }

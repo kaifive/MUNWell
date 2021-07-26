@@ -36,3 +36,15 @@ export function getInvoiceTotal(item) {
     amount = amount.toFixed(2)
     return amount
 }
+
+export function getDelegations() {
+    let delegations = [<option value="" disabled>Select Delegation</option>]
+
+    let i;
+    for (i = 0; i < registrationData.length; i++) {
+        let temp = registrationData[i].delegation
+        delegations[i + 1] = <option value={temp}>{temp}</option>
+    }
+
+    return delegations
+}
