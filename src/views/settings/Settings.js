@@ -29,11 +29,14 @@ import {
     CModalTitle,
     CLabel,
     CRow,
+    CSelect,
     CTextarea,
 } from '@coreui/react';
 
 import awards from '../../data/MockData/MockAwardTypes'
 import licenseData from '../../data/MockData/MockLicense'
+
+import { getStateList } from 'src/reusable/StateList';
 
 const getBadge = status => {
     switch (status) {
@@ -207,7 +210,9 @@ const Settings = () => {
                                                         <CInput id="conf-city" name="conf-city" placeholder="City" />
                                                     </CCol>
                                                     <CCol xs="12" md="3">
-                                                        <CInput id="conf-state" name="conf-state" placeholder="State" />
+                                                        <CSelect custom name="conf-state">
+                                                            {getStateList()}
+                                                        </CSelect>
                                                     </CCol>
                                                     <CCol xs="12" md="3">
                                                         <CInput id="conf-postal" name="conf-postal" placeholder="Postal Code" />
@@ -258,7 +263,7 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-addr">Invoice Address</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="9">
-                                                        <CInput id="conf-stree" name="conf-street" placeholder="Street" />
+                                                        <CInput id="conf-street" name="conf-street" placeholder="Street" />
                                                     </CCol>
                                                 </CFormGroup>
                                                 <CFormGroup row>
@@ -267,7 +272,9 @@ const Settings = () => {
                                                         <CInput id="conf-city" name="conf-city" placeholder="City" />
                                                     </CCol>
                                                     <CCol xs="12" md="3">
-                                                        <CInput id="conf-state" name="conf-state" placeholder="State" />
+                                                        <CSelect custom name="conf-state">
+                                                            {getStateList()}
+                                                        </CSelect>
                                                     </CCol>
                                                     <CCol xs="12" md="3">
                                                         <CInput id="conf-postal" name="conf-postal" placeholder="Postal Code" />

@@ -29,6 +29,7 @@ import { Export } from 'src/reusable'
 import registrationData from '../../data/MockData/MockRegistration'
 
 import { exportTable, getEmailList } from './registrationHelper'
+import { getStateList } from 'src/reusable/StateList';
 
 const getBadge = label => {
   switch (label) {
@@ -376,12 +377,14 @@ const Registration = () => {
                 }} />
               </CCol>
               <CCol xs="12" md="2">
-                <CInput disabled={status} name="regiState" placeholder="State" value={registrationState.state} onChange={e => {
+                <CSelect custom name="regiState" value={registrationState.state} onChange={e => {
                   const val = e.target.value
                   setRegistrationState(prevState => {
                     return { ...prevState, state: val }
                   });
-                }} />
+                }}>
+                  {getStateList()}
+                </CSelect>
               </CCol>
               <CCol xs="12" md="3">
                 <CInput disabled={status} name="regiZip" placeholder="Zip Code" value={registrationState.zipcode} onChange={e => {

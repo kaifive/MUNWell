@@ -126,7 +126,7 @@ export function getAlerts(committee) {
                                 {registrationData[i].delegation} requires <strong>{alertNumber}</strong> {position} in the {committee.committee}
                             </CCol>
                             <CCol lg="3">
-                                <CButton block color="primary">Auto Assign</CButton>
+                                <CButton block color="primary" onClick={() => autoAssign(committee)}>Auto Assign</CButton>
                             </CCol>
                         </CRow>
                     </CAlert>
@@ -139,4 +139,21 @@ export function getAlerts(committee) {
     }
 
     return alerts
+}
+
+function autoAssign(committee) {
+    let positions = committee.positions.split(",")
+    let assignments = committee.assignments.split(",")
+    let indexes = []
+
+    let i;
+    for(i = 0; i < assignments.length; i++) {
+        if(assignments[i] === "") {
+            indexes.push(i)
+        }
+    }
+
+    let index = indexes[parseInt(Math.random() * (indexes.length))];
+    
+    console.log(positions[index])
 }

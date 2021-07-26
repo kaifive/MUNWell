@@ -340,7 +340,7 @@ const CommitteeRoster = () => {
                                 <CLabel htmlFor="committee-positions">Committee Positions</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CTextarea name="committeePositions" rows="9" placeholder="Committee Positions" value={committeeState.positions} onChange={e => {
+                                <CTextarea name="committeePositions" rows="9" placeholder='Committee Positions - Separate multiple positions with a comma (",")' value={committeeState.positions} onChange={e => {
                                     const val = e.target.value
                                     setCommitteeState(prevState => {
                                         return { ...prevState, positions: val }
