@@ -2,6 +2,8 @@ import registrationData from '../../data/MockData/MockRegistration'
 import committeeData from '../../data/MockData/MockCommittees'
 import allotmentData from '../../data/MockData/MockAllotments'
 
+import { positionPDF } from 'src/reusable/jsPDF'
+
 export function getStatus(item) {
   let assignedPositions = 0
   let allottedPositions = 0
@@ -42,3 +44,12 @@ export function getStatus(item) {
   return status
 }
 
+
+export function downloadPositionInvoice(item) {
+  if(getStatus(item) === "Unbalanced") {
+    alert(item.delegation + " is unbalanced. Balance the delegation before downloading position invoices.")
+    return
+  }
+
+  positionPDF(item)
+}

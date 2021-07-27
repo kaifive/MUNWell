@@ -16,7 +16,7 @@ import { positionPDF } from 'src/reusable/jsPDF'
 
 import registrationData from '../../data/MockData/MockRegistration'
 
-import { getStatus } from './positionInvoicingHelper'
+import { getStatus, downloadPositionInvoice } from './positionInvoicingHelper'
 
 const getBadge = balance => {
   switch (balance) {
@@ -72,7 +72,7 @@ const PositionInvoicing = () => {
                             Select Action
                           </CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => positionPDF(item)}>Download Position Invoice</CDropdownItem>
+                            <CDropdownItem onClick={() => downloadPositionInvoice(item)}>Download Position Invoice</CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </td>
