@@ -30,7 +30,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 0 ? null : 0)}
                                         >
-                                            <h5 className="m-0 p-0">Dashboard</h5>
+                                            <h5 className="m-0 p-0"><strong>Dashboard</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 0}>
@@ -91,7 +91,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 1 ? null : 1)}
                                         >
-                                            <h5 className="m-0 p-0">Settings</h5>
+                                            <h5 className="m-0 p-0"><strong>Settings</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 1}>
@@ -171,7 +171,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 2 ? null : 2)}
                                         >
-                                            <h5 className="m-0 p-0">Registration Data</h5>
+                                            <h5 className="m-0 p-0"><strong>Registration Data</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 2}>
@@ -210,7 +210,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 3 ? null : 3)}
                                         >
-                                            <h5 className="m-0 p-0">Committee Allotments</h5>
+                                            <h5 className="m-0 p-0"><strong>Committee Allotments</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 3}>
@@ -244,7 +244,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 4 ? null : 4)}
                                         >
-                                            <h5 className="m-0 p-0">Payment Invoicing</h5>
+                                            <h5 className="m-0 p-0"><strong>Payment Invoicing</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 4}>
@@ -283,7 +283,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 5 ? null : 5)}
                                         >
-                                            <h5 className="m-0 p-0">Position Invoicing</h5>
+                                            <h5 className="m-0 p-0"><strong>Position Invoicing</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 5}>
@@ -326,7 +326,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 6 ? null : 6)}
                                         >
-                                            <h5 className="m-0 p-0">Committee Roster</h5>
+                                            <h5 className="m-0 p-0"><strong>Committee Roster</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 6}>
@@ -360,7 +360,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 7 ? null : 7)}
                                         >
-                                            <h5 className="m-0 p-0">Individual Committee - Position Assignments</h5>
+                                            <h5 className="m-0 p-0"><strong>Individual Committee - Position Assignments</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 7}>
@@ -394,7 +394,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 8 ? null : 8)}
                                         >
-                                            <h5 className="m-0 p-0">Individual Committee - Individual Awards</h5>
+                                            <h5 className="m-0 p-0"><strong>Individual Committee - Individual Awards</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 8}>
@@ -442,7 +442,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 9 ? null : 9)}
                                         >
-                                            <h5 className="m-0 p-0">Committee Awards</h5>
+                                            <h5 className="m-0 p-0"><strong>Committee Awards</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 9}>
@@ -473,7 +473,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 10 ? null : 10)}
                                         >
-                                            <h5 className="m-0 p-0">Delegation Awards</h5>
+                                            <h5 className="m-0 p-0"><strong>Delegation Awards</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 10}>
@@ -497,7 +497,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 11 ? null : 11)}
                                         >
-                                            <h5 className="m-0 p-0">Participation Awards</h5>
+                                            <h5 className="m-0 p-0"><strong>Participation Awards</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 11}>
@@ -542,7 +542,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 12 ? null : 12)}
                                         >
-                                            <h5 className="m-0 p-0">Export</h5>
+                                            <h5 className="m-0 p-0"><strong>Export</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 12}>
@@ -572,7 +572,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 13 ? null : 13)}
                                         >
-                                            <h5 className="m-0 p-0">Mail Merge</h5>
+                                            <h5 className="m-0 p-0"><strong>Mail Merge</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 13}>
@@ -604,7 +604,7 @@ const Documentation = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 14 ? null : 14)}
                                         >
-                                            <h5 className="m-0 p-0">Suggestions</h5>
+                                            <h5 className="m-0 p-0"><strong>Suggestions</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 14}>

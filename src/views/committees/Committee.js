@@ -98,7 +98,7 @@ const Committee = ({ match: { params: { committee } } }) => {
                                                         {getActive(item, committee)}
                                                     </CDropdownToggle>
                                                     <CDropdownMenu>
-                                                        {getDelegations(item, committee)}
+                                                        {getDelegations(item, json)}
                                                     </CDropdownMenu>
                                                 </CDropdown>
                                             </td>

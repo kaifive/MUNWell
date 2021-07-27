@@ -67,7 +67,6 @@ export function getPositions(committee) {
     let data = [<option value="" disabled>Select Position</option>]
 
     let positions = committee.positions.split(",")
-    let assignments = committee.assignments.split(",")
 
     let i;
     for (i = 0; i < positions.length; i++) {

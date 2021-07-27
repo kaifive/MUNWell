@@ -377,7 +377,7 @@ const Registration = () => {
                 }} />
               </CCol>
               <CCol xs="12" md="2">
-                <CSelect custom name="regiState" value={registrationState.state} onChange={e => {
+                <CSelect disabled={status} custom name="regiState" value={registrationState.state} onChange={e => {
                   const val = e.target.value
                   setRegistrationState(prevState => {
                     return { ...prevState, state: val }

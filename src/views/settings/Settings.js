@@ -145,7 +145,7 @@ const Settings = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 0 ? null : 0)}
                                         >
-                                            <h5 className="m-0 p-0">Conference Settings</h5>
+                                            <h5 className="m-0 p-0"><strong>Conference Settings</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 0}>
@@ -252,7 +252,7 @@ const Settings = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 1 ? null : 1)}
                                         >
-                                            <h5 className="m-0 p-0">Registration Settings</h5>
+                                            <h5 className="m-0 p-0"><strong>Registration Settings</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 1}>
@@ -414,7 +414,7 @@ const Settings = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 2 ? null : 2)}
                                         >
-                                            <h5 className="m-0 p-0">Award Settings</h5>
+                                            <h5 className="m-0 p-0"><strong>Award Settings</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 2}>
@@ -461,7 +461,7 @@ const Settings = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 3 ? null : 3)}
                                         >
-                                            <h5 className="m-0 p-0">Manuel License</h5>
+                                            <h5 className="m-0 p-0"><strong>Manuel License</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 3}>

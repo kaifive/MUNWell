@@ -5,7 +5,7 @@ import {
   CRow
 } from '@coreui/react'
 
-import '../page404/404.css'
+import './404.css'
 
 const Page404 = () => {
   return (

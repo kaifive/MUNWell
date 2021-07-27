@@ -65,7 +65,7 @@ const TheHeader = () => {
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3" >
           <CHeaderNavLink to="/dashboard">
-            <CButton block color="primary">Logout</CButton>
+            <CButton block color="primary" to="/">Logout</CButton>
           </CHeaderNavLink>
         </CHeaderNavItem>
       </CHeaderNav>

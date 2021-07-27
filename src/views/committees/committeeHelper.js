@@ -35,17 +35,19 @@ export function getActive(item, committee) {
     return "Select Delegation"
 }
 
-export function getDelegations(item, committee) {
+export function getDelegations(item, json) {
     let data = []
 
     let i;
     for (i = 0; i < registrationData.length; i++) {
-        let name = registrationData[i].delegation
+        if (json.division.includes(registrationData[i].division) || registrationData[i].division.includes(json.division)) {
+            let name = registrationData[i].delegation
 
-        if (name === getActive(item, committee)) {
-            data[i] = <CDropdownItem active>{name}</CDropdownItem>
-        } else {
-            data[i] = <CDropdownItem>{name}</CDropdownItem>
+            if (name === getActive(item, json.committee)) {
+                data[i] = <CDropdownItem active>{name}</CDropdownItem>
+            } else {
+                data[i] = <CDropdownItem>{name}</CDropdownItem>
+            }
         }
     }
 
@@ -117,16 +119,18 @@ export function getAlerts(committee) {
             position = "positions"
         }
 
+        let delegation = registrationData[i].delegation
+
         let alert =
             <CRow>
                 <CCol lg="12">
                     <CAlert color="danger">
                         <CRow>
                             <CCol lg="9">
-                                {registrationData[i].delegation} requires <strong>{alertNumber}</strong> {position} in the {committee.committee}
+                                {delegation} requires <strong>{alertNumber}</strong> {position} in the {committee.committee}
                             </CCol>
                             <CCol lg="3">
-                                <CButton block color="primary" onClick={() => autoAssign(committee)}>Auto Assign</CButton>
+                                <CButton block color="primary" onClick={() => autoAssign(committee, delegation, alertNumber)}>Auto Assign</CButton>
                             </CCol>
                         </CRow>
                     </CAlert>
@@ -141,19 +145,39 @@ export function getAlerts(committee) {
     return alerts
 }
 
-function autoAssign(committee) {
+function autoAssign(committee, delegation, alertNumber) {
     let positions = committee.positions.split(",")
     let assignments = committee.assignments.split(",")
     let indexes = []
+    let openPositions = 0
 
     let i;
-    for(i = 0; i < assignments.length; i++) {
-        if(assignments[i] === "") {
-            indexes.push(i)
+    for (i = 0; i < assignments.length; i++) {
+        if (alertNumber > 0) {
+            if (assignments[i] === "") {
+                indexes.push(i)
+            }
+        } else {
+            if (assignments[i] === delegation) {
+                indexes.push(i)
+            }
+        }
+
+        if (assignments[i] === "") {
+            openPositions = openPositions + 1
         }
     }
 
-    let index = indexes[parseInt(Math.random() * (indexes.length))];
-    
-    console.log(positions[index])
+    if (openPositions < alertNumber) {
+        alert("Not enough positions to assign to " + delegation)
+        return
+    }
+
+    let j;
+    for (j = 0; j < Math.abs(alertNumber); j++) {
+        let index = indexes[parseInt(Math.random() * (indexes.length))];
+        console.log(positions[index])
+
+        indexes.splice(indexes.indexOf(index), 1)
+    }
 }
