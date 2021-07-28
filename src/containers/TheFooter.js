@@ -5,7 +5,7 @@ const TheFooter = () => {
   return (
     <CFooter fixed={false}>
       <div>
-        <a href="/">Manuel:</a>
+        <a href="/"><strong>Manuel:</strong></a>
         <span className="ml-1"><i>The Future of Organizing MUN Well</i></span>
       </div>
     </CFooter>

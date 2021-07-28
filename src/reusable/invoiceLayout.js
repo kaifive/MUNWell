@@ -1,4 +1,4 @@
-import logo from '../assets/branding/Banner.png'
+import logo from '../assets/branding/Logo.png'
 
 const font = "times"
 
@@ -92,7 +92,7 @@ export function invoiceLayout(doc, item) {
         }
     }
 
-    let termsAndConditions = "test"
+    let termsAndConditions = ""
 
     body[body.length] = ['', '', '', '']
     body[body.length] = ['', '', 'Total:', "$" + total.toFixed(2)]

@@ -2,7 +2,7 @@ import React from 'react'
 import {
   CButton,
 } from '@coreui/react'
-import banner from '../../../../assets/branding/Banner.png'
+import banner from '../../../../assets/branding/Banner.svg'
 
 import '../portal.css'
 

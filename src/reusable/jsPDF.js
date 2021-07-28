@@ -4,7 +4,7 @@ import 'jspdf-autotable'
 import committeeData from "src/data/MockData/MockCommittees";
 import awardData from "src/data/MockData/MockAwards";
 
-import logo from '../assets/branding/Banner.png'
+import logo from '../assets/branding/Logo.png'
 
 import { participationLayout1, committeeLayout1 } from "./awardLayouts";
 import { receiptLayout } from "./receiptLayout";

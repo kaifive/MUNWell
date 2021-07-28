@@ -1,4 +1,4 @@
-import logo from '../assets/branding/Banner.png'
+import logo from '../assets/branding/Logo.png'
 
 const font = "times"
 

@@ -8,7 +8,7 @@ import {
 
 import './home.css'
 
-import banner from '../../../assets/branding/Banner.png'
+import banner from '../../../assets/branding/PageBanner.svg'
 
 import testPicture from './img/portfolio/portfolio-1.jpg'
 import testPicture2 from './img/portfolio/portfolio-2.jpg'
