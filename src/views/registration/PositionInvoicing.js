@@ -12,7 +12,6 @@ import {
   CDropdownItem,
   CRow
 } from '@coreui/react'
-import { positionPDF } from 'src/reusable/jsPDF'
 
 import registrationData from '../../data/MockData/MockRegistration'
 

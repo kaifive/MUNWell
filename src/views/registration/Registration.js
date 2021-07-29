@@ -439,7 +439,7 @@ const Registration = () => {
                 <CLabel htmlFor="regi-delegates">Number of Delegates</CLabel>
               </CCol>
               <CCol xs="12" md="8">
-                <CInput disabled={status} type="number" name="regiDelegates" placeholder="Number of Delegates" value={registrationState.delegates} onChange={e => {
+                <CInput disabled={status} type="number" min="0" name="regiDelegates" placeholder="Number of Delegates" value={registrationState.delegates} onChange={e => {
                   const val = e.target.value
                   setRegistrationState(prevState => {
                     return { ...prevState, delegates: val }

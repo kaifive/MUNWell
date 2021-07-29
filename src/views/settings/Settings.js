@@ -290,7 +290,7 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0"  />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -305,7 +305,7 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -324,7 +324,7 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -339,7 +339,7 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -358,7 +358,7 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -373,7 +373,7 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -540,7 +540,7 @@ const Settings = () => {
                                 <CLabel htmlFor="award-value">Point Value</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput type="number" name="awardValue" placeholder="Point Value" value={awardsState.awardValue} onChange={e => {
+                                <CInput type="number" min="0" name="awardValue" placeholder="Point Value" value={awardsState.awardValue} onChange={e => {
                                     const val = e.target.value
                                     setAwardsState(prevState => {
                                         return { ...prevState, awardValue: val }
