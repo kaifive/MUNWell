@@ -2,7 +2,7 @@ import logo from '../assets/branding/Logo.png'
 
 const font = "times"
 
-export function invoiceLayout(doc, item) {
+export function invoiceLayout(doc, item, settings) {
     let image = new Image();
     image.src = logo;
 
@@ -13,16 +13,22 @@ export function invoiceLayout(doc, item) {
     doc.setFontSize(24)
     doc.text("PAYMENT INVOICE", 1, 1);
 
-    doc.setFontSize(14)
-    doc.text("Conference Name", 1, 1.3);
+    let fontSize = 14;
+
+    while((doc.getStringUnitWidth(settings.name ) * fontSize / 72) >= 4.75) {
+        fontSize--;
+    }
+
+    doc.setFontSize(fontSize)
+    doc.text(settings.name, 1, 1.3);
 
     doc.setFont(font, "normal")
     doc.setFontSize(12)
-    doc.text("Organization", 1, 1.55);
+    doc.text(settings.organization, 1, 1.55);
 
     doc.setFont(font, "italic")
-    doc.text("12660 Marcum Ct.,", 1, 1.75);
-    doc.text("Fairfax, VA 22033", 1, 1.95);
+    doc.text(settings.invoiceStreet + ",", 1, 1.75);
+    doc.text(settings.invoiceCity + ", " + settings.invoiceState + " " + settings.invoiceZipcode, 1, 1.95);
 
     doc.setFont(font, "bold")
     doc.text("BILL TO:", 1, 2.45)
@@ -37,8 +43,7 @@ export function invoiceLayout(doc, item) {
     doc.text(item.city + ", " + item.state + " " + item.zipcode, 1, 3.35)
 
     doc.setFont(font, "normal")
-    doc.text("Invoice Number:", 5.25, 2.75)
-    doc.text("Invoice Date:", 5.25, 2.95)
+    doc.text("Invoice Date:", 5.25, 2.75)
 
     let today = new Date()
     var dd = String(today.getDate()).padStart(2, '0');
@@ -47,15 +52,7 @@ export function invoiceLayout(doc, item) {
 
     today = mm + '/' + dd + '/' + yyyy;
 
-    let invoiceNumber = !!item.id ? item.id : item.number
-
-    while (invoiceNumber.length < 5) {
-        invoiceNumber = "0" + invoiceNumber;
-    }
-
-    doc.text("#" + invoiceNumber, 7.5, 2.75, { align: "right" })
-
-    doc.text(today, 7.5, 2.95, { align: "right" })
+    doc.text(today, 7.5, 2.75, { align: "right" })
 
     doc.setLineWidth(.01);
     doc.line(1, 3.65, 7.5, 3.65)
@@ -64,8 +61,21 @@ export function invoiceLayout(doc, item) {
     doc.setFontSize(24)
     doc.text("INVOICE TOTAL", 1, 4);
 
-    let delFee = item.delegates * 20
-    let schoolFee = 0
+    let multiplier = 0;
+    let schoolFee = 0;
+
+    if (item.window === "Early") {
+        multiplier = Number(settings.earlydelfee)
+        schoolFee = Number(settings.earlyschoolfee)
+    } else if (item.window === "Regular") {
+        multiplier = Number(settings.regdelfee)
+        schoolFee = Number(settings.regschoolfee)
+    } else if (item.window === "Late") {
+        multiplier = Number(settings.latedelfee)
+        schoolFee = Number(settings.lateschoolfee)
+    }
+
+    let delFee = item.delegates * multiplier
 
     let total = !!item.total ? + item.total : + delFee + schoolFee
 
@@ -75,11 +85,10 @@ export function invoiceLayout(doc, item) {
 
     let body = []
     if (item.line1 === undefined) {
-        body = [[item.delegates, 'Delegate Fee - ' + item.window + ' Registration Rate', '$20.00', '$' + delFee.toFixed(2)]]
+        body = [[item.delegates, 'Delegate Fee - ' + item.window + ' Registration Rate', '$' + multiplier.toFixed(2), '$' + delFee.toFixed(2)]]
 
         if (item.type === "Delegation") {
-            schoolFee = 30
-            body[1] = ['1', 'School Fee - ' + item.window + ' Registration Rate', '$30.00', '$30.00']
+            body[1] = ['1', 'School Fee - ' + item.window + ' Registration Rate', '$' + schoolFee.toFixed(2), '$' + schoolFee.toFixed(2)]
         }
     } else {
         let lines = [item.line1, item.line2, item.line3, item.line4, item.line5]
@@ -87,12 +96,12 @@ export function invoiceLayout(doc, item) {
         let i;
         for (i = 0; i < lines.length; i++) {
             if (lines[i].qty !== "") {
-                body[body.length] = [lines[i].qty, lines[i].description, (+ lines[i].price).toFixed(2), (+ lines[i].amount).toFixed(2)]
+                body[body.length] = [lines[i].qty, lines[i].description, "$" + (+ lines[i].price).toFixed(2), "$" + (+ lines[i].qty * lines[i].price).toFixed(2)]
             }
         }
     }
 
-    let termsAndConditions = ""
+    let termsAndConditions = settings.terms
 
     body[body.length] = ['', '', '', '']
     body[body.length] = ['', '', 'Total:', "$" + total.toFixed(2)]

@@ -1,6 +1,4 @@
-import registrationData from '../../data/MockData/MockRegistration'
-
-export function exportTable() {
+export function exportTable(registrationData) {
     let data = registrationData
 
     let i;
@@ -13,38 +11,25 @@ export function exportTable() {
         }
 
         data[i]["invoice total"] = "$" + ((data[i]["delegates"] * 20) + temp).toFixed(2)
+
+        delete data[i]._id
+        delete data[i].id
+        delete data[i].user
+        delete data[i].__v
     }
 
     return data
 }
 
-export function getDelegateFee(item) {
-    let amount = 0
-    amount = item.delegates * 20
-    amount = amount.toFixed(2)
-    return amount
-}
-
-export function getInvoiceTotal(item) {
-    let amount = 0;
-    amount = + getDelegateFee(item)
-
-    if (item.type === 'Delegation') {
-        amount = amount + 30
-    }
-
-    amount = amount.toFixed(2)
-    return amount
-}
-
-export function getDelegations() {
-    let delegations = [<option value="" disabled>Select Delegation</option>]
+export function getDelegations(registrationData) {
+    let delegations = [<option value="" disabled hidden key="">Select Delegation</option>]
 
     let i;
     for (i = 0; i < registrationData.length; i++) {
         let temp = registrationData[i].delegation
-        delegations[i + 1] = <option value={temp}>{temp}</option>
+        delegations[i + 1] = <option value={temp} key={temp+Math.random()}>{temp}</option>
     }
 
     return delegations
 }
+

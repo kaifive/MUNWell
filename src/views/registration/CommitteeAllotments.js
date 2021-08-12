@@ -30,8 +30,24 @@ import registrationData from '../../data/MockData/MockRegistration'
 import committeeData from '../../data/MockData/MockCommittees'
 import allotmentData from '../../data/MockData/MockAllotments'
 
+import { exportTable } from './committeeAllotmentsHelper'
+
+function defaultState() {
+    let state = {}
+
+    let i;
+    for (i = 0; i < committeeData.length; i++) {
+        state[committeeData[i].committee] = 0
+    }
+
+    return state
+}
+
+let test = defaultState()
+
 const CommitteeAllotments = () => {
     const [modal, setModal] = useState(false)
+    const [modalAllotments, setModalAllotments] = useState(false)
 
     const fields = getFields()
 
@@ -46,15 +62,64 @@ const CommitteeAllotments = () => {
         assignments: ''
     })
 
-    function openModal(committee) {
+    //const [allotmentsState, setAllotmentsState] = useState(defaultState())
+    
+    function editAllotments(item) {
+        let i;
+        for (i = 0; i < allotmentData.length; i++) {
+            if (allotmentData[i].delegation === item.delegation) {
+                let j;
+                for (j = 0; j < committeeData.length; j++) {
+                    let committee = committeeData[j].committee
+                    let allotment = allotmentData[i].allotments[committee]
+
+                    console.log(committee + allotment)
+
+                    test[committee] = allotment
+                    
+                    console.log(test)
+                }
+            }
+        }
+
+        setModalAllotments(!modalAllotments)
+    }
+
+    function createAllotmentsModal() {
+        let rows = []
+
+        let i;
+        for (i = 0; i < committeeData.length; i++) {
+            let committee = committeeData[i].committee
+            let temp =
+                <CFormGroup row>
+                    <CCol md="7">
+                        <CLabel htmlFor={committee}>{committee}</CLabel>
+                    </CCol>
+                    <CCol xs="12" md="4"> 
+                        <CInput type="number" name="numPositions" placeholder="Number of Positions" value={test[committee]} onChange={e => {
+                            const val = e.target.value
+                            test[committee] = val
+                        }} />
+                    </CCol>
+                </CFormGroup>
+
+            rows.push(temp)
+        }
+
+        return rows
+    }
+
+
+    function openCommitteeModal(committee) {
         let item;
 
         let i;
-        for(i = 0; i < committeeData.length; i++) {
-            if(committeeData[i].committee === committee) {
+        for (i = 0; i < committeeData.length; i++) {
+            if (committeeData[i].committee === committee) {
                 item = committeeData[i]
             }
-        } 
+        }
 
         setCommitteeState({
             division: item.division,
@@ -68,33 +133,6 @@ const CommitteeAllotments = () => {
         })
 
         setModal(!modal)
-    }
-
-    function exportTable() {
-        let data = []
-
-        let i;
-        for (i = 0; i < registrationData.length; i++) {
-            let entry = {
-                "delegation": registrationData[i]["delegation"]
-            }
-
-            let j;
-            for (j = 0; j < committeeData.length; j++) {
-                let name;
-                if (committeeData[j].abbreviation === '') {
-                    name = committeeData[j].committee
-                } else {
-                    name = committeeData[j].abbreviation
-                }
-
-                entry[name] = getAssigned(registrationData[i], committeeData[j].committee)
-            }
-
-            data.push(entry)
-        }
-
-        return data
     }
 
     function getFields() {
@@ -124,7 +162,7 @@ const CommitteeAllotments = () => {
 
             let item = {
                 key: name,
-                label: <CButton block variant="outline" color="primary" onClick={() => openModal(committee)}> {name + " | " + count} </CButton>
+                label: <CButton block variant="outline" color="primary" onClick={() => openCommitteeModal(committee)}> {name + " | " + count} </CButton>
             }
 
             committeeList[i + 1] = item
@@ -134,16 +172,6 @@ const CommitteeAllotments = () => {
         return committeeList
     }
 
-    function getAssigned(item, committee) {
-        let i;
-        for (i = 0; i < allotmentData.length; i++) {
-            if (allotmentData[i].delegation === item.delegation) {
-                return allotmentData[i].allotments[committee]
-            }
-        }
-
-        return 0
-    }
 
     function getScopedSlots(committeeData) {
         let scopedSlots = {}
@@ -185,13 +213,24 @@ const CommitteeAllotments = () => {
                             Select Action
                         </CDropdownToggle>
                         <CDropdownMenu>
-                            <CDropdownItem>Edit</CDropdownItem>
+                            <CDropdownItem onClick={() => editAllotments(item)}>Edit</CDropdownItem>
                         </CDropdownMenu>
                     </CDropdown>
                 </td>
             )
 
         return scopedSlots
+    }
+
+    function getAssigned(item, committee) {
+        let i;
+        for (i = 0; i < allotmentData.length; i++) {
+            if (allotmentData[i].delegation === item.delegation) {
+                return allotmentData[i].allotments[committee]
+            }
+        }
+
+        return 0
     }
 
     return (
@@ -415,6 +454,21 @@ const CommitteeAllotments = () => {
                 </CModalFooter>
             </CModal>
 
+
+            <CModal show={modalAllotments} onClose={setModalAllotments} size="lg">
+                <CModalHeader>
+                    <CModalTitle>Edit Committee Allotments</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
+                        {createAllotmentsModal()}
+                    </CForm>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="secondary" onClick={() => setModalAllotments(false)}>Cancel</CButton>
+                    <CButton color="primary" onClick={() => setModalAllotments(false)}>Submit</CButton>
+                </CModalFooter>
+            </CModal>
         </>
     )
 }

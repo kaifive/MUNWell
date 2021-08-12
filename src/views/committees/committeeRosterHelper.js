@@ -1,7 +1,15 @@
-import committeeData from '../../data/MockData/MockCommittees'
+export function exportTable(committeeData) {
+    let data = committeeData
 
-export function exportTable() {
-    return committeeData
+    let i;
+    for (i = 0; i < data.length; i++) {
+        delete data[i]._id
+        delete data[i].id
+        delete data[i].user
+        delete data[i].__v
+    }
+
+    return data
 }
 
 export function count(string) {

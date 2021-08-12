@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
 import {
     CCard,
     CCardBody,
@@ -9,26 +10,79 @@ import {
 } from '@coreui/react'
 import { Export } from 'src/reusable'
 
-import registrationData from '../../data/MockData/MockRegistration'
-import committeeData from '../../data/MockData/MockCommittees'
+import { getFields, exportTable, getScopedSlots } from './delegationAwardsHelper';
 
-import { exportTable, getFields, getScopedSlots } from './delegationAwardsHelper'
+import fetchData from '../../data/LiveData/FetchData'
 
-const fields = getFields()
+let fields;
 
 const DelegationAwards = () => {
-    return (
+    const { user } = useAuth0()
+
+    const [data, setData] = useState({
+        registrationData: [],
+        awardData: [],
+        awardType: [],
+        committeeData: []
+    });
+
+    const [isLoading, setIsLoading] = useState(true)
+
+    async function getData() {
+        fetchData('/api/get/awardType', user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.awardType)) {
+                setData(prevState => {
+                    return { ...prevState, awardType: res }
+                })
+            }
+        })
+
+        fetchData('/api/get/committee', user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
+                setData(prevState => {
+                    return { ...prevState, committeeData: res }
+                })
+            }
+        })
+
+        fetchData('/api/get/individualAward', user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.awardData)) {
+                setData(prevState => {
+                    return { ...prevState, awardData: res }
+                })
+            }
+        })
+
+        fetchData('/api/get/registrationData', user.sub, 'division').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+                setData(prevState => {
+                    return { ...prevState, registrationData: res }
+                })
+            }
+        })
+    }
+
+    getData().then(() => {
+        if (isLoading) {
+            setIsLoading(false)
+        }
+    })
+
+
+    fields = getFields(data.awardType)
+
+    return !isLoading ? (
         <>
             <CRow>
                 <CCol>
                     <CCard>
                         <CCardHeader>
                             Delegation Awards
-                            <Export data={exportTable()} filename="DelegationAwards.csv" />
+                            <Export data={exportTable(data.registrationData, data.awardData, data.awardType, data.committeeData)} filename="DelegationAwards.csv" />
                         </CCardHeader>
                         <CCardBody>
                             <CDataTable
-                                items={registrationData}
+                                items={data.registrationData}
                                 fields={fields}
                                 hover
                                 striped
@@ -38,7 +92,7 @@ const DelegationAwards = () => {
                                 itemsPerPage={10}
                                 pagination
                                 scopedSlots={
-                                    getScopedSlots(committeeData)
+                                    getScopedSlots(data.awardType, data.awardData, data.committeeData)
                                 }
                             />
                         </CCardBody>
@@ -46,7 +100,7 @@ const DelegationAwards = () => {
                 </CCol>
             </CRow>
         </>
-    )
+    ) : (<p>Waiting for Data...</p>)
 }
 
 export default DelegationAwards

@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from 'axios'
 import {
   CBadge,
   CButton,
@@ -25,11 +27,12 @@ import {
   CTextarea
 } from '@coreui/react'
 import { Export } from 'src/reusable'
+
+import fetchData from '../../data/LiveData/FetchData'
+
 import { invoicePDF, receiptPDF } from 'src/reusable/jsPDF'
-
-import registrationData from '../../data/MockData/MockRegistration'
-
-import { exportTable, getDelegateFee, getInvoiceTotal, getDelegations } from './paymentInvoicingHelper'
+import { exportTable, getDelegations } from './paymentInvoicingHelper'
+import { checkLicense } from 'src/reusable/checkLicense';
 
 const getBadge = label => {
   switch (label) {
@@ -57,11 +60,12 @@ const fields = [
 ]
 
 const PaymentInvoicing = () => {
+  const { user } = useAuth0()
+
   const [modalInvoice, setModalInvoice] = useState(false)
   const [modalReceipt, setModalReceipt] = useState(false)
 
   const [invoiceState, setInvoiceState] = useState({
-    number: '',
     delegation: '',
     line1: { qty: '', description: '', price: '', amount: '' },
     line2: { qty: '', description: '', price: '', amount: '' },
@@ -72,22 +76,66 @@ const PaymentInvoicing = () => {
   })
 
   const [receiptState, setReceiptState] = useState({
-    number: '',
     delegation: '',
     total: '',
     description: '',
     note: ''
   })
 
+  const [data, setData] = useState({
+    registrationData: [],
+    settings: []
+  });
+
+  const [isLoading, setIsLoading] = useState(true)
+
+  function getDelegateFee(item) {
+    let multiplier = 0;
+
+    if (item.window === "Early") {
+      multiplier = Number(data.settings.earlydelfee)
+    } else if (item.window === "Regular") {
+      multiplier = Number(data.settings.regdelfee)
+    } else if (item.window === "Late") {
+      multiplier = Number(data.settings.latedelfee)
+    }
+
+    let amount = 0
+    amount = item.delegates * multiplier
+    amount = amount.toFixed(2)
+    return amount
+  }
+
+  function getInvoiceTotal(item) {
+    let amount = 0;
+    amount = + getDelegateFee(item)
+
+    let schoolfee = 0;
+
+    if (item.window === "Early") {
+      schoolfee = Number(data.settings.earlyschoolfee)
+    } else if (item.window === "Regular") {
+      schoolfee = Number(data.settings.regschoolfee)
+    } else if (item.window === "Late") {
+      schoolfee = Number(data.settings.lateschoolfee)
+    }
+
+    if (item.type === 'Delegation') {
+      amount = amount + schoolfee
+    }
+
+    amount = amount.toFixed(2)
+    return amount
+  }
+
   function openInvoiceModal() {
     setInvoiceState({
-      number: '',
       delegation: '',
-      line1: { qty: '', description: '', price: '', amount: '' },
-      line2: { qty: '', description: '', price: '', amount: '' },
-      line3: { qty: '', description: '', price: '', amount: '' },
-      line4: { qty: '', description: '', price: '', amount: '' },
-      line5: { qty: '', description: '', price: '', amount: '' },
+      line1: { qty: '', description: '', price: '' },
+      line2: { qty: '', description: '', price: '' },
+      line3: { qty: '', description: '', price: '' },
+      line4: { qty: '', description: '', price: '' },
+      line5: { qty: '', description: '', price: '' },
       note: ''
     })
 
@@ -95,40 +143,50 @@ const PaymentInvoicing = () => {
   }
 
   function generateInvoice() {
-    let item = invoiceState
+    checkLicense(user.sub)
+      .then(result => {
+        if (result === 0) {
+          alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+        } else {
+          let item = invoiceState
 
-    let i;
-    for(i = 0; i < registrationData.length; i++) {
-      if(registrationData[i].delegation === item.delegation) {
-        item["contact"] = registrationData[i].contact
-        item["street"] = registrationData[i].street
-        item["city"] = registrationData[i].city
-        item["state"] = registrationData[i].state
-        item["zipcode"] = registrationData[i].zipcode
-      }
-    } 
+          let i;
+          for (i = 0; i < data.registrationData.length; i++) {
+            if (data.registrationData[i].delegation === item.delegation) {
+              item["contact"] = data.registrationData[i].contact
+              item["street"] = data.registrationData[i].street
+              item["city"] = data.registrationData[i].city
+              item["state"] = data.registrationData[i].state
+              item["zipcode"] = data.registrationData[i].zipcode
+            }
+          }
 
-    let amounts = [item.line1.amount, item.line2.amount, item.line3.amount, item.line4.amount, item.line5.amount]
-    let total = 0
+          let amounts = [item.line1.qty * item.line1.price,
+          item.line2.qty * item.line2.price,
+          item.line3.qty * item.line3.price,
+          item.line4.qty * item.line4.price,
+          item.line5.qty * item.line5.price]
 
-    let j;
-    for(j = 0; j < amounts.length; j++) {
-      if(amounts[j] !== "") {
-        total = + total + Number(amounts[j])
-      }
-    }
+          let total = 0
 
-    item["total"] = total
+          let j;
+          for (j = 0; j < amounts.length; j++) {
+            if (amounts[j] !== 0) {
+              total = + total + Number(amounts[j])
+            }
+          }
 
-    invoicePDF(item)
+          item["total"] = total
+
+          invoicePDF(item, data.settings)
+        }
+      })
 
     setModalInvoice(false)
   }
 
-
   function openReceiptModal() {
     setReceiptState({
-      number: '',
       delegation: '',
       total: '',
       description: '',
@@ -139,32 +197,86 @@ const PaymentInvoicing = () => {
   }
 
   function generateReceipt() {
-    let item = receiptState
+    checkLicense(user.sub)
+      .then(result => {
+        if (result === 0) {
+          alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+        } else {
+          let item = receiptState
 
-    let i;
-    for(i = 0; i < registrationData.length; i++) {
-      if(registrationData[i].delegation === item.delegation) {
-        item["contact"] = registrationData[i].contact
-        item["street"] = registrationData[i].street
-        item["city"] = registrationData[i].city
-        item["state"] = registrationData[i].state
-        item["zipcode"] = registrationData[i].zipcode
-      }
-    } 
+          let i;
+          for (i = 0; i < data.registrationData.length; i++) {
+            if (data.registrationData[i].delegation === item.delegation) {
+              item["contact"] = data.registrationData[i].contact
+              item["street"] = data.registrationData[i].street
+              item["city"] = data.registrationData[i].city
+              item["state"] = data.registrationData[i].state
+              item["zipcode"] = data.registrationData[i].zipcode
+            }
+          }
 
-    receiptPDF(item)
+          receiptPDF(item, data.settings)
+        }
+      })
 
     setModalReceipt(false)
   }
 
-  return (
+  function reverseStatus(item) {
+    let newStatus = ""
+
+    if (item.status === "Pending") {
+      newStatus = "Paid"
+    } else {
+      newStatus = "Pending"
+    }
+
+    axios.put('/api/update/registrationData', {
+      data: {
+        id: item._id,
+        update: { status: newStatus}
+      },
+    });
+
+    fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
+      setData(prevState => {
+        return { ...prevState, registrationData: JSON.stringify(res) }
+      })    
+    })
+  }
+
+  async function getData() {
+    await fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
+      if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+        setData(prevState => {
+          return { ...prevState, registrationData: JSON.stringify(res) }
+        })
+      }
+    })
+
+    await fetchData("/api/get/settings", user.sub).then((res) => {
+      if (JSON.stringify(res[res.length - 1]) !== JSON.stringify(data.settings)) {
+        setData(prevState => {
+          return { ...prevState, settings: res[res.length - 1] }
+        })
+      }
+    })
+  }
+
+  getData().then(() => {
+    if (isLoading) {
+      setIsLoading(false)
+    }
+  })
+
+  return !isLoading ? (
     <>
       <CRow>
         <CCol>
           <CCard>
             <CCardHeader>
               Payment Invoicing Data
-              <Export data={exportTable()} filename="PaymentInvoicing.csv" />
+              <Export data={exportTable(JSON.parse(data.registrationData))} filename="PaymentInvoicing.csv" />
             </CCardHeader>
             <CCardBody>
               <CRow className="align-items-left">
@@ -177,7 +289,7 @@ const PaymentInvoicing = () => {
               </CRow>
               <br></br>
               <CDataTable
-                items={registrationData}
+                items={JSON.parse(data.registrationData)}
                 fields={fields}
                 hover
                 striped
@@ -221,9 +333,9 @@ const PaymentInvoicing = () => {
                             Select Action
                           </CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem>Reverse Status</CDropdownItem>
-                            <CDropdownItem onClick={() => invoicePDF(item)}>Download Payment Invoice</CDropdownItem>
-                            <CDropdownItem onClick={() => receiptPDF(item)}>Download Payment Receipt</CDropdownItem>
+                            <CDropdownItem onClick={() => reverseStatus(item)}>Reverse Status</CDropdownItem>
+                            <CDropdownItem onClick={() => invoicePDF(item, data.settings)}>Download Payment Invoice</CDropdownItem>
+                            <CDropdownItem onClick={() => receiptPDF(item, data.settings)}>Download Payment Receipt</CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </td>
@@ -243,19 +355,6 @@ const PaymentInvoicing = () => {
           <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
             <CFormGroup row>
               <CCol md="3">
-                <CLabel htmlFor="invoice-number">Invoice Number</CLabel>
-              </CCol>
-              <CCol xs="12" md="8">
-                <CInput type="number" name="invoiceNumber" placeholder="Invoice Number" value={invoiceState.number} onChange={e => {
-                  const val = e.target.value
-                  setInvoiceState(prevState => {
-                    return { ...prevState, number: val }
-                  });
-                }} />
-              </CCol>
-            </CFormGroup>
-            <CFormGroup row>
-              <CCol md="3">
                 <CLabel htmlFor="invoice-delegation">Invoice Delegation</CLabel>
               </CCol>
               <CCol xs="12" md="8">
@@ -265,7 +364,7 @@ const PaymentInvoicing = () => {
                     return { ...prevState, delegation: val }
                   });
                 }}>
-                  {getDelegations()}
+                  {getDelegations(data.registrationData)}
                 </CSelect>
               </CCol>
             </CFormGroup>
@@ -290,7 +389,7 @@ const PaymentInvoicing = () => {
             </CFormGroup>
             <CFormGroup row>
               <CCol xs="12" md="2">
-                <CInput type="number" name="line1QTY" placeholder="#" value={invoiceState.line1.qty} onChange={e => {
+                <CInput type="number" name="line1QTY" placeholder="QTY" value={invoiceState.line1.qty} onChange={e => {
                   let line1 = invoiceState.line1
                   const val = e.target.value
                   setInvoiceState(prevState => {
@@ -317,19 +416,13 @@ const PaymentInvoicing = () => {
                 }} />
               </CCol>
               <CCol xs="12" md="3">
-                <CInput type="number" name="line1Amount" placeholder="Amount" value={invoiceState.line1.amount} onChange={e => {
-                  let line1 = invoiceState.line1
-                  const val = e.target.value
-                  setInvoiceState(prevState => {
-                    return { ...prevState, line1: { qty: line1.qty, description: line1.description, price: line1.price, amount: val } }
-                  });
-                }} />
+                <CInput type="number" name="line1Amount" placeholder="Amount" value={invoiceState.line1.qty * invoiceState.line1.price} disabled />
               </CCol>
             </CFormGroup>
 
             <CFormGroup row>
               <CCol xs="12" md="2">
-                <CInput type="number" name="line2QTY" placeholder="#" value={invoiceState.line2.qty} onChange={e => {
+                <CInput type="number" name="line2QTY" placeholder="QTY" value={invoiceState.line2.qty} onChange={e => {
                   let line2 = invoiceState.line2
                   const val = e.target.value
                   setInvoiceState(prevState => {
@@ -356,19 +449,13 @@ const PaymentInvoicing = () => {
                 }} />
               </CCol>
               <CCol xs="12" md="3">
-                <CInput type="number" name="line2Amount" placeholder="Amount" value={invoiceState.line2.amount} onChange={e => {
-                  let line2 = invoiceState.line2
-                  const val = e.target.value
-                  setInvoiceState(prevState => {
-                    return { ...prevState, line2: { qty: line2.qty, description: line2.description, price: line2.price, amount: val } }
-                  });
-                }} />
+                <CInput type="number" name="line2Amount" placeholder="Amount" value={invoiceState.line2.qty * invoiceState.line2.price} disabled />
               </CCol>
             </CFormGroup>
 
             <CFormGroup row>
               <CCol xs="12" md="2">
-                <CInput type="number" name="line3QTY" placeholder="#" value={invoiceState.line3.qty} onChange={e => {
+                <CInput type="number" name="line3QTY" placeholder="QTY" value={invoiceState.line3.qty} onChange={e => {
                   let line3 = invoiceState.line3
                   const val = e.target.value
                   setInvoiceState(prevState => {
@@ -395,19 +482,13 @@ const PaymentInvoicing = () => {
                 }} />
               </CCol>
               <CCol xs="12" md="3">
-                <CInput type="number" name="line3Amount" placeholder="Amount" value={invoiceState.line3.amount} onChange={e => {
-                  let line3 = invoiceState.line3
-                  const val = e.target.value
-                  setInvoiceState(prevState => {
-                    return { ...prevState, line3: { qty: line3.qty, description: line3.description, price: line3.price, amount: val } }
-                  });
-                }} />
+                <CInput type="number" name="line3Amount" placeholder="Amount" value={invoiceState.line3.qty * invoiceState.line3.price} disabled />
               </CCol>
             </CFormGroup>
 
             <CFormGroup row>
               <CCol xs="12" md="2">
-                <CInput type="number" name="line4QTY" placeholder="#" value={invoiceState.line4.qty} onChange={e => {
+                <CInput type="number" name="line4QTY" placeholder="QTY" value={invoiceState.line4.qty} onChange={e => {
                   let line4 = invoiceState.line4
                   const val = e.target.value
                   setInvoiceState(prevState => {
@@ -434,19 +515,13 @@ const PaymentInvoicing = () => {
                 }} />
               </CCol>
               <CCol xs="12" md="3">
-                <CInput type="number" name="line4Amount" placeholder="Amount" value={invoiceState.line4.amount} onChange={e => {
-                  let line4 = invoiceState.line4
-                  const val = e.target.value
-                  setInvoiceState(prevState => {
-                    return { ...prevState, line4: { qty: line4.qty, description: line4.description, price: line4.price, amount: val } }
-                  });
-                }} />
+                <CInput type="number" name="line4Amount" placeholder="Amount" value={invoiceState.line4.qty * invoiceState.line4.price} disabled />
               </CCol>
             </CFormGroup>
 
             <CFormGroup row>
               <CCol xs="12" md="2">
-                <CInput type="number" name="line5QTY" placeholder="#" value={invoiceState.line5.qty} onChange={e => {
+                <CInput type="number" name="line5QTY" placeholder="QTY" value={invoiceState.line5.qty} onChange={e => {
                   let line5 = invoiceState.line5
                   const val = e.target.value
                   setInvoiceState(prevState => {
@@ -473,13 +548,7 @@ const PaymentInvoicing = () => {
                 }} />
               </CCol>
               <CCol xs="12" md="3">
-                <CInput type="number" name="line5Amount" placeholder="Amount" value={invoiceState.line5.amount} onChange={e => {
-                  let line5 = invoiceState.line5
-                  const val = e.target.value
-                  setInvoiceState(prevState => {
-                    return { ...prevState, line5: { qty: line5.qty, description: line5.description, price: line5.price, amount: val } }
-                  });
-                }} />
+                <CInput type="number" name="line5Amount" placeholder="Amount" value={invoiceState.line5.qty * invoiceState.line5.price} disabled />
               </CCol>
             </CFormGroup>
             <CFormGroup row />
@@ -512,19 +581,6 @@ const PaymentInvoicing = () => {
           <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
             <CFormGroup row>
               <CCol md="3">
-                <CLabel htmlFor="receipt-number">Invoice Number</CLabel>
-              </CCol>
-              <CCol xs="12" md="8">
-                <CInput type="number" name="receiptNumber" placeholder="Invoice Number" value={receiptState.number} onChange={e => {
-                  const val = e.target.value
-                  setReceiptState(prevState => {
-                    return { ...prevState, number: val }
-                  });
-                }} />
-              </CCol>
-            </CFormGroup>
-            <CFormGroup row>
-              <CCol md="3">
                 <CLabel htmlFor="receipt-total">Invoice Total</CLabel>
               </CCol>
               <CCol xs="12" md="8">
@@ -547,7 +603,7 @@ const PaymentInvoicing = () => {
                     return { ...prevState, delegation: val }
                   });
                 }}>
-                  {getDelegations()}
+                  {getDelegations(data.registrationData)}
                 </CSelect>
               </CCol>
             </CFormGroup>
@@ -585,7 +641,7 @@ const PaymentInvoicing = () => {
         </CModalFooter>
       </CModal>
     </>
-  )
+  ) : (<p>Waiting for Data...</p>)
 }
 
 export default PaymentInvoicing

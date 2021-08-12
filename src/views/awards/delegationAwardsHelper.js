@@ -1,9 +1,5 @@
-import registrationData from '../../data/MockData/MockRegistration'
-import awardData from '../../data/MockData/MockAwards'
-import awardTypes from '../../data/MockData/MockAwardTypes'
-import committeeData from 'src/data/MockData/MockCommittees';
 
-export function exportTable() {
+export function exportTable(registrationData, awardData, awardTypes, committeeData) {
     let data = []
 
     let i;
@@ -16,11 +12,11 @@ export function exportTable() {
         for (j = 0; j < awardTypes.length; j++) {
             let type = awardTypes[j].type
 
-            entry[type] = getAwards(registrationData[i], type)
+            entry[type] = getAwards(registrationData[i], type, awardData)
         }
 
-        entry["raw"] = getRawScore(registrationData[i])
-        entry["score"] = getPerCapitaScore(registrationData[i])
+        entry["raw"] = getRawScore(registrationData[i], awardTypes, awardData)
+        entry["score"] = getPerCapitaScore(registrationData[i], committeeData, awardTypes, awardData)
 
         data.push(entry)
     }
@@ -28,7 +24,85 @@ export function exportTable() {
     return data
 }
 
-export function getFields() {
+function getAwards(item, award, awardData) {
+    let count = 0;
+
+    let i;
+    for (i = 0; i < awardData.length; i++) {
+        if (awardData[i].type === award && awardData[i].delegation === item.delegation) {
+            count = count + 1
+        }
+    }
+
+    return count
+}
+
+function getRawScore(item, awardTypes, awardData) {
+    let score = 0;
+
+    let i;
+    for (i = 0; i < awardTypes.length; i++) {
+        score = score + (getAwards(item, awardTypes[i].type, awardData) * awardTypes[i].value);
+    }
+
+    return score
+}
+
+function getPerCapitaScore(item, committeeData, awardTypes, awardData) {
+    let delegations = 0
+
+    let i;
+    for (i = 0; i < committeeData.length; i++) {
+        let assignments = committeeData[i].assignments.split(",")
+
+        let j;
+        for (j = 0; j < assignments.length; j++) {
+            if (assignments[j] === item.delegation) {
+                delegations = delegations + 1;
+            }
+        }
+    }
+
+    let calculated = (getRawScore(item, awardTypes, awardData) / delegations).toFixed(5)
+
+    let score = isNaN(calculated) ? "0.00000" : calculated
+
+    return score
+}
+
+export function getScopedSlots(awardTypes, awardData, committeeData) {
+    let scopedSlots = {}
+
+    let i;
+    for (i = 0; i < awardTypes.length; i++) {
+        let type = awardTypes[i].type
+
+        scopedSlots[type] =
+            (item) => (
+                <td>
+                    {getAwards(item, type, awardData)}
+                </td>
+            )
+    }
+
+    scopedSlots['raw'] =
+        (item) => (
+            <td>
+                {getRawScore(item, awardTypes, awardData)}
+            </td>
+        )
+
+    scopedSlots['score'] =
+        (item) => (
+            <td>
+                {getPerCapitaScore(item, committeeData, awardTypes, awardData)}
+            </td>
+        )
+
+    return scopedSlots
+}
+
+export function getFields(awardTypes) {
     let fields = []
 
     fields[0] = 'division'
@@ -51,82 +125,4 @@ export function getFields() {
     fields[i + 3] = { key: 'score', label: 'Per Capita Score' }
 
     return fields
-}
-
-export function getAwards(item, award) {
-    let count = 0;
-
-    let i;
-    for (i = 0; i < awardData.length; i++) {
-        if (awardData[i].type === award && awardData[i].delegation === item.delegation) {
-            count = count + 1
-        }
-    }
-
-    return count
-}
-
-export function getRawScore(item) {
-    let score = 0;
-
-    let i;
-    for (i = 0; i < awardTypes.length; i++) {
-        score = score + (getAwards(item, awardTypes[i].type) * awardTypes[i].value);
-    }
-
-    return score
-}
-
-export function getPerCapitaScore(item) {
-    let delegations = 0
-
-    let i;
-    for (i = 0; i < committeeData.length; i++) {
-        let assignments = committeeData[i].assignments.split(",")
-
-        let j;
-        for (j = 0; j < assignments.length; j++) {
-            if (assignments[j] === item.delegation) {
-                delegations = delegations + 1;
-            }
-        }
-    }
-
-    let calculated = (getRawScore(item) / delegations).toFixed(5)
-
-    let score = isNaN(calculated) ? "0.00000" : calculated
-
-    return score
-}
-
-export function getScopedSlots(committeeData) {
-    let scopedSlots = {}
-
-    let i;
-    for (i = 0; i < awardTypes.length; i++) {
-        let type = awardTypes[i].type
-
-        scopedSlots[type] =
-            (item) => (
-                <td>
-                    {getAwards(item, type)}
-                </td>
-            )
-    }
-
-    scopedSlots['raw'] =
-        (item) => (
-            <td>
-                {getRawScore(item)}
-            </td>
-        )
-
-    scopedSlots['score'] =
-        (item) => (
-            <td>
-                {getPerCapitaScore(item)}
-            </td>
-        )
-
-    return scopedSlots
 }

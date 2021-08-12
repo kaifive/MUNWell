@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
 import {
     CButton,
     CCard,
@@ -20,10 +21,12 @@ import {
 } from '@coreui/react'
 import { participationAwardsPDFLayout1, customParticipationAwardLayout1 } from 'src/reusable/jsPDF'
 
-import registrationData from '../../data/MockData/MockRegistration'
-import committeeData from '../../data/MockData/MockCommittees'
+//import registrationData from '../../data/MockData/MockRegistration'
+//import committeeData from '../../data/MockData/MockCommittees'
+import fetchData from '../../data/LiveData/FetchData'
 
-import { getAwardTypes, getDelegations, getCommittees } from './awardHelper'
+import { getDelegations, getCommittees } from './awardHelper'
+import { checkLicense } from 'src/reusable/checkLicense';
 
 const fieldsCommittee = [
     'division',
@@ -41,6 +44,8 @@ const fieldsDelegation = [
 ]
 
 const ParticipationAwards = () => {
+    const { user } = useAuth0()
+
     const [modalAdd, setModalAdd] = useState(false)
 
     const [awardsState, setAwardsState] = useState({
@@ -51,10 +56,17 @@ const ParticipationAwards = () => {
         committee: ''
     })
 
+    const [data, setData] = useState({
+        registrationData: [],
+        committeeData: [],
+        awardTypes: [],
+        settings: []
+    });
+
+    const [isLoading, setIsLoading] = useState(true)
+
     function openModal() {
         setAwardsState({
-            type: '',
-            delegate: '',
             position: '',
             delegation: '',
             committee: ''
@@ -64,12 +76,68 @@ const ParticipationAwards = () => {
     }
 
     function createAwardLayout1() {
-        customParticipationAwardLayout1(awardsState)
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
+                    let awardData = awardsState
+
+                    let i;
+                    for (i = 0; i < data.committeeData.length; i++) {
+                        if (JSON.stringify(awardData.committee) === JSON.stringify(data.committeeData[i].committee)) {
+                            awardData["chair"] = data.committeeData[i].chair
+                        }
+                    }
+
+                    customParticipationAwardLayout1(awardData, data.settings)
+                }
+            })
 
         setModalAdd(false)
     }
 
-    return (
+    async function getData() {
+        await fetchData("/api/get/committee", user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
+                setData(prevState => {
+                    return { ...prevState, committeeData: res }
+                })
+            }
+        })
+
+        await fetchData("/api/get/registrationData", user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+                setData(prevState => {
+                    return { ...prevState, registrationData: res }
+                })
+            }
+        })
+
+        await fetchData("/api/get/settings", user.sub).then((res) => {
+            if (JSON.stringify(res[res.length - 1]) !== JSON.stringify(data.settings)) {
+                setData(prevState => {
+                    return { ...prevState, settings: res[res.length - 1] }
+                })
+            }
+        })
+
+        await fetchData('/api/get/awardType', user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.awardTypes)) {
+                setData(prevState => {
+                    return { ...prevState, awardTypes: res }
+                })
+            }
+        })
+    }
+
+    getData().then(() => {
+        if (isLoading) {
+            setIsLoading(false)
+        }
+    })
+
+    return !isLoading ? (
         <>
             <CRow>
                 <CCol>
@@ -85,7 +153,7 @@ const ParticipationAwards = () => {
                             </CRow>
                             <br></br>
                             <CDataTable
-                                items={committeeData}
+                                items={data.committeeData}
                                 fields={fieldsCommittee}
                                 hover
                                 striped
@@ -96,7 +164,7 @@ const ParticipationAwards = () => {
                                     'download':
                                         (item) => (
                                             <td>
-                                                <CButton block color="primary" onClick={() => participationAwardsPDFLayout1(item, "Committee")}>Download</CButton>
+                                                <CButton block color="primary" onClick={() => participationAwardsPDFLayout1(item, "Committee", data.settings)}>Download</CButton>
                                             </td>
                                         )
                                 }}
@@ -114,12 +182,12 @@ const ParticipationAwards = () => {
                         <CCardBody>
                             <CRow className="align-items-left">
                                 <CCol lg="3">
-                                <CButton block color="primary" onClick={() => openModal()}>Custom Participation Award</CButton>
+                                    <CButton block color="primary" onClick={() => openModal()}>Custom Participation Award</CButton>
                                 </CCol>
                             </CRow>
                             <br></br>
                             <CDataTable
-                                items={registrationData}
+                                items={data.registrationData}
                                 fields={fieldsDelegation}
                                 hover
                                 striped
@@ -130,7 +198,7 @@ const ParticipationAwards = () => {
                                     'download':
                                         (item) => (
                                             <td>
-                                                <CButton block color="primary" onClick={() => participationAwardsPDFLayout1(item, "Delegation")}>Download</CButton>
+                                                <CButton block color="primary" onClick={() => participationAwardsPDFLayout1(item, "Delegation", data.settings)}>Download</CButton>
                                             </td>
                                         )
                                 }}
@@ -148,21 +216,6 @@ const ParticipationAwards = () => {
                     <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
                         <CFormGroup row>
                             <CCol md="3">
-                                <CLabel htmlFor="award-type">Award Type</CLabel>
-                            </CCol>
-                            <CCol xs="12" md="8">
-                                <CSelect custom name="awardType" value={awardsState.type} onChange={e => {
-                                    const val = e.target.value
-                                    setAwardsState(prevState => {
-                                        return { ...prevState, type: val }
-                                    });
-                                }}>
-                                    {getAwardTypes()}
-                                </CSelect>
-                            </CCol>
-                        </CFormGroup>
-                        <CFormGroup row>
-                            <CCol md="3">
                                 <CLabel htmlFor="award-committee">Committee</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
@@ -172,7 +225,7 @@ const ParticipationAwards = () => {
                                         return { ...prevState, committee: val }
                                     });
                                 }}>
-                                    {getCommittees()}
+                                    {getCommittees(data.committeeData)}
                                 </CSelect>
                             </CCol>
                         </CFormGroup>
@@ -191,19 +244,6 @@ const ParticipationAwards = () => {
                         </CFormGroup>
                         <CFormGroup row>
                             <CCol md="3">
-                                <CLabel htmlFor="award-del">Delegate Name</CLabel>
-                            </CCol>
-                            <CCol xs="12" md="8">
-                                <CInput name="awardDel" placeholder="Delegate Name" value={awardsState.delegate} onChange={e => {
-                                    const val = e.target.value
-                                    setAwardsState(prevState => {
-                                        return { ...prevState, delegate: val }
-                                    });
-                                }} />
-                            </CCol>
-                        </CFormGroup>
-                        <CFormGroup row>
-                            <CCol md="3">
                                 <CLabel htmlFor="award-delegation">Delegation</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
@@ -213,7 +253,7 @@ const ParticipationAwards = () => {
                                         return { ...prevState, delegation: val }
                                     });
                                 }}>
-                                    {getDelegations()}
+                                    {getDelegations(data.registrationData)}
                                 </CSelect>
                             </CCol>
                         </CFormGroup>
@@ -225,7 +265,7 @@ const ParticipationAwards = () => {
                 </CModalFooter>
             </CModal>
         </>
-    )
+    ) : (<p>Waiting for Data...</p>)
 }
 
 export default ParticipationAwards

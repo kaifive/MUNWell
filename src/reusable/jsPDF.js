@@ -12,7 +12,7 @@ import { invoiceLayout } from "./invoiceLayout";
 
 const font = "times"
 
-export function placardSetPDF(committee) {
+export function placardSetPDF(committee, settings) {
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
@@ -22,20 +22,15 @@ export function placardSetPDF(committee) {
     let pageHeight = doc.internal.pageSize.height || doc.internal.pageSize.getHeight();
     let pageWidth = doc.internal.pageSize.width || doc.internal.pageSize.getWidth();
 
-    let positions = committeeData[0].positions.split(",")
+    let positions = committee.positions.split(",")
 
     let i;
     for (i = 0; i < positions.length; i++) {
         doc.setFont(font, "bold")
         let fontSize = 80;
 
-        let j;
-        for (j = positions[i].length; j > 20; j--) {
-            fontSize = fontSize - 10
-        }
-
-        if (fontSize < 0) {
-            fontSize = 24
+        while((doc.getStringUnitWidth(positions[i].toUpperCase()) * fontSize / 72) >= 10.5) {
+            fontSize--;
         }
 
         doc.setFontSize(fontSize)
@@ -45,26 +40,24 @@ export function placardSetPDF(committee) {
         doc.text(positions[i].toUpperCase(), pageWidth / 2, pageHeight / 2 - 2.5, { align: "center" })
 
         doc.setFontSize(14)
-        doc.text(committee, pageWidth / 2, pageHeight / 2 + 2.8, { align: "center" })
+        doc.text(committee.committee, pageWidth / 2, pageHeight / 2 + 2.8, { align: "center" })
 
         doc.setFontSize(-14)
-        doc.text(committee, pageWidth / 2, pageHeight / 2 - 2.8, { align: "center" })
-
+        doc.text(committee.committee, pageWidth / 2, pageHeight / 2 - 2.8, { align: "center" })
 
         doc.setFont(font, "normal")
         doc.setFontSize(10)
-        doc.text("Conference Name", pageWidth / 2, pageHeight / 2 + 3.9, { align: "center" })
+        doc.text(settings.name, pageWidth / 2, pageHeight / 2 + 3.9, { align: "center" })
 
         doc.setFontSize(-10)
-        doc.text("Conference Name", pageWidth / 2, pageHeight / 2 - 3.9, { align: "center" })
-
+        doc.text(settings.name, pageWidth / 2, pageHeight / 2 - 3.9, { align: "center" })
 
         if (i !== positions.length - 1) {
             doc.addPage();
         }
     }
 
-    doc.save(committee + " Placard Set.pdf");
+    doc.save(committee.committee + " Placard Set.pdf");
 }
 
 export function attendanceSheetPDF(committee) {
@@ -76,10 +69,10 @@ export function attendanceSheetPDF(committee) {
 
     doc.setFont(font, "bold")
     doc.setFontSize(12)
-    doc.text(committee + " Attendance Sheet", 1, 1);
+    doc.text(committee.committee + " Attendance Sheet", 1, 1);
 
-    let positions = committeeData[0].positions.split(",")
-    let assignments = committeeData[0].assignments.split(",")
+    let positions = committee.positions.split(",")
+    let assignments = committee.assignments.split(",")
 
     let body = []
 
@@ -114,29 +107,29 @@ export function attendanceSheetPDF(committee) {
         },
     })
 
-    doc.save(committee + " Attendance Sheet.pdf");
+    doc.save(committee.committee + " Attendance Sheet.pdf");
 }
 
-export function invoicePDF(item) {
+export function invoicePDF(item, settings) {
     const doc = new jsPDF({
         orientation: "portrait",
         unit: "in",
         format: [11, 8.5]
     });
 
-    invoiceLayout(doc, item)
+    invoiceLayout(doc, item, settings)
 
     doc.save(item.delegation + " Payment Invoice.pdf");
 }
 
-export function receiptPDF(item) {
+export function receiptPDF(item, settings) {
     const doc = new jsPDF({
         orientation: "portrait",
         unit: "in",
         format: [11, 8.5]
     });
 
-    receiptLayout(doc, item)
+    receiptLayout(doc, item, settings)
     doc.save(item.delegation + " Payment Receipt.pdf");
 }
 
@@ -221,7 +214,7 @@ export function positionPDF(item) {
 
 }
 
-export function committeeAwardsPDFLayout1(item) {
+export function committeeAwardsPDFLayout1(item, settings) {
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
@@ -243,8 +236,9 @@ export function committeeAwardsPDFLayout1(item) {
             let j;
             for (j = 0; j < nameCount; j++) {
                 award = true;
+                awardData[i]["delegate"] = names[j]
 
-                committeeLayout1(doc, awardData[i].type, awardData[i].committee, awardData[i].position, names[j], awardData[i].delegation)
+                committeeLayout1(doc, awardData[i], settings)
 
                 doc.addPage()
             }
@@ -261,7 +255,7 @@ export function committeeAwardsPDFLayout1(item) {
     }
 }
 
-export function participationAwardsPDFLayout1(item, type) {
+export function participationAwardsPDFLayout1(item, type, settings) {
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
@@ -275,7 +269,13 @@ export function participationAwardsPDFLayout1(item, type) {
         let i;
         for (i = 0; i < positions.length; i++) {
             if (assignments[i] !== "") {
-                participationLayout1(doc, item.committee, positions[i], assignments[i])
+                let data = item
+
+                data["position"] = positions[i]
+                data["delegation"] = assignments[i]
+                data["chair"] = item.chair
+                
+                participationLayout1(doc, data, settings)
 
                 if (i !== positions.length - 1) {
                     doc.addPage();
@@ -293,7 +293,13 @@ export function participationAwardsPDFLayout1(item, type) {
             let j;
             for (j = 0; j < assignments.length; j++) {
                 if (assignments[j] === item.delegation) {
-                    participationLayout1(doc, committeeData[i].committee, positions[j], assignments[j])
+                    let data = item
+
+                    data["position"] = positions[j]
+                    data["delegation"] = assignments[j]
+                    data["chair"] = item.chair
+                    
+                    participationLayout1(doc, data, settings)
 
                     doc.addPage();
                 }
@@ -307,33 +313,26 @@ export function participationAwardsPDFLayout1(item, type) {
     }
 }
 
-export function customCommitteeAwardLayout1(item) {
+export function customCommitteeAwardLayout1(item, settings) {
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
         format: [11, 8.5]
     });
 
-    committeeLayout1(doc, item.type, item.committee, item.position, item.delegate, item.delegation)
+    committeeLayout1(doc, item, settings)
 
-    doc.save(item.delegate + " Custom Award.pdf");
+    doc.save(item.delegate + " Custom Committee Award.pdf");
 }
 
-export function customParticipationAwardLayout1(item) {
+export function customParticipationAwardLayout1(item, settings) {
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
         format: [11, 8.5]
     });
 
-    participationLayout1(doc, item.committee, item.position, item.delegation)
+    participationLayout1(doc, item, settings)
 
-    doc.save(item.delegate + " Custom Award.pdf");
-}
-
-export function customPaymentReceipt(item) {
-
-
-
-
+    doc.save(item.position + " Custom Participation Award.pdf");
 }

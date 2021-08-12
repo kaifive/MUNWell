@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from 'axios'
 import {
   CBadge,
   CButton,
@@ -26,10 +28,12 @@ import {
 } from '@coreui/react'
 import { Export } from 'src/reusable'
 
-import registrationData from '../../data/MockData/MockRegistration'
+import fetchData from '../../data/LiveData/FetchData'
 
 import { exportTable, getEmailList } from './registrationHelper'
 import { getStateList } from 'src/reusable/StateList';
+import { checkLicense } from 'src/reusable/checkLicense';
+
 
 const getBadge = label => {
   switch (label) {
@@ -56,8 +60,11 @@ const fields = [
 
 let header = ""
 let status = false;
+let editItem;
 
 const Registration = () => {
+  const { user } = useAuth0()
+
   const [modal, setModal] = useState(false)
   const [modalEmail, setModalEmail] = useState(false)
 
@@ -76,6 +83,12 @@ const Registration = () => {
     status: '',
     window: ''
   })
+
+  const [data, setData] = useState({
+    registrationData: []
+  });
+
+  const [isLoading, setIsLoading] = useState(true)
 
   function openModal() {
     setRegistrationState({
@@ -100,7 +113,60 @@ const Registration = () => {
     setModal(!modal)
   }
 
-  function addRegistration() {
+  function addRegistration(event) {
+    event.preventDefault();
+
+    checkLicense(user.sub)
+      .then(result => {
+        if (result === 0) {
+          alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+        } else {
+          const payload = {
+            user: user.sub,
+            type: registrationState.type,
+            division: registrationState.division,
+            delegation: registrationState.delegation,
+            street: registrationState.street,
+            city: registrationState.city,
+            state: registrationState.state,
+            zipcode: registrationState.zipcode,
+            contact: registrationState.contact,
+            email: registrationState.email,
+            phone: registrationState.phone,
+            delegates: registrationState.delegates,
+            status: (registrationState.status) ? registrationState.status : "Pending",
+            window: registrationState.window
+          }
+
+          if (!header.includes("Edit")) {
+            axios({
+              url: '/api/save/registrationData',
+              method: 'POST',
+              data: payload
+            })
+              .then(() => {
+                console.log('Data has been sent to the server')
+              })
+              .catch(() => {
+                console.log('Internal server error')
+              })
+          } else {
+            axios.put('/api/update/registrationData', {
+              data: {
+                id: editItem._id,
+                update: payload
+              },
+            });
+          }
+        }
+      })
+
+    fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
+      setData(prevState => {
+        return { ...prevState, registrationData: JSON.stringify(res) }
+      })
+    })
+
     setModal(false)
   }
 
@@ -123,8 +189,23 @@ const Registration = () => {
 
     header = "Edit " + item.delegation
     status = false;
+    editItem = item
 
     setModal(!modal)
+  }
+
+  function deleteRegistration(item) {
+    axios.delete('/api/delete/registrationData', {
+      data: {
+        id: item._id,
+      },
+    });
+
+    fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
+      setData(prevState => {
+        return { ...prevState, registrationData: JSON.stringify(res) }
+      })
+    })
   }
 
   function detailsRegistration(item) {
@@ -150,14 +231,30 @@ const Registration = () => {
     setModal(!modal)
   }
 
-  return (
+  async function getData() {
+    await fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
+      if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+        setData(prevState => {
+          return { ...prevState, registrationData: JSON.stringify(res) }
+        })
+      }
+    })
+  }
+
+  getData().then(() => {
+    if (isLoading) {
+      setIsLoading(false)
+    }
+  })
+
+  return !isLoading ? (
     <>
       <CRow>
         <CCol>
           <CCard>
             <CCardHeader>
               Registration Data
-              <Export data={exportTable()} filename="RegistrationData.csv" />
+              <Export data={exportTable(JSON.parse(data.registrationData))} filename="RegistrationData.csv" />
             </CCardHeader>
             <CCardBody>
               <CRow className="align-items-left">
@@ -170,7 +267,7 @@ const Registration = () => {
               </CRow>
               <br></br>
               <CDataTable
-                items={registrationData}
+                items={JSON.parse(data.registrationData)}
                 fields={fields}
                 hover
                 striped
@@ -196,7 +293,7 @@ const Registration = () => {
                           <CDropdownMenu>
                             <CDropdownItem onClick={() => detailsRegistration(item)}>Details</CDropdownItem>
                             <CDropdownItem onClick={() => editRegistration(item)}>Edit</CDropdownItem>
-                            <CDropdownItem>Delete</CDropdownItem>
+                            <CDropdownItem onClick={() => deleteRegistration(item)}>Delete</CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </td>
@@ -225,7 +322,7 @@ const Registration = () => {
                     return { ...prevState, window: val }
                   });
                 }}>
-                  <option value="" disabled>Select Registration Time Window</option>
+                  <option value="" disabled hidden>Select Registration Time Window</option>
                   <option value="Early">Early Registration</option>
                   <option value="Regular">Regular Registration</option>
                   <option value="Late">Late Registration</option>
@@ -243,7 +340,7 @@ const Registration = () => {
                     return { ...prevState, type: val }
                   });
                 }}>
-                  <option value="" disabled>Select Delegation Type</option>
+                  <option value="" disabled hidden>Select Delegation Type</option>
                   <option value="Delegation">Delegation</option>
                   <option value="Independent">Independent</option>
                 </CSelect>
@@ -450,8 +547,9 @@ const Registration = () => {
           </CForm>
         </CModalBody>
         <CModalFooter>
-          <CButton color="secondary" onClick={() => setModal(false)}>Cancel</CButton>
-          <CButton color="primary" onClick={() => addRegistration()}>Submit</CButton>
+          <CButton color="secondary" onClick={() => setModal(false)} hidden={status}>Cancel</CButton>
+          <CButton color="primary" onClick={event => addRegistration(event)} hidden={status}>Submit</CButton>
+          <CButton color="primary" onClick={() => setModal(false)} hidden={!status}>Close</CButton>
         </CModalFooter>
       </CModal>
 
@@ -460,14 +558,14 @@ const Registration = () => {
           <CModalTitle>Full Registration Email List</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          {getEmailList(registrationData)}
+          {getEmailList(data.registrationData)}
         </CModalBody>
         <CModalFooter>
           <CButton color="primary" onClick={() => setModalEmail(false)}>Close</CButton>
         </CModalFooter>
       </CModal>
     </>
-  )
+  ) : (<p>Waiting for Data...</p>)
 }
 
 export default Registration

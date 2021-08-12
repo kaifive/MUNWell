@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from 'axios'
 import {
     CButton,
     CCard,
@@ -26,11 +28,11 @@ import {
     CFormText
 } from '@coreui/react'
 import { Export } from 'src/reusable'
-import './defaultPositions.css'
 
-import committeeData from '../../data/MockData/MockCommittees'
+import fetchData from '../../data/LiveData/FetchData'
 
 import { exportTable, count } from './committeeRosterHelper'
+import { checkLicense } from 'src/reusable/checkLicense';
 
 const fields = [
     'division',
@@ -51,8 +53,12 @@ const fields = [
 ]
 
 let header = ""
+let status = true;
+let editItem;
 
 const CommitteeRoster = () => {
+    const { user } = useAuth0()
+
     const [modalAdd, setModalAdd] = useState(false)
 
     const [committeeState, setCommitteeState] = useState({
@@ -65,6 +71,10 @@ const CommitteeRoster = () => {
         positions: '',
         assignments: ''
     })
+
+    const [data, setData] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(true)
 
     function openModal() {
         setCommitteeState({
@@ -79,11 +89,65 @@ const CommitteeRoster = () => {
         })
 
         header = "Add Committee"
+        status = true
 
         setModalAdd(!modalAdd)
     }
 
-    function addCommittee() {
+    function addCommittee(event) {
+        event.preventDefault();
+
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
+                    let assignments = ''
+
+                    let i;
+                    for (i = 0; i < committeeState.positions.split(",").length - 1; i++) {
+                        assignments = assignments + ","
+                    }
+
+                    const payload = {
+                        user: user.sub,
+                        division: committeeState.division,
+                        category: committeeState.category,
+                        type: committeeState.type,
+                        committee: committeeState.committee,
+                        abbreviation: committeeState.abbreviation,
+                        chair: committeeState.chair,
+                        positions: committeeState.positions,
+                        assignments: assignments
+                    }
+
+                    if (status) {
+                        axios({
+                            url: '/api/save/committee',
+                            method: 'POST',
+                            data: payload
+                        })
+                            .then(() => {
+                                console.log('Data has been sent to the server')
+                            })
+                            .catch(() => {
+                                console.log('Internal server error')
+                            })
+                    } else {
+                        axios.put('/api/update/committee', {
+                            data: {
+                                id: editItem._id,
+                                update: payload
+                            },
+                        });
+                    }
+                }
+            })
+
+        fetchData("/api/get/committee", user.sub, 'division').then((res) => {
+            setData(JSON.stringify(res))
+        })
+
         setModalAdd(false)
     }
 
@@ -100,18 +164,46 @@ const CommitteeRoster = () => {
         })
 
         header = "Edit " + item.committee
+        status = false
+        editItem = item
 
         setModalAdd(!modalAdd)
     }
 
-    return (
+    function deleteCommittee(item) {
+        axios.delete('/api/delete/committee', {
+            data: {
+                id: item._id,
+            },
+        });
+
+        fetchData("/api/get/committee", user.sub, 'division').then((res) => {
+            setData(JSON.stringify(res))
+        })
+    }
+
+    async function getData() {
+        await fetchData("/api/get/committee", user.sub, 'division').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data)) {
+                setData(JSON.stringify(res))
+            }
+        })
+    }
+
+    getData().then(() => {
+        if (isLoading) {
+            setIsLoading(false)
+        }
+    })
+
+    return !isLoading ? (
         <>
             <CRow>
                 <CCol>
                     <CCard>
                         <CCardHeader>
                             Committee Roster
-                            <Export data={exportTable()} filename="CommitteeRoster.csv" />
+                            <Export data={exportTable(JSON.parse(data))} filename="CommitteeRoster.csv" />
                         </CCardHeader>
                         <CCardBody>
                             <CRow className="align-items-left">
@@ -121,7 +213,7 @@ const CommitteeRoster = () => {
                             </CRow>
                             <br></br>
                             <CDataTable
-                                items={committeeData}
+                                items={JSON.parse(data)}
                                 fields={fields}
                                 hover
                                 striped
@@ -138,7 +230,7 @@ const CommitteeRoster = () => {
                                                     </CDropdownToggle>
                                                     <CDropdownMenu>
                                                         <CDropdownItem onClick={() => editCommittee(item)}>Edit</CDropdownItem>
-                                                        <CDropdownItem>Delete</CDropdownItem>
+                                                        <CDropdownItem onClick={() => deleteCommittee(item)}>Delete</CDropdownItem>
                                                     </CDropdownMenu>
                                                 </CDropdown>
                                             </td>
@@ -180,7 +272,7 @@ const CommitteeRoster = () => {
                                         return { ...prevState, category: val }
                                     });
                                 }}>
-                                    <option value="" disabled>Select Committee Category</option>
+                                    <option value="" disabled hidden>Select Committee Category</option>
                                     <option value="General Assembly">General Assembly</option>
                                     <option value="Specialized Agency">Specialized Agency</option>
                                     <option value="Crisis Committee">Crisis Committee</option>
@@ -199,7 +291,7 @@ const CommitteeRoster = () => {
                                         return { ...prevState, type: val }
                                     });
                                 }}>
-                                    <option value="" disabled>Select Committee Type</option>
+                                    <option value="" disabled hidden>Select Committee Type</option>
                                     <option value="Single Delegation">Single Delegation</option>
                                     <option value="Double Delegation">Double Delegation</option>
                                 </CSelect>
@@ -371,12 +463,12 @@ const CommitteeRoster = () => {
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setModalAdd(false)}>Cancel</CButton>
-                    <CButton color="primary" onClick={() => addCommittee()}>Submit</CButton>
+                    <CButton color="primary" onClick={event => addCommittee(event)}>Submit</CButton>
                 </CModalFooter>
             </CModal>
 
         </>
-    )
+    ) : (<p>Waiting for Data...</p>)
 }
 
 export default CommitteeRoster

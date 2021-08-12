@@ -1,9 +1,13 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 
-import committeeData from '../data/MockData/MockCommittees'
+export function getNav(committeeData) {
+  insertCommittees(committeeData);
 
-function getIndividualCommittees(name, committee) {
+  return _nav
+}
+
+function getIndividualCommittees(name, id) {
   let item =
   {
     _tag: 'CSidebarNavDropdown',
@@ -14,12 +18,12 @@ function getIndividualCommittees(name, committee) {
       {
         _tag: 'CSidebarNavItem',
         name: 'Position Assignments',
-        to: '/committees/' + committee,
+        to: '/committees/' + id,
       },
       {
         _tag: 'CSidebarNavItem',
         name: 'Individual Awards',
-        to: '/award/' + committee,
+        to: '/award/' + id,
       }
     ],
   }
@@ -27,22 +31,24 @@ function getIndividualCommittees(name, committee) {
   return item
 }
 
-function insertCommittees() {
+function insertCommittees(committeeData) {
   let i;
   for (i = 0; i < committeeData.length; i++) {
     let name = ""
 
-    if(committeeData[i].abbreviation !== "") {
+    if (committeeData[i].abbreviation !== "") {
       name = committeeData[i].abbreviation
     } else {
       name = committeeData[i].committee
     }
 
-    _nav.splice(_nav.length - 4, 0, getIndividualCommittees(name, committeeData[i].committee))
+    if (!_nav.some(item => item.name === name)) {
+      _nav.splice(_nav.length - 4, 0, getIndividualCommittees(name, committeeData[i]._id))
+    }
   }
 }
 
-const _nav = [
+let _nav = [
   {
     _tag: 'CSidebarNavItem',
     name: 'Dashboard',
@@ -128,6 +134,4 @@ const _nav = [
   }
 ]
 
-insertCommittees();
 
-export default _nav

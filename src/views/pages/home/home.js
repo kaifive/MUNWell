@@ -1,20 +1,19 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { Link } from 'react-scroll'
-import {
-  CButton,
-  CCol,
-  CRow
-} from '@coreui/react'
+import { CButton } from '@coreui/react'
+import { useAuth0 } from "@auth0/auth0-react";
 
 import './home.css'
 
 import banner from '../../../assets/branding/PageBanner.svg'
 
-import testPicture from './img/portfolio/portfolio-1.jpg'
-import testPicture2 from './img/portfolio/portfolio-2.jpg'
+import testPicture from "../../../assets/home/hero.png"
+
+import documents from "../../../assets/home/screenshots/Documents.png"
+
 
 const Home = () => {
-  let test = useRef()
+  const { loginWithRedirect } = useAuth0();
 
   return (
     <>
@@ -37,27 +36,25 @@ const Home = () => {
               <li><Link className="nav-link scrollto" to="screenshots" spy={true} smooth={true}>Screenshots</Link></li>
               <li><Link className="nav-link scrollto" to="pricing" spy={true} smooth={true}>Pricing</Link></li>
 
-              <li> <CButton block color="primary" href="#/login" style={{ color: "#FFFFFF", padding: ".5em" }}>LOGIN</CButton> </li>
+              <li> <CButton block color="primary" onClick={() => loginWithRedirect()} style={{ color: "#FFFFFF", padding: ".5em" }}>LOGIN</CButton> </li>
             </ul>
             <i className="bi bi-list mobile-nav-toggle"></i>
           </nav>
         </div>
       </header>
 
-      <section id="hero" ref={test} className="d-flex align-items-center">
+      <section id="hero" className="d-flex align-items-center">
         <div className="container" data-aos="zoom-out" data-aos-delay="100">
-          <h1>Introducing <span>MANUEL</span></h1>
+          <h1 style={{ color: "white" }}>Introducing <span>MANUEL</span></h1>
           <h2><i>The Future of Organizing MUN Well</i></h2>
-          <CRow className="align-items-left">
-            <CCol lg="2">
-              <CButton block color="primary" href="#/login">Login / Register</CButton>
-            </CCol>
-            {/*
-            <CCol lg="2">
-              <CButton block variant="outline" color="primary"><i className="far fa-play-circle"></i>&ensp;Watch Video</CButton>
-            </CCol>
-            */}
+          <CButton style={{ width: "200px", margin: "auto" }} block color="primary" onClick={() => loginWithRedirect()}>Login / Register</CButton>
+
+          {/*
+          <CRow className="align-items-center">
+            <CButton style={{ width: "200px", margin: "auto 1% auto auto" }} block color="primary" onClick={() => loginWithRedirect()}>Login / Register</CButton>
+            <CButton style={{ width: "200px", margin: "auto auto auto 1%" }} block variant="outline" color="primary"><i className="far fa-play-circle"></i>&ensp;Watch Video</CButton>
           </CRow>
+*/}
         </div>
       </section>
 
@@ -169,44 +166,30 @@ const Home = () => {
           <div className="container" data-aos="fade-up">
             <div className="section-title">
               <h2>Screenshots</h2>
-              <h3>Check Out <span>Screenshots of Manuel</span></h3>
+              <h3>Check Out Some Of Manuel’s <span>Views</span></h3>
             </div>
 
             <div className="row portfolio-container">
-              <div className="col-lg-4 col-md-6 portfolio-item">
+              <div className="col-lg-12 col-md-6 portfolio-item">
                 <img src={testPicture} className="img-fluid" alt="" />
               </div>
 
-              <div className="col-lg-4 col-md-6 portfolio-item">
-                <img src={testPicture2} className="img-fluid" alt="" />
-              </div>
-
-              <div className="col-lg-4 col-md-6 portfolio-item">
+              <div className="col-lg-6 col-md-6 portfolio-item">
                 <img src={testPicture} className="img-fluid" alt="" />
               </div>
 
-              <div className="col-lg-4 col-md-6 portfolio-item">
+              <div className="col-lg-6 col-md-6 portfolio-item">
                 <img src={testPicture} className="img-fluid" alt="" />
               </div>
+            </div>
 
-              <div className="col-lg-4 col-md-6 portfolio-item">
-                <img src={testPicture} className="img-fluid" alt="" />
-              </div>
+            <div className="section-title">
+              <h3>Check Out Some Of Manuel’s <span>Generated Documents</span></h3>
+            </div>
 
-              <div className="col-lg-4 col-md-6 portfolio-item">
-                <img src={testPicture} className="img-fluid" alt="" />
-              </div>
-
-              <div className="col-lg-4 col-md-6 portfolio-item">
-                <img src={testPicture} className="img-fluid" alt="" />
-              </div>
-
-              <div className="col-lg-4 col-md-6 portfolio-item">
-                <img src={testPicture} className="img-fluid" alt="" />
-              </div>
-
-              <div className="col-lg-4 col-md-6 portfolio-item">
-                <img src={testPicture} className="img-fluid" alt="" />
+            <div className="row portfolio-container">
+              <div className="col-lg-12 col-md-6 portfolio-item">
+                <img src={documents} className="img-fluid" alt="" />
               </div>
             </div>
           </div>
@@ -217,21 +200,38 @@ const Home = () => {
             <div className="section-title">
               <h2>Pricing</h2>
               <h3>Available <span>Manuel Licenses</span></h3>
-              {/*<p>Manuel implements multiple license types for conferences to manage expenses dependent on their
+              <p>While Manuel is in developmental and testing stages, the web application will be available for purchase at a fixed rate. This rate however will increase and fluctuate based on the number of committees and delegates a conference contains once the software has been debugged and new features are added.</p>
+              {/* <p>Manuel implements multiple license types for conferences to manage expenses dependent on their
                 conference size. Each license enables access to all of Manuel’s features, however the scale a
-                conference can operate is dependent on the license.
-              </p>
-              */}
-              <p>While Manuel is in developmental and testing stages, the web application will be available for purchase at a fixed rate. This rate however will increase and fluctuate based on the number of committees and delegates a conference contains once the software has been debugged and new features are added.
-              </p>
+                conference can operate is dependent on the license.</p> */}
+              <p>Once a plan is purchased and processed, the conference organizer will be contacted via email with their Manuel license within 48 hours upon which the organizer can begin utilizing all of the features that Manuel has to offer.</p>
             </div>
 
             <div className="row-home">
-              {/*
+              <div className="col-lg-3 col-md-6 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="400">
+                <div className="box">
+                  <span className="advanced">Beta</span>
+                  <h3>Platinum</h3>
+                  <h4><sup>$</sup>1,000 USD<span> / year</span></h4>
+                  <ul>
+                    <li>Unlimited Committees</li>
+                    <li>Unlimited Delegations</li>
+                    <li>Unlimited Independent Delegates</li>
+                  </ul>
+                  <div className="btn-wrap">
+                    <CButton color="primary">Buy Now</CButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            {/*
+            <div className="row-home">
               <div className="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
                 <div className="box">
                   <h3>Silver</h3>
-                  <h4><sup>$</sup>500 USD<span> / year</span></h4>
+                  <h4><sup>$</sup>1,000 USD<span> / year</span></h4>
                   <ul>
                     <li>Max. of 5 Committees</li>
                     <li>Max. of 5 Delegations</li>
@@ -246,7 +246,7 @@ const Home = () => {
               <div className="col-lg-3 col-md-6 mt-4 mt-md-0" data-aos="fade-up" data-aos-delay="200">
                 <div className="box">
                   <h3>Gold</h3>
-                  <h4><sup>$</sup>850 USD<span> / year</span></h4>
+                  <h4><sup>$</sup>1,350 USD<span> / year</span></h4>
                   <ul>
                     <li>Max. of 10 Committees</li>
                     <li>Max. of 15 Delegations</li>
@@ -257,34 +257,35 @@ const Home = () => {
                   </div>
                 </div>
               </div>
-*/}
+
               <div className="col-lg-3 col-md-6 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="400">
                 <div className="box">
-                  <span className="advanced">Beta</span>
-                  <h3>Platinum</h3>
-                  <h4><sup>$</sup>500 USD<span> / year</span></h4>
-                  <ul>
-                    <li>Unlimited Committees</li>
-                    <li>Unlimited Delegations</li>
-                    <li>Unlimited Independent Delegates</li>
-                  </ul>
-                  <div className="btn-wrap">
-                    <CButton color="primary">Buy Now</CButton>
-                  </div>
-                </div>
-              </div>
-
+            <h3>Platinum</h3>
+            <h4><sup>$</sup>1,500 USD<span> / year</span></h4>
+            <ul>
+              <li>Unlimited Committees</li>
+              <li>Unlimited Delegations</li>
+              <li>Unlimited Independent Delegates</li>
+            </ul>
+            <div className="btn-wrap">
+              <CButton color="primary">Buy Now</CButton>
             </div>
           </div>
-        </section>
-      </main>
+          </div>
+            </div>
+*/}
+          </div>
+        </section >
+      </main >
 
-      <footer id="footer">
-        <div className="footerDIV">
-          <Link to="hero" spy={true} smooth={true}><p className="footerLink"><strong style={{color: "#321fdb"}}>Manuel:</strong> <i>The Future of Organizing MUN Well</i></p></Link>
-          <a href="mailto:tuongkhai.nguyen@gmail.com" target="_blank" rel="noreferrer">tuongkhai.nguyen@gmail.com</a>
-        </div>
-      </footer>
+      <div style={{ height: "10px" }}>
+        <footer id="footer">
+          <div className="footerDIV">
+            <Link to="hero" spy={true} smooth={true}><p className="footerLink"><strong style={{ color: "#321fdb" }}>Manuel:</strong> <i>The Future of Organizing MUN Well</i></p></Link>
+            <a href="mailto:tuongkhai.nguyen@gmail.com" target="_blank" rel="noreferrer">tuongkhai.nguyen@gmail.com</a>
+          </div>
+        </footer>
+      </div>
     </>
   )
 }

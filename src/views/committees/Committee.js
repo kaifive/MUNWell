@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
 import {
     CButton,
     CCard,
     CCardBody,
     CCardHeader,
+    CCardFooter,
     CCol,
     CDataTable,
-    CDropdown,
-    CDropdownToggle,
-    CDropdownMenu,
     CForm,
     CFormGroup,
     CInput,
@@ -18,13 +17,16 @@ import {
     CModalFooter,
     CModalHeader,
     CModalTitle,
-    CRow
+    CRow,
+    CSelect
 } from '@coreui/react'
 import { Redirect } from 'react-router-dom'
 import { Export } from 'src/reusable'
 import { attendanceSheetPDF, placardSetPDF } from 'src/reusable/jsPDF'
 
-import { getIndex, getActive, getDelegations, getData, exportTable, getAlerts } from './committeeHelper'
+import fetchData from '../../data/LiveData/FetchData'
+
+import { getAllDelegations, getCommitteeData, exportTable, getAlerts } from './committeeHelper'
 
 const buttons = [{ void: 'void' }]
 
@@ -39,11 +41,59 @@ const fieldsButtons = [
 ]
 
 const Committee = ({ match: { params: { committee } } }) => {
+    const { user } = useAuth0()
+
     const [modalAdd, setModalAdd] = useState(false)
 
     const [positionState, setPositionState] = useState({
         position: ''
     })
+
+    const [data, setData] = useState({
+        registrationData: [],
+        settings: [],
+        committee: [],
+        redirect: false
+    })
+
+    async function getData() {
+        await fetchData('/api/get/registrationData', user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+                setData(prevState => {
+                    return { ...prevState, registrationData: res }
+                })
+            }
+        })
+
+        await fetchData("/api/get/settings", user.sub).then((res) => {
+            if (JSON.stringify(res[res.length - 1]) !== JSON.stringify(data.settings)) {
+                setData(prevState => {
+                    return { ...prevState, settings: res[res.length - 1] }
+                })
+            }
+        })
+
+        await fetchData('/api/get/committee', user.sub).then((res) => {
+            let i;
+            for (i = 0; i < res.length; i++) {
+                if (res[i]._id === committee) {
+                    let committeeData = res[i]
+
+                    if (JSON.stringify(committeeData) !== JSON.stringify(data.committee)) {
+                        setData(prevState => {
+                            return { ...prevState, committee: committeeData }
+                        })
+                    }
+                }
+            }
+
+            if (data.committee.length === 0) {
+                setData(prevState => {
+                    return { ...prevState, redirect: true }
+                })
+            }
+        })
+    }
 
     function openModal() {
         setPositionState({
@@ -57,22 +107,18 @@ const Committee = ({ match: { params: { committee } } }) => {
         setModalAdd(false)
     }
 
-    let json = getIndex(committee)
+    getData()
 
-    if (getIndex(committee) === null) {
-        return <Redirect to={{ pathname: "/404" }} />
-    }
-
-    return (
+    return data.committee.length !== 0 ? (
         <>
-            {getAlerts(json)}
+            {getAlerts(data.committee)}
 
             <CRow>
                 <CCol>
                     <CCard>
                         <CCardHeader>
-                            {committee} - Position Assigments
-                            <Export data={exportTable(json)} filename={committee + " Position Assignments.csv"} />
+                            {data.committee.committee} - Position Assigments
+                            <Export data={exportTable(data.committee)} filename={data.committee.committee + " Position Assignments.csv"} />
                         </CCardHeader>
                         <CCardBody>
                             <CRow className="align-items-left">
@@ -82,30 +128,30 @@ const Committee = ({ match: { params: { committee } } }) => {
                             </CRow>
                             <br></br>
                             <CDataTable
-                                items={getData(json)}
+                                items={getCommitteeData(data.committee)}
                                 fields={fieldsAssignments}
                                 hover
                                 striped
                                 sorter
-                                itemsPerPage={10}
-                                pagination
                                 scopedSlots={{
                                     'assignment':
                                         (item) => (
                                             <td>
-                                                <CDropdown className="m-1">
-                                                    <CDropdownToggle color="secondary">
-                                                        {getActive(item, committee)}
-                                                    </CDropdownToggle>
-                                                    <CDropdownMenu>
-                                                        {getDelegations(item, json)}
-                                                    </CDropdownMenu>
-                                                </CDropdown>
+                                                <CSelect custom name="select" id="award-delegation" >
+                                                    {getAllDelegations(data.committee, data.registrationData)}
+                                                </CSelect>
                                             </td>
                                         )
                                 }}
                             />
                         </CCardBody>
+                        <CCardFooter>
+                            <CRow className="align-items-right">
+                                <CCol lg="2">
+                                    <CButton block color="primary">Save Changes</CButton>
+                                </CCol>
+                            </CRow>
+                        </CCardFooter>
                     </CCard>
                 </CCol>
             </CRow>
@@ -114,7 +160,7 @@ const Committee = ({ match: { params: { committee } } }) => {
                 <CCol>
                     <CCard>
                         <CCardHeader>
-                            {committee} - Generated Documents
+                            {data.committee.committee} - Generated Documents
                         </CCardHeader>
                         <CCardBody>
                             <CDataTable
@@ -129,13 +175,13 @@ const Committee = ({ match: { params: { committee } } }) => {
                                     'placardSet':
                                         (item) => (
                                             <td>
-                                                <CButton block color="primary" onClick={() => placardSetPDF(committee)}>Placard Set</CButton>
+                                                <CButton block color="primary" onClick={() => placardSetPDF(data.committee, data.settings)}>Placard Set</CButton>
                                             </td>
                                         ),
                                     'attendanceSheet':
                                         (item) => (
                                             <td>
-                                                <CButton block color="primary" onClick={() => attendanceSheetPDF(committee)}>Attendance Sheet</CButton>
+                                                <CButton block color="primary" onClick={() => attendanceSheetPDF(data.committee)}>Attendance Sheet</CButton>
                                             </td>
                                         ),
                                 }}
@@ -156,7 +202,7 @@ const Committee = ({ match: { params: { committee } } }) => {
                                 <CLabel htmlFor="new-position">New Position</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput name="newPosition" placeholder="New Position" value={positionState.position} onChange={e => {
+                                <CInput name="newPosition" placeholder='New Position - Separate multiple positions with a comma (",")' value={positionState.position} onChange={e => {
                                     const val = e.target.value
                                     setPositionState(prevState => {
                                         return { ...prevState, position: val }
@@ -172,7 +218,7 @@ const Committee = ({ match: { params: { committee } } }) => {
                 </CModalFooter>
             </CModal>
         </>
-    )
+    ) : ((data.redirect) ? <Redirect to={{ pathname: "/404" }} /> : <p>Waiting for Data...</p>)
 }
 
 export default Committee

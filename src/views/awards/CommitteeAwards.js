@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
 import {
     CButton,
     CCard,
@@ -18,10 +19,12 @@ import {
     CRow,
     CSelect
 } from '@coreui/react'
-import { committeeAwardsPDFLayout1, customCommitteeAwardLayout1 } from 'src/reusable/jsPDF'
 
-import committeeData from '../../data/MockData/MockCommittees'
+import fetchData from '../../data/LiveData/FetchData'
+
+import { committeeAwardsPDFLayout1, customCommitteeAwardLayout1 } from 'src/reusable/jsPDF'
 import { getAwardTypes, getDelegations, getCommittees } from './awardHelper'
+import { checkLicense } from 'src/reusable/checkLicense';
 
 const fields = [
     'division',
@@ -32,6 +35,8 @@ const fields = [
 ]
 
 const CommitteeAwards = () => {
+    const { user } = useAuth0()
+
     const [modalAdd, setModalAdd] = useState(false)
 
     const [awardsState, setAwardsState] = useState({
@@ -42,25 +47,91 @@ const CommitteeAwards = () => {
         committee: ''
     })
 
+    const [data, setData] = useState({
+        registrationData: [],
+        committeeData: [],
+        awardTypes: [],
+        settings: []
+    });
+
+    const [isLoading, setIsLoading] = useState(true)
+
     function openModal() {
         setAwardsState({
             type: '',
             delegate: '',
             position: '',
             delegation: '',
-            committee: ''
+            committee: '',
+            chair: ''
         })
 
         setModalAdd(!modalAdd)
     }
 
     function createAwardLayout1() {
-        customCommitteeAwardLayout1(awardsState)
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
+                    let awardData = awardsState
+
+                    let i;
+                    for (i = 0; i < data.committeeData.length; i++) {
+                        if (JSON.stringify(awardData.committee) === JSON.stringify(data.committeeData[i].committee)) {
+                            awardData["chair"] = data.committeeData[i].chair
+                        }
+                    }
+
+                    customCommitteeAwardLayout1(awardData, data.settings)
+                }
+            })
 
         setModalAdd(false)
     }
 
-    return (
+    async function getData() {
+        await fetchData("/api/get/committee", user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
+                setData(prevState => {
+                    return { ...prevState, committeeData: res }
+                })
+            }
+        })
+
+        await fetchData("/api/get/registrationData", user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+                setData(prevState => {
+                    return { ...prevState, registrationData: res }
+                })
+            }
+        })
+
+        await fetchData("/api/get/settings", user.sub).then((res) => {
+            if (JSON.stringify(res[res.length - 1]) !== JSON.stringify(data.settings)) {
+                setData(prevState => {
+                    return { ...prevState, settings: res[res.length - 1] }
+                })
+            }
+        })
+
+        await fetchData('/api/get/awardType', user.sub).then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.awardTypes)) {
+                setData(prevState => {
+                    return { ...prevState, awardTypes: res }
+                })
+            }
+        })
+    }
+
+    getData().then(() => {
+        if (isLoading) {
+            setIsLoading(false)
+        }
+    })
+
+    return !isLoading ? (
         <>
             <CRow>
                 <CCol>
@@ -76,7 +147,7 @@ const CommitteeAwards = () => {
                             </CRow>
                             <br></br>
                             <CDataTable
-                                items={committeeData}
+                                items={data.committeeData}
                                 fields={fields}
                                 hover
                                 striped
@@ -87,7 +158,7 @@ const CommitteeAwards = () => {
                                     'download':
                                         (item) => (
                                             <td>
-                                                <CButton block color="primary" onClick={() => committeeAwardsPDFLayout1(item)}>Download</CButton>
+                                                <CButton block color="primary" onClick={() => committeeAwardsPDFLayout1(item, data.settings)}>Download</CButton>
                                             </td>
                                         )
                                 }}
@@ -114,7 +185,7 @@ const CommitteeAwards = () => {
                                         return { ...prevState, type: val }
                                     });
                                 }}>
-                                    {getAwardTypes()}
+                                    {getAwardTypes(data.awardTypes)}
                                 </CSelect>
                             </CCol>
                         </CFormGroup>
@@ -129,7 +200,7 @@ const CommitteeAwards = () => {
                                         return { ...prevState, committee: val }
                                     });
                                 }}>
-                                    {getCommittees()}
+                                    {getCommittees(data.committeeData)}
                                 </CSelect>
                             </CCol>
                         </CFormGroup>
@@ -170,7 +241,7 @@ const CommitteeAwards = () => {
                                         return { ...prevState, delegation: val }
                                     });
                                 }}>
-                                    {getDelegations()}
+                                    {getDelegations(data.registrationData)}
                                 </CSelect>
                             </CCol>
                         </CFormGroup>
@@ -182,7 +253,7 @@ const CommitteeAwards = () => {
                 </CModalFooter>
             </CModal>
         </>
-    )
+    ) : (<p>Waiting for Data...</p>)
 }
 
 export default CommitteeAwards

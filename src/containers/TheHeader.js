@@ -1,5 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useAuth0 } from "@auth0/auth0-react";
+
 import {
   CButton,
   CHeader,
@@ -18,6 +20,8 @@ import routes from '../routes'
 import white from '../assets/branding/White.svg'
 
 const TheHeader = () => {
+  const { logout } = useAuth0();
+
   const dispatch = useDispatch()
   const sidebarShow = useSelector(state => state.sidebarShow)
 
@@ -65,7 +69,7 @@ const TheHeader = () => {
         </CHeaderNavItem>
         <CHeaderNavItem className="px-3" >
           <CHeaderNavLink to="/dashboard">
-            <CButton block color="primary" to="/">Logout</CButton>
+            <CButton block color="primary" onClick={() => logout()}>Logout</CButton>
           </CHeaderNavLink>
         </CHeaderNavItem>
       </CHeaderNav>

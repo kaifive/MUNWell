@@ -14,9 +14,6 @@ const TheLayout = React.lazy(() => import('./containers/TheLayout'));
 // Pages
 const PageNotFound = React.lazy(() => import('./views/pages/page404/Page404'));
 const Home = React.lazy(() => import('./views/pages/home/home'));
-const Login = React.lazy(() => import('./views/pages/portal/login/Login'));
-const Register = React.lazy(() => import('./views/pages/portal/register/Register'));
-const ForgotPassword = React.lazy(() => import('./views/pages/portal/forgotpassword/ForgotPassword'));
 
 class App extends Component {
   render() {
@@ -38,10 +35,6 @@ class App extends Component {
             <Route exact path="/awards/committee-awards" name="Committee Awards" render={props => <TheLayout {...props} />} />
             <Route exact path="/awards/delegation-awards" name="Delegation Awards" render={props => <TheLayout {...props} />} />
             <Route exact path="/awards/participation-awards" name="Participation Awards" render={props => <TheLayout {...props} />} />
-
-            <Route exact path="/login" name="Login" render={props => <Login {...props} />} />
-            <Route exact path="/register" name="Register" render={props => <Register {...props} />} />
-            <Route exact path="/forgot" name="Forgot Password" render={props => <ForgotPassword {...props} />} />
 
             <Route path="*" name="Page 404" render={props => <PageNotFound {...props} />} />
           </Switch>

@@ -2,7 +2,7 @@ import logo from '../assets/branding/Logo.png'
 
 const font = "times"
 
-export function receiptLayout(doc, item) {
+export function receiptLayout(doc, item, settings) {
     let image = new Image();
     image.src = logo;
 
@@ -13,16 +13,22 @@ export function receiptLayout(doc, item) {
     doc.setFontSize(24)
     doc.text("PAYMENT RECEIPT", 1, 1);
 
-    doc.setFontSize(14)
-    doc.text("Conference Name", 1, 1.3);
+    let fontSize = 14;
+
+    while((doc.getStringUnitWidth(settings.name ) * fontSize / 72) >= 4.75) {
+        fontSize--;
+    }
+
+    doc.setFontSize(fontSize)
+    doc.text(settings.name, 1, 1.3);
 
     doc.setFont(font, "normal")
     doc.setFontSize(12)
-    doc.text("Organization", 1, 1.55);
+    doc.text(settings.organization, 1, 1.55);
 
     doc.setFont(font, "italic")
-    doc.text("12660 Marcum Ct.,", 1, 1.75);
-    doc.text("Fairfax, VA 22033", 1, 1.95);
+    doc.text(settings.invoiceStreet + ",", 1, 1.75);
+    doc.text(settings.invoiceCity + ", " + settings.invoiceState + " " + settings.invoiceZipcode, 1, 1.95);
 
     doc.setFont(font, "bold")
     doc.text("RECEIPT FOR:", 1, 2.45)
@@ -37,22 +43,30 @@ export function receiptLayout(doc, item) {
     doc.text(item.city + ", " + item.state + " " + item.zipcode, 1, 3.35)
 
     doc.setFont(font, "normal")
-    doc.text("Invoice Number:", 5.25, 2.75)
-    doc.text("Invoice Total:", 5.25, 2.95)
+    doc.text("Invoice Total:", 5.25, 2.75)
 
-    let invoiceNumber = !!item.id ? item.id : item.number
+    let multiplier = 0;
+    let schoolFee = 0;
 
-    while (invoiceNumber.length < 5) {
-        invoiceNumber = "0" + invoiceNumber;
+    if (item.window === "Early") {
+        multiplier = Number(settings.earlydelfee)
+        schoolFee = Number(settings.earlyschoolfee)
+    } else if (item.window === "Regular") {
+        multiplier = Number(settings.regdelfee)
+        schoolFee = Number(settings.regschoolfee)
+    } else if (item.window === "Late") {
+        multiplier = Number(settings.latedelfee)
+        schoolFee = Number(settings.lateschoolfee)
     }
 
-    let delFee = item.delegates * 20
-    let schoolFee = 0
+    let delFee = item.delegates * multiplier
+
     let paymentOf = "Conference Abbreviation - \n\t" + item.delegates + " Delegates"
 
     if (item.type === "Delegation") {
-        schoolFee = 30
         paymentOf = paymentOf + " & School Fee"
+    } else {
+        schoolFee = 0
     }
 
     paymentOf = paymentOf + " on " + item.window + " Registration Rate"
@@ -60,14 +74,13 @@ export function receiptLayout(doc, item) {
 
     let total = !!item.total ? + item.total : + delFee + schoolFee
 
-    doc.text("#" + invoiceNumber, 7.5, 2.75, { align: "right" })
-    doc.text("$" + total.toFixed(2), 7.5, 2.95, { align: "right" })
+    doc.text("$" + total.toFixed(2), 7.5, 2.75, { align: "right" })
 
-    let paymentInfo = [["Delegation", item.delegation], [], ["Received From", item.contact], [], ["For Payment of", paymentOf], [], ["Received By", "Khai Nguyen | Conference Abbreviation Secretary-General"]]
+    let paymentInfo = [["Delegation", item.delegation], [], ["Received From", item.contact], [], ["For Payment of", paymentOf], [], ["Received By", settings.secgen + " | " + settings.abbreviation + " Secretary-General"]]
     paymentInfo[paymentInfo.length] = ["", ""]
     paymentInfo[paymentInfo.length] = ["Thank you for your payment.", ""]
-    paymentInfo[paymentInfo.length] = ["We look forward to seeing you at Conference Abbreviation!", ""]
-    paymentInfo[paymentInfo.length] = ["Conference Address", ""]
+    paymentInfo[paymentInfo.length] = ["We look forward to seeing you at " + settings.abbreviation + "!", ""]
+    paymentInfo[paymentInfo.length] = [settings.street + ", " + settings.city + ", " + settings.state + " " + settings.zipcode, ""]
     paymentInfo[paymentInfo.length] = ["", ""]
     paymentInfo[paymentInfo.length] = [!!item.note ? "SPECIAL NOTES:" : "", ""]
     paymentInfo[paymentInfo.length] = [!!item.note ? item.note : "", ""]

@@ -15,6 +15,7 @@
     "url": ""
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.6.0",
     "@coreui/chartjs": "^2.0.0",
     "@coreui/coreui": "^3.4.0",
     "@coreui/icons": "^2.0.0",
@@ -27,13 +28,20 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.0",
+    "axios": "^0.21.1",
     "classnames": "^2.2.6",
+    "concurrently": "^6.2.0",
     "core-js": "^3.9.1",
+    "dotenv": "^10.0.0",
     "enzyme": "^3.11.0",
+    "express": "^4.17.1",
     "glightbox": "^3.0.9",
     "jest-canvas-mock": "^2.3.1",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.15",
+    "mongoose": "^5.13.4",
+    "mongoose-auto-increment": "^5.0.1",
+    "morgan": "^1.10.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-app-polyfill": "^2.0.0",
@@ -52,6 +60,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "concurrently -n 'SERVER,CLIENT' -c 'red,green' \"nodemon server.js\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
@@ -79,5 +88,6 @@
   "engines": {
     "node": ">=10",
     "npm": ">=6"
-  }
+  },
+  "proxy": "http://localhost:8080"
 }

@@ -1,20 +1,5 @@
-import registrationData from '../../data/MockData/MockRegistration'
-import committeeData from '../../data/MockData/MockCommittees'
-import allotmentData from '../../data/MockData/MockAllotments'
 
-export function countCommittees() {
-    let count = 0;
-
-    let i;
-    for (i = 0; i < committeeData.length; i++) {
-        if (committeeData[i].committee !== '') {
-            count = count + 1
-        }
-    }
-    return count
-}
-
-export function countDelegations() {
+export function countDelegations(registrationData) {
     let count = 0;
 
     let i;
@@ -26,7 +11,7 @@ export function countDelegations() {
     return count
 }
 
-export function countTotalDelegates() {
+export function countTotalDelegates(registrationData) {
     let count = 0;
 
     let i;
@@ -36,15 +21,29 @@ export function countTotalDelegates() {
     return count
 }
 
-export function getIncome() {
+export function getIncome(registrationData, settings) {
     let count = 0;
 
     let i;
     for (i = 0; i < registrationData.length; i++) {
-        count = count + (Number(registrationData[i].delegates) * 20)
+        let multiplier = 0;
+        let schoolfee = 0;
+
+        if(registrationData[i].window === "Early") {
+          multiplier = Number(settings.earlydelfee)
+          schoolfee = Number(settings.earlyschoolfee)
+        } else if(registrationData[i].window === "Regular") {
+          multiplier = Number(settings.regdelfee)
+          schoolfee = Number(settings.regschoolfee)
+        } else if(registrationData[i].window === "Late") {
+          multiplier = Number(settings.latedelfee)
+          schoolfee = Number(settings.lateschoolfee)
+        }
+
+        count = count + (Number(registrationData[i].delegates) * multiplier)
 
         if (registrationData[i].type === 'Delegation') {
-            count = count + 30
+            count = count + schoolfee
         }
     }
 
@@ -53,7 +52,7 @@ export function getIncome() {
     return count
 }
 
-export function getCommitteeList() {
+export function getCommitteeList(committeeData) {
     let committeeList = []
 
     let i;
@@ -67,7 +66,7 @@ export function getCommitteeList() {
     return committeeList
 }
 
-export function getCommitteeValues(field) {
+export function getCommitteeValues(field, committeeData) {
     let ans = []
 
     let i;
@@ -93,14 +92,14 @@ export function getCommitteeValues(field) {
     return ans
 }
 
-export function calculateConferenceCapacity() {
-    let assigned = getCommitteeValues('assigned').reduce(function (a, b) { return a + b; }, 0)
-    let total = getCommitteeValues('total').reduce(function (a, b) { return a + b; }, 0)
+export function calculateConferenceCapacity(committeeData) {
+    let assigned = getCommitteeValues('assigned', committeeData).reduce(function (a, b) { return a + b; }, 0)
+    let total = getCommitteeValues('total', committeeData).reduce(function (a, b) { return a + b; }, 0)
 
-    return Math.round((assigned / total) * 100)
+    return isNaN(Math.round((assigned / total) * 100)) ? 0 : Math.round((assigned / total) * 100)
 }
 
-export function calculatePaymentCompletion() {
+export function calculatePaymentCompletion(registrationData) {
     let count = 0;
 
     let i;
@@ -110,12 +109,11 @@ export function calculatePaymentCompletion() {
         }
     }
 
-    return Math.round((count / registrationData.length) * 100)
+    return isNaN(Math.round((count / registrationData.length) * 100)) ? 0 : Math.round((count / registrationData.length) * 100)
 }
 
-export function calculateDelegationBalance() {
+export function calculateDelegationBalance(registrationData, committeeData) {
     let balanced = 0
-
 
     let i;
     for (i = 0; i < registrationData.length; i++) {
@@ -132,13 +130,13 @@ export function calculateDelegationBalance() {
                     assignedPositions = assignedPositions + 1
                 }
             }
-
-            let l;
-            for (l = 0; l < allotmentData.length; l++) {
-                if (allotmentData[l].delegation === registrationData[i].delegation) {
-                    allottedPositions = allottedPositions + allotmentData[l].allotments[committeeData[j].committee]
-                }
-            }
+            /*
+                    let l;
+                    for (l = 0; l < allotmentData.length; l++) {
+                      if (allotmentData[l].delegation === registrationData[i].delegation) {
+                        allottedPositions = allottedPositions + allotmentData[l].allotments[committeeData[j].committee]
+                      }
+                    }*/
         }
 
         if (assignedPositions - allottedPositions === 0) {
@@ -146,10 +144,10 @@ export function calculateDelegationBalance() {
         }
     }
 
-    return Math.round((balanced / registrationData.length) * 100)
+    return isNaN(Math.round((balanced / registrationData.length) * 100)) ? 0 : Math.round((balanced / registrationData.length) * 100)
 }
 
-export function countCommitteeCategory(category) {
+export function countCommitteeCategory(category, committeeData) {
     let count = 0;
 
     let i;
@@ -162,7 +160,7 @@ export function countCommitteeCategory(category) {
     return count
 }
 
-export function countRegistrationTimeWindow(window) {
+export function countRegistrationTimeWindow(window, registrationData) {
     let count = 0;
 
     let i;
@@ -175,7 +173,7 @@ export function countRegistrationTimeWindow(window) {
     return count
 }
 
-export function countDelegatesByCategory(category) {
+export function countDelegatesByCategory(category, committeeData) {
     let count = 0;
 
     let i;
@@ -195,7 +193,7 @@ export function countDelegatesByCategory(category) {
     return count
 }
 
-export function countDelegatesByType(type) {
+export function countDelegatesByType(type, committeeData, registrationData) {
     let count = 0;
 
     let i;

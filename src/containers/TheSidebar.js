@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { useAuth0 } from "@auth0/auth0-react";
 import {
   CCreateElement,
   CSidebar,
@@ -17,17 +18,30 @@ import CIcon from '@coreui/icons-react'
 import banner from '../assets/branding/Banner-TransparentWhite.svg'
 import logo from '../assets/branding/Logo-TransparentWhite.png'
 
-// sidebar nav config
-import navigation from './_nav'
+import fetchData from '../data/LiveData/FetchData'
+
+import { getNav } from './_nav'
 
 const TheSidebar = () => {
+  const { user } = useAuth0()
+
+  const [committeeData, setCommitteeData] = useState([]);
+
+  fetchData('/api/get/committee', user.sub, 'abbreviation').then((res) => {
+    if (JSON.stringify(res) !== JSON.stringify(committeeData)) {
+      setCommitteeData(res)
+    }
+  })
+
   const dispatch = useDispatch()
   const show = useSelector(state => state.sidebarShow)
+
+  let navigation = getNav(committeeData)
 
   return (
     <CSidebar
       show={show}
-      onShowChange={(val) => dispatch({type: 'set', sidebarShow: val })}
+      onShowChange={(val) => dispatch({ type: 'set', sidebarShow: val })}
     >
       <CSidebarBrand className="d-md-down-none" to="/">
         <CIcon
@@ -54,7 +68,7 @@ const TheSidebar = () => {
           }}
         />
       </CSidebarNav>
-      <CSidebarMinimizer className="c-d-md-down-none"/>
+      <CSidebarMinimizer className="c-d-md-down-none" />
     </CSidebar>
   )
 }

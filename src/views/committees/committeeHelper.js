@@ -2,59 +2,29 @@ import {
     CAlert,
     CButton,
     CCol,
-    CDropdownItem,
     CRow
 } from '@coreui/react'
 
-import committeeData from '../../data/MockData/MockCommittees'
 import registrationData from '../../data/MockData/MockRegistration'
 import allotmentData from '../../data/MockData/MockAllotments'
 
-export function getIndex(committee) {
-    let i;
-    for (i = 0; i < committeeData.length; i++) {
-        if (committeeData[i].committee === committee) {
-            return committeeData[i]
-        }
-    }
-
-    return null
-}
-
-export function getActive(item, committee) {
-    let positions = getIndex(committee).positions.split(",")
-    let assignments = getIndex(committee).assignments.split(",")
+export function getAllDelegations(json, registrationData) {
+    let delegations = [<option value="">Select Delegation</option>]
 
     let i;
-    for (i = 0; i < positions.length; i++) {
-        if (positions[i] === item.position && assignments[i] !== '') {
-            return assignments[i];
-        }
-    }
-
-    return "Select Delegation"
-}
-
-export function getDelegations(item, json) {
-    let data = []
-
-    let i;
-    for (i = 0; i < registrationData.length; i++) {
+    for(i = 0; i < registrationData.length; i++) {
         if (json.division.includes(registrationData[i].division) || registrationData[i].division.includes(json.division)) {
-            let name = registrationData[i].delegation
 
-            if (name === getActive(item, json.committee)) {
-                data[i] = <CDropdownItem active>{name}</CDropdownItem>
-            } else {
-                data[i] = <CDropdownItem>{name}</CDropdownItem>
-            }
+        let temp = registrationData[i].delegation
+
+        delegations.push(<option value={temp}>{temp}</option>)
         }
     }
 
-    return data
+    return delegations
 }
 
-export function getData(committee) {
+export function getCommitteeData(committee) {
     let data = []
     let positions = committee.positions.split(",")
 

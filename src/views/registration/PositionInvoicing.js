@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
 import {
   CBadge,
   CCard,
@@ -13,7 +14,7 @@ import {
   CRow
 } from '@coreui/react'
 
-import registrationData from '../../data/MockData/MockRegistration'
+import fetchData from '../../data/LiveData/FetchData'
 
 import { getStatus, downloadPositionInvoice } from './positionInvoicingHelper'
 
@@ -35,7 +36,27 @@ const fields = [
 ]
 
 const PositionInvoicing = () => {
-  return (
+  const { user } = useAuth0()
+
+  const [data, setData] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true)
+
+  async function getData() {
+    await fetchData("/api/get/registrationData", user.sub).then((res) => {
+      if (JSON.stringify(res) !== JSON.stringify(data)) {
+        setData(res)
+      }
+    })
+  }
+
+  getData().then(() => {
+    if (isLoading) {
+      setIsLoading(false)
+    }
+  })
+
+  return !isLoading ? (
     <>
       <CRow>
         <CCol>
@@ -45,7 +66,7 @@ const PositionInvoicing = () => {
             </CCardHeader>
             <CCardBody>
               <CDataTable
-                items={registrationData}
+                items={data}
                 fields={fields}
                 hover
                 striped
@@ -75,8 +96,7 @@ const PositionInvoicing = () => {
                           </CDropdownMenu>
                         </CDropdown>
                       </td>
-                    ),
-
+                    )
                 }}
               />
             </CCardBody>
@@ -84,7 +104,7 @@ const PositionInvoicing = () => {
         </CCol>
       </CRow>
     </>
-  )
+  ) : (<p>Waiting for Data...</p>)
 }
 
 export default PositionInvoicing

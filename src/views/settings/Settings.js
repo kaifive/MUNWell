@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from 'axios'
 import {
     CBadge,
     CButton,
@@ -33,10 +35,10 @@ import {
     CTextarea,
 } from '@coreui/react';
 
-import awards from '../../data/MockData/MockAwardTypes'
-import licenseData from '../../data/MockData/MockLicense'
+import fetchData from '../../data/LiveData/FetchData'
 
 import { getStateList } from 'src/reusable/StateList';
+import { checkLicense } from 'src/reusable/checkLicense';
 
 const getBadge = status => {
     switch (status) {
@@ -68,17 +70,49 @@ const fieldsLicense = [
         key: 'end',
         label: 'End Date',
     },
-    'licenseType',
+    'license',
     'actions'
 ]
 
 let header = ""
+let status = true;
+let editItem;
 
 const Settings = () => {
+    const { user } = useAuth0()
+
     const [accordion, setAccordion] = useState()
 
     const [modalAwards, setModalAwards] = useState(false)
     const [modalLicense, setModalLicense] = useState(false)
+
+    const [settingsState, setSettingsState] = useState({
+        default: true,
+        name: '',
+        abbreviation: '',
+        organization: '',
+        secgen: '',
+        start: '',
+        end: '',
+        street: '',
+        city: '',
+        state: '',
+        zipcode: '',
+        logo: '',
+        website: '',
+
+        invoiceStreet: '',
+        invoiceCity: '',
+        invoiceState: '',
+        invoiceZipcode: '',
+        earlydelfee: '',
+        earlyschoolfee: '',
+        regdelfee: '',
+        regschoolfee: '',
+        latedelfee: '',
+        lateschoolfee: '',
+        terms: ''
+    })
 
     const [awardsState, setAwardsState] = useState({
         awardType: '',
@@ -89,6 +123,13 @@ const Settings = () => {
         productKey: '',
     })
 
+    const [data, setData] = useState({
+        awardTypes: [],
+        licenses: []
+    });
+
+    const [isLoading, setIsLoading] = useState(true)
+
     function openAwardsModal() {
         setAwardsState({
             awardType: '',
@@ -96,6 +137,7 @@ const Settings = () => {
         })
 
         header = "Add Award Type"
+        status = true
 
         setModalAwards(!modalAwards)
     }
@@ -108,7 +150,50 @@ const Settings = () => {
         setModalLicense(!modalLicense)
     }
 
-    function addAwards() {
+    function addAwards(event) {
+        event.preventDefault();
+
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
+                    if (status) {
+                        const payload = {
+                            user: user.sub,
+                            type: awardsState.awardType,
+                            value: awardsState.awardValue
+                        }
+
+                        axios({
+                            url: '/api/save/awardType',
+                            method: 'POST',
+                            data: payload
+                        })
+                            .then(() => {
+                                console.log('Data has been sent to the server')
+                            })
+                            .catch(() => {
+                                console.log('Internal server error')
+                            })
+                    } else {
+                        axios.put('/api/update/awardType', {
+                            data: {
+                                id: editItem._id,
+                                update: { type: awardsState.awardType, value: awardsState.awardValue }
+                            },
+                        });
+                    }
+
+                }
+            })
+
+        fetchData("/api/get/awardType", user.sub, 'value').then((res) => {
+            setData(prevState => {
+                return { ...prevState, awardTypes: res }
+            })
+        })
+
         setModalAwards(false)
     }
 
@@ -119,15 +204,206 @@ const Settings = () => {
         })
 
         header = "Edit Award Type"
+        status = false
+        editItem = item
 
         setModalAwards(!modalAwards)
     }
 
-    function addLicense() {
+    function deleteAwards(item) {
+        axios.delete('/api/delete/awardType', {
+            data: {
+                id: item._id,
+            },
+        });
+
+        fetchData("/api/get/awardType", user.sub, 'value').then((res) => {
+            setData(prevState => {
+                return { ...prevState, awardTypes: res }
+            })
+        })
+    }
+
+    function addLicense(event) {
+        event.preventDefault();
+
+        fetchData("/api/get/validlicense", user.sub, 'start').then((res) => {
+            let msg = "Invalid Manuel License Key";
+
+            let i;
+            for (i = 0; i < res.length; i++) {
+                if (res[i].key === licenseState.productKey) {
+                    msg = "";
+
+                    const payload = {
+                        user: user.sub,
+                        key: licenseState.productKey,
+                        license: res[i].license,
+                        start: res[i].start,
+                        end: res[i].end
+                    }
+
+                    axios({
+                        url: '/api/save/license',
+                        method: 'POST',
+                        data: payload
+                    })
+                        .then(() => {
+                            console.log('Data has been sent to the server')
+                            fetchData("/api/get/license", user.sub, 'start').then((res) => {
+                                setData(prevState => {
+                                    return { ...prevState, licenses: res }
+                                })
+                            })
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
+                }
+            }
+
+            if (msg.length > 0) {
+                alert(msg)
+            }
+        })
+
         setModalLicense(false)
     }
 
-    return (
+    function deleteLicense(item) {
+        axios.delete('/api/delete/license', {
+            data: {
+                id: item._id,
+            },
+        });
+
+        fetchData("/api/get/license", user.sub, 'start').then((res) => {
+            setData(prevState => {
+                return { ...prevState, licenses: res }
+            })
+        })
+    }
+
+    function getValidity(item) {
+        var dateFrom = item.start;
+        var dateTo = item.end;
+
+        var dateCheck = new Date();
+        var dd = String(dateCheck.getDate()).padStart(2, '0');
+        var mm = String(dateCheck.getMonth() + 1).padStart(2, '0');
+        var yyyy = dateCheck.getFullYear();
+
+        dateCheck = mm + '/' + dd + '/' + yyyy;
+
+        var d1 = dateFrom.split("/");
+        var d2 = dateTo.split("/");
+        var c = dateCheck.split("/");
+
+        var from = new Date(d1[2], parseInt(d1[1]) - 1, d1[0]);
+        var to = new Date(d2[2], parseInt(d2[1]) - 1, d2[0]);
+        var check = new Date(c[2], parseInt(c[1]) - 1, c[0]);
+
+        if (check > from && check < to) {
+            return "Valid"
+        }
+        return "Invalid"
+    }
+
+    function saveSettings(event) {
+        event.preventDefault();
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
+                    const payload = {
+                        user: user.sub,
+                        name: settingsState.name,
+                        abbreviation: settingsState.abbreviation,
+                        organization: settingsState.organization,
+                        secgen: settingsState.secgen,
+                        start: settingsState.start,
+                        end: settingsState.end,
+                        street: settingsState.street,
+                        city: settingsState.city,
+                        state: settingsState.state,
+                        zipcode: settingsState.zipcode,
+                        logo: settingsState.logo,
+                        website: settingsState.website,
+
+                        invoiceStreet: settingsState.invoiceStreet,
+                        invoiceCity: settingsState.invoiceCity,
+                        invoiceState: settingsState.invoiceState,
+                        invoiceZipcode: settingsState.invoiceZipcode,
+                        earlydelfee: settingsState.earlydelfee,
+                        earlyschoolfee: settingsState.earlyschoolfee,
+                        regdelfee: settingsState.regdelfee,
+                        regschoolfee: settingsState.regschoolfee,
+                        latedelfee: settingsState.latedelfee,
+                        lateschoolfee: settingsState.lateschoolfee,
+                        terms: settingsState.terms
+                    }
+
+                    axios({
+                        url: '/api/save/settings',
+                        method: 'POST',
+                        data: payload
+                    })
+                        .then(() => {
+                            console.log('Data has been sent to the server')
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
+                }
+            })
+
+        fetchData("/api/get/settings", user.sub).then((res) => {
+            setSettingsState(res[res.length - 1])
+            setSettingsState(prevState => {
+                return { ...prevState, default: true }
+            })
+        })
+    }
+
+    async function getData() {
+        await fetchData("/api/get/awardType", user.sub, 'value').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.awardTypes)) {
+                setData(prevState => {
+                    return { ...prevState, awardTypes: res }
+                })
+            }
+        })
+
+        await fetchData("/api/get/license", user.sub, 'start').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.licenses)) {
+                setData(prevState => {
+                    return { ...prevState, licenses: res }
+                })
+            }
+        })
+
+        if (settingsState.default) {
+            await fetchData("/api/get/settings", user.sub).then((res) => {
+                if (res.length !== 0) {
+                    if (JSON.stringify(res[res.length - 1]) !== JSON.stringify(settingsState)) {
+                        setSettingsState(res[res.length - 1])
+                        setSettingsState(prevState => {
+                            return { ...prevState, default: false }
+                        })
+                    }
+                }
+            })
+        }
+    }
+
+    getData().then(() => {
+        if (isLoading) {
+            setIsLoading(false)
+        }
+    })
+
+    return !isLoading ? (
         <>
             <CRow>
                 <CCol>
@@ -156,7 +432,12 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-name">Conference Name</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="9">
-                                                        <CInput id="conf-name" name="conf-name" placeholder="Conference Name" />
+                                                        <CInput name="confName" placeholder="Conference Name" value={settingsState.name} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, name: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                 </CFormGroup>
                                                 <CFormGroup row>
@@ -164,7 +445,12 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-abbr">Conference Abbreviation</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="9">
-                                                        <CInput id="conf-abbr" name="conf-abbr" placeholder="Conference Abbreviation" />
+                                                        <CInput name="confAbbr" placeholder="Conference Abbreviation" value={settingsState.abbreviation} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, abbreviation: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                 </CFormGroup>
                                                 <CFormGroup row>
@@ -172,7 +458,12 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-org">Conference Organization</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="9">
-                                                        <CInput id="conf-org" name="conf-org" placeholder="Conference Organization" />
+                                                        <CInput name="confOrg" placeholder="Conference Organization" value={settingsState.organization} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, organization: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                 </CFormGroup>
                                                 <CFormGroup row>
@@ -180,7 +471,12 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-org">Conference Secretary-General Name</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="9">
-                                                        <CInput id="conf-org" name="conf-secgen" placeholder="Conference Secretary-General Name" />
+                                                        <CInput name="confSecGen" placeholder="Conference Secretary-General Name" value={settingsState.secgen} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, secgen: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                 </CFormGroup>
                                                 <CFormGroup row>
@@ -188,11 +484,21 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-date">Conference Date</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="4">
-                                                        <CInput type="date" id="conf-start" name="conf-start" />
+                                                        <CInput type="date" name="confStart" value={settingsState.start} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, start: val }
+                                                            })
+                                                        }} />
                                                         <CFormText className="help-block">Start Date</CFormText>
                                                     </CCol>
                                                     <CCol xs="12" md="4">
-                                                        <CInput type="date" id="conf-end" name="conf-end" />
+                                                        <CInput type="date" name="confEnd" value={settingsState.end} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, end: val }
+                                                            })
+                                                        }} />
                                                         <CFormText className="help-block">End Date</CFormText>
                                                     </CCol>
                                                 </CFormGroup>
@@ -201,27 +507,52 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-addr">Conference Address</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="9">
-                                                        <CInput id="conf-street" name="conf-street" placeholder="Street" />
+                                                        <CInput name="confStreet" placeholder="Street" value={settingsState.street} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, street: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                 </CFormGroup>
                                                 <CFormGroup row>
                                                     <CCol md="2"></CCol>
                                                     <CCol xs="12" md="3">
-                                                        <CInput id="conf-city" name="conf-city" placeholder="City" />
+                                                        <CInput name="confCity" placeholder="City" value={settingsState.city} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, city: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                     <CCol xs="12" md="3">
-                                                        <CSelect custom name="conf-state">
+                                                        <CSelect custom name="confState" value={settingsState.state} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, state: val }
+                                                            })
+                                                        }} >
                                                             {getStateList()}
                                                         </CSelect>
                                                     </CCol>
                                                     <CCol xs="12" md="3">
-                                                        <CInput id="conf-postal" name="conf-postal" placeholder="Postal Code" />
+                                                        <CInput name="confPostal" placeholder="Postal Code" value={settingsState.zipcode} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, zipcode: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                 </CFormGroup>
                                                 <CFormGroup row>
                                                     <CLabel col md="2" htmlFor="conf-logo">Conference Logo</CLabel>
                                                     <CCol xs="12" md="9">
-                                                        <CInputFile id="conf-logo" name="conf-logo" />
+                                                        <CInputFile name="confLogo" value={settingsState.logo} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, logo: val }
+                                                            })
+                                                        }} />
                                                         <CFormText className="help-block">Recommended Image With 1:1 Aspect Ratio</CFormText>
                                                     </CCol>
                                                 </CFormGroup>
@@ -230,7 +561,12 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-web">Conference Website</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="9">
-                                                        <CInput id="conf-web" name="conf-web" placeholder="Conference Website" />
+                                                        <CInput name="conf-web" placeholder="Conference Website" value={settingsState.website} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, website: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                 </CFormGroup>
                                             </CForm>
@@ -238,7 +574,7 @@ const Settings = () => {
                                         <CCardFooter>
                                             <CRow className="align-items-right">
                                                 <CCol lg="2">
-                                                    <CButton block color="primary">Save Changes</CButton>
+                                                    <CButton block color="primary" onClick={event => saveSettings(event)}>Save Changes</CButton>
                                                 </CCol>
                                             </CRow>
                                         </CCardFooter>
@@ -263,21 +599,41 @@ const Settings = () => {
                                                         <CLabel htmlFor="conf-addr">Invoice Address</CLabel>
                                                     </CCol>
                                                     <CCol xs="12" md="9">
-                                                        <CInput id="conf-street" name="conf-street" placeholder="Street" />
+                                                        <CInput name="confStreet" placeholder="Street" value={settingsState.invoiceStreet} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, invoiceStreet: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                 </CFormGroup>
                                                 <CFormGroup row>
                                                     <CCol md="2"></CCol>
                                                     <CCol xs="12" md="3">
-                                                        <CInput id="conf-city" name="conf-city" placeholder="City" />
+                                                        <CInput name="confCity" placeholder="City" value={settingsState.invoiceCity} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, invoiceCity: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                     <CCol xs="12" md="3">
-                                                        <CSelect custom name="conf-state">
+                                                        <CSelect custom name="confState" value={settingsState.invoiceState} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, invoiceState: val }
+                                                            })
+                                                        }}>
                                                             {getStateList()}
                                                         </CSelect>
                                                     </CCol>
                                                     <CCol xs="12" md="3">
-                                                        <CInput id="conf-postal" name="conf-postal" placeholder="Postal Code" />
+                                                        <CInput name="confPostal" placeholder="Postal Code" value={settingsState.invoiceZipcode} onChange={e => {
+                                                            const val = e.target.value
+                                                            setSettingsState(prevState => {
+                                                                return { ...prevState, invoiceZipcode: val }
+                                                            })
+                                                        }} />
                                                     </CCol>
                                                 </CFormGroup>
                                                 <CFormGroup row>
@@ -290,7 +646,12 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0"  />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" value={settingsState.earlydelfee} onChange={e => {
+                                                                    const val = e.target.value
+                                                                    setSettingsState(prevState => {
+                                                                        return { ...prevState, earlydelfee: val }
+                                                                    })
+                                                                }} />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -305,7 +666,12 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" value={settingsState.earlyschoolfee} onChange={e => {
+                                                                    const val = e.target.value
+                                                                    setSettingsState(prevState => {
+                                                                        return { ...prevState, earlyschoolfee: val }
+                                                                    })
+                                                                }} />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -324,7 +690,12 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" value={settingsState.regdelfee} onChange={e => {
+                                                                    const val = e.target.value
+                                                                    setSettingsState(prevState => {
+                                                                        return { ...prevState, regdelfee: val }
+                                                                    })
+                                                                }} />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -339,7 +710,12 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" value={settingsState.regschoolfee} onChange={e => {
+                                                                    const val = e.target.value
+                                                                    setSettingsState(prevState => {
+                                                                        return { ...prevState, regschoolfee: val }
+                                                                    })
+                                                                }} />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -358,7 +734,12 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" value={settingsState.latedelfee} onChange={e => {
+                                                                    const val = e.target.value
+                                                                    setSettingsState(prevState => {
+                                                                        return { ...prevState, latedelfee: val }
+                                                                    })
+                                                                }} />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -373,7 +754,12 @@ const Settings = () => {
                                                                 <CInputGroupPrepend>
                                                                     <CInputGroupText>$</CInputGroupText>
                                                                 </CInputGroupPrepend>
-                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" />
+                                                                <CInput id="appendedPrependedInput" size="16" type="number" min="0" value={settingsState.lateschoolfee} onChange={e => {
+                                                                    const val = e.target.value
+                                                                    setSettingsState(prevState => {
+                                                                        return { ...prevState, lateschoolfee: val }
+                                                                    })
+                                                                }} />
                                                                 <CInputGroupAppend>
                                                                     <CInputGroupText>.00</CInputGroupText>
                                                                 </CInputGroupAppend>
@@ -389,9 +775,15 @@ const Settings = () => {
                                                     <CCol xs="12" md="9">
                                                         <CTextarea
                                                             name="textarea-input"
-                                                            id="textarea-input"
                                                             rows="9"
                                                             placeholder="Terms & Conditions"
+                                                            value={settingsState.terms}
+                                                            onChange={e => {
+                                                                const val = e.target.value
+                                                                setSettingsState(prevState => {
+                                                                    return { ...prevState, terms: val }
+                                                                })
+                                                            }}
                                                         />
                                                     </CCol>
                                                 </CFormGroup>
@@ -400,7 +792,7 @@ const Settings = () => {
                                         <CCardFooter>
                                             <CRow className="align-items-right">
                                                 <CCol lg="2">
-                                                    <CButton block color="primary">Save Changes</CButton>
+                                                    <CButton block color="primary" onClick={event => saveSettings(event)}>Save Changes</CButton>
                                                 </CCol>
                                             </CRow>
                                         </CCardFooter>
@@ -426,7 +818,7 @@ const Settings = () => {
                                             </CRow>
                                             <br></br>
                                             <CDataTable
-                                                items={awards}
+                                                items={data?.awardTypes || { message: "Waiting for Data..." }}
                                                 fields={fieldsAwards}
                                                 hover
                                                 striped
@@ -443,7 +835,7 @@ const Settings = () => {
                                                                     </CDropdownToggle>
                                                                     <CDropdownMenu>
                                                                         <CDropdownItem onClick={() => editAwards(item)}>Edit</CDropdownItem>
-                                                                        <CDropdownItem>Delete</CDropdownItem>
+                                                                        <CDropdownItem onClick={() => deleteAwards(item)}>Delete</CDropdownItem>
                                                                     </CDropdownMenu>
                                                                 </CDropdown>
                                                             </td>
@@ -473,7 +865,7 @@ const Settings = () => {
                                             </CRow>
                                             <br></br>
                                             <CDataTable
-                                                items={licenseData}
+                                                items={data?.licenses || { message: "Waiting for Data..." }}
                                                 fields={fieldsLicense}
                                                 hover
                                                 striped
@@ -489,9 +881,7 @@ const Settings = () => {
                                                                         Select Action
                                                                     </CDropdownToggle>
                                                                     <CDropdownMenu>
-                                                                        <CDropdownItem>
-                                                                            Delete
-                                                                        </CDropdownItem>
+                                                                        <CDropdownItem onClick={() => deleteLicense(item)}>Delete</CDropdownItem>
                                                                     </CDropdownMenu>
                                                                 </CDropdown>
                                                             </td>
@@ -499,8 +889,8 @@ const Settings = () => {
                                                     'validity':
                                                         (item) => (
                                                             <td>
-                                                                <CBadge color={getBadge(item.validity)}>
-                                                                    {item.validity}
+                                                                <CBadge color={getBadge(getValidity(item))}>
+                                                                    {getValidity(item)}
                                                                 </CBadge>
                                                             </td>
                                                         )
@@ -552,7 +942,7 @@ const Settings = () => {
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setModalAwards(false)}>Cancel</CButton>
-                    <CButton color="primary" onClick={() => addAwards()}>Submit</CButton>
+                    <CButton color="primary" onClick={event => addAwards(event)}>Submit</CButton>
                 </CModalFooter>
             </CModal>
 
@@ -579,11 +969,11 @@ const Settings = () => {
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setModalLicense(false)}>Cancel</CButton>
-                    <CButton color="primary" onClick={() => addLicense()}>Submit</CButton>
+                    <CButton color="primary" onClick={event => addLicense(event)}>Submit</CButton>
                 </CModalFooter>
             </CModal>
         </>
-    )
+    ) : (<p>Waiting for Data...</p>)
 }
 
 export default Settings
