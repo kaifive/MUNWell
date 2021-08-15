@@ -7,7 +7,7 @@ const IndividualAwardModel = new Schema({
     committee: String,
     type: String,
     position: String,
-    delegation: String, 
+    delegation: String,
     delegate1: String,
     delegate2: String
 });

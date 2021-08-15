@@ -61,6 +61,7 @@ const fields = [
 
 const PaymentInvoicing = () => {
   const { user } = useAuth0()
+  const { isAuthenticated } = useAuth0()
 
   const [modalInvoice, setModalInvoice] = useState(false)
   const [modalReceipt, setModalReceipt] = useState(false)
@@ -234,14 +235,14 @@ const PaymentInvoicing = () => {
     axios.put('/api/update/registrationData', {
       data: {
         id: item._id,
-        update: { status: newStatus}
+        update: { status: newStatus }
       },
     });
 
     fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
       setData(prevState => {
         return { ...prevState, registrationData: JSON.stringify(res) }
-      })    
+      })
     })
   }
 
@@ -263,11 +264,13 @@ const PaymentInvoicing = () => {
     })
   }
 
-  getData().then(() => {
-    if (isLoading) {
-      setIsLoading(false)
-    }
-  })
+  if (isAuthenticated) {
+    getData().then(() => {
+      if (isLoading) {
+        setIsLoading(false)
+      }
+    })
+  }
 
   return !isLoading ? (
     <>

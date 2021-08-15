@@ -12,26 +12,29 @@ import {
   CSidebarNavDropdown,
   CSidebarNavItem,
 } from '@coreui/react'
-
 import CIcon from '@coreui/icons-react'
-
-import banner from '../assets/branding/Banner-TransparentWhite.svg'
-import logo from '../assets/branding/Logo-TransparentWhite.png'
 
 import fetchData from '../data/LiveData/FetchData'
 
 import { getNav } from './_nav'
+
+import banner from '../assets/branding/Banner-TransparentWhite.svg'
+import logo from '../assets/branding/Logo-TransparentWhite.png'
 
 const TheSidebar = () => {
   const { user } = useAuth0()
 
   const [committeeData, setCommitteeData] = useState([]);
 
-  fetchData('/api/get/committee', user.sub, 'abbreviation').then((res) => {
-    if (JSON.stringify(res) !== JSON.stringify(committeeData)) {
-      setCommitteeData(res)
-    }
-  })
+  const { isAuthenticated } = useAuth0()
+
+  if (isAuthenticated) {
+    fetchData('/api/get/committee', user.sub, 'abbreviation').then((res) => {
+      if (JSON.stringify(res) !== JSON.stringify(committeeData)) {
+        setCommitteeData(res)
+      }
+    })
+  }
 
   const dispatch = useDispatch()
   const show = useSelector(state => state.sidebarShow)

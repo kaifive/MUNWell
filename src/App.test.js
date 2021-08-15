@@ -19,56 +19,56 @@ import DelegationAwards from './views/awards/DelegationAwards'
 import ParticipationAwards from './views/awards/ParticipationAwards'
 
 it('Manuel App mounts without crashing', () => {
-  const wrapper = shallow(<App/>)
+  const wrapper = shallow(<App />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Dashboard without crashing', () => {
-  const wrapper = shallow(<Dashboard/>)
+  const wrapper = shallow(<Dashboard />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Settings without crashing', () => {
-  const wrapper = shallow(<Settings/>)
+  const wrapper = shallow(<Settings />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Registration without crashing', () => {
-  const wrapper = shallow(<Registration/>)
+  const wrapper = shallow(<Registration />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Committee Allotments without crashing', () => {
-  const wrapper = shallow(<CommitteeAllotments/>)
+  const wrapper = shallow(<CommitteeAllotments />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Payment Invoicing without crashing', () => {
-  const wrapper = shallow(<PaymentInvoicing/>)
+  const wrapper = shallow(<PaymentInvoicing />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Position Invoicing without crashing', () => {
-  const wrapper = shallow(<PositionInvoicing/>)
+  const wrapper = shallow(<PositionInvoicing />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Committee Roster without crashing', () => {
-  const wrapper = shallow(<CommitteeRoster/>)
+  const wrapper = shallow(<CommitteeRoster />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Committee Awards without crashing', () => {
-  const wrapper = shallow(<CommitteeAwards/>)
+  const wrapper = shallow(<CommitteeAwards />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Delegation Awards without crashing', () => {
-  const wrapper = shallow(<DelegationAwards/>)
+  const wrapper = shallow(<DelegationAwards />)
   wrapper.unmount()
 })
 
 it('Manuel mounts Participation Awards without crashing', () => {
-  const wrapper = shallow(<ParticipationAwards/>)
+  const wrapper = shallow(<ParticipationAwards />)
   wrapper.unmount()
 })

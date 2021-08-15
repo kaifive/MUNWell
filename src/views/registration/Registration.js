@@ -64,6 +64,7 @@ let editItem;
 
 const Registration = () => {
   const { user } = useAuth0()
+  const { isAuthenticated } = useAuth0()
 
   const [modal, setModal] = useState(false)
   const [modalEmail, setModalEmail] = useState(false)
@@ -241,11 +242,13 @@ const Registration = () => {
     })
   }
 
-  getData().then(() => {
-    if (isLoading) {
-      setIsLoading(false)
-    }
-  })
+  if (isAuthenticated) {
+    getData().then(() => {
+      if (isLoading) {
+        setIsLoading(false)
+      }
+    })
+  }
 
   return !isLoading ? (
     <>

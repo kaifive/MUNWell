@@ -147,6 +147,14 @@ router.put('/update/committee', (req, res) => {
     });
 });
 
+router.put('/update/individualAward', (req, res) => {
+    const { id, update } = req.body.data;
+    IndividualAward.findByIdAndUpdate(id, update, err => {
+        if (err) return res.send(err);
+        return res.json({ success: true });
+    });
+});
+
 /**SAVING DATA TO MONGODB */
 router.post('/save/awardType', (req, res) => {
     const data = req.body

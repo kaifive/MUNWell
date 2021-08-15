@@ -18,6 +18,7 @@ let fields;
 
 const DelegationAwards = () => {
     const { user } = useAuth0()
+    const { isAuthenticated } = useAuth0()
 
     const [data, setData] = useState({
         registrationData: [],
@@ -62,12 +63,13 @@ const DelegationAwards = () => {
         })
     }
 
-    getData().then(() => {
-        if (isLoading) {
-            setIsLoading(false)
-        }
-    })
-
+    if (isAuthenticated) {
+        getData().then(() => {
+            if (isLoading) {
+                setIsLoading(false)
+            }
+        })
+    }
 
     fields = getFields(data.awardType)
 

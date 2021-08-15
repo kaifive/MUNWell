@@ -27,6 +27,7 @@ import fetchData from 'src/data/LiveData/FetchData'
 
 const Dashboard = () => {
   const { user } = useAuth0()
+  const { isAuthenticated } = useAuth0()
 
   const [data, setData] = useState({
     committeeData: [],
@@ -62,11 +63,14 @@ const Dashboard = () => {
     })
   }
 
-  getData().then(() => {
-    if (isLoading) {
-      setIsLoading(false)
-    }
-  })
+  if (isAuthenticated) {
+    getData().then(() => {
+      if (isLoading) {
+        setIsLoading(false)
+      }
+    })
+  }
+
 
   return !isLoading ? (
     <>

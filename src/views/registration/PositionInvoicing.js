@@ -37,6 +37,7 @@ const fields = [
 
 const PositionInvoicing = () => {
   const { user } = useAuth0()
+  const { isAuthenticated } = useAuth0()
 
   const [data, setData] = useState([]);
 
@@ -50,11 +51,13 @@ const PositionInvoicing = () => {
     })
   }
 
-  getData().then(() => {
-    if (isLoading) {
-      setIsLoading(false)
-    }
-  })
+  if (isAuthenticated) {
+    getData().then(() => {
+      if (isLoading) {
+        setIsLoading(false)
+      }
+    })
+  }
 
   return !isLoading ? (
     <>

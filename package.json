@@ -60,7 +60,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "dev": "concurrently -n 'SERVER,CLIENT' -c 'red,green' \"nodemon server.js\" \"react-scripts start\"",
+    "dev": "concurrently -n 'SERVER,CLIENT' -c 'red,green' \"nodemon server.js --ignore client\" \"react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
@@ -89,5 +89,5 @@
     "node": ">=10",
     "npm": ">=6"
   },
-  "proxy": "http://localhost:8080"
+  "proxy": "http://localhost:8080/"
 }

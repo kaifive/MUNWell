@@ -45,6 +45,7 @@ const fieldsDelegation = [
 
 const ParticipationAwards = () => {
     const { user } = useAuth0()
+    const { isAuthenticated } = useAuth0()
 
     const [modalAdd, setModalAdd] = useState(false)
 
@@ -131,11 +132,13 @@ const ParticipationAwards = () => {
         })
     }
 
-    getData().then(() => {
-        if (isLoading) {
-            setIsLoading(false)
-        }
-    })
+    if (isAuthenticated) {
+        getData().then(() => {
+            if (isLoading) {
+                setIsLoading(false)
+            }
+        })
+    }
 
     return !isLoading ? (
         <>

@@ -29,7 +29,7 @@ export function placardSetPDF(committee, settings) {
         doc.setFont(font, "bold")
         let fontSize = 80;
 
-        while((doc.getStringUnitWidth(positions[i].toUpperCase()) * fontSize / 72) >= 10.5) {
+        while ((doc.getStringUnitWidth(positions[i].toUpperCase()) * fontSize / 72) >= 10.5) {
             fontSize--;
         }
 
@@ -274,7 +274,7 @@ export function participationAwardsPDFLayout1(item, type, settings) {
                 data["position"] = positions[i]
                 data["delegation"] = assignments[i]
                 data["chair"] = item.chair
-                
+
                 participationLayout1(doc, data, settings)
 
                 if (i !== positions.length - 1) {
@@ -298,7 +298,7 @@ export function participationAwardsPDFLayout1(item, type, settings) {
                     data["position"] = positions[j]
                     data["delegation"] = assignments[j]
                     data["chair"] = item.chair
-                    
+
                     participationLayout1(doc, data, settings)
 
                     doc.addPage();

@@ -12,12 +12,12 @@ export function getAllDelegations(json, registrationData) {
     let delegations = [<option value="">Select Delegation</option>]
 
     let i;
-    for(i = 0; i < registrationData.length; i++) {
+    for (i = 0; i < registrationData.length; i++) {
         if (json.division.includes(registrationData[i].division) || registrationData[i].division.includes(json.division)) {
 
-        let temp = registrationData[i].delegation
+            let temp = registrationData[i].delegation
 
-        delegations.push(<option value={temp}>{temp}</option>)
+            delegations.push(<option value={temp}>{temp}</option>)
         }
     }
 

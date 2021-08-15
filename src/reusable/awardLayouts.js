@@ -71,7 +71,7 @@ export function committeeLayout1(doc, item, settings) {
 
     let fontSize = 33;
 
-    while((doc.getStringUnitWidth(settings.name ) * fontSize / 72) >= 9) {
+    while ((doc.getStringUnitWidth(settings.name) * fontSize / 72) >= 9) {
         fontSize--;
     }
 

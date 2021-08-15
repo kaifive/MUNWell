@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
 import {
   TheContent,
@@ -12,12 +12,40 @@ import {
   CRow
 } from '@coreui/react'
 
+import fetchData from '../data/LiveData/FetchData'
+
 import '../views/pages/page404/404.css'
 
 const TheLayout = () => {
+  const { user } = useAuth0()
+
   const { isAuthenticated, loginWithRedirect } = useAuth0()
 
-  return isAuthenticated ? (
+  const [data, setData] = useState({
+    committeeData: []
+  });
+
+  const [isLoading, setIsLoading] = useState(true)
+
+  async function getData() {
+    if (isAuthenticated) {
+      await fetchData("/api/get/committee", user.sub, 'division').then((res) => {
+        if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
+          setData(prevState => {
+            return { ...prevState, committeeData: JSON.stringify(res) }
+          })
+        }
+      })
+    }
+  }
+
+  getData().then(() => {
+    if (isLoading) {
+      setIsLoading(false)
+    }
+  })
+
+  return !isLoading ? (
     <div className="c-app c-default-layout">
       <TheSidebar />
       <div className="c-wrapper">

@@ -58,6 +58,7 @@ let editItem;
 
 const CommitteeRoster = () => {
     const { user } = useAuth0()
+    const { isAuthenticated } = useAuth0()
 
     const [modalAdd, setModalAdd] = useState(false)
 
@@ -72,7 +73,9 @@ const CommitteeRoster = () => {
         assignments: ''
     })
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({
+        committeeData: []
+    });
 
     const [isLoading, setIsLoading] = useState(true)
 
@@ -145,7 +148,9 @@ const CommitteeRoster = () => {
             })
 
         fetchData("/api/get/committee", user.sub, 'division').then((res) => {
-            setData(JSON.stringify(res))
+            setData(prevState => {
+                return { ...prevState, committeeData: JSON.stringify(res) }
+            })
         })
 
         setModalAdd(false)
@@ -178,23 +183,29 @@ const CommitteeRoster = () => {
         });
 
         fetchData("/api/get/committee", user.sub, 'division').then((res) => {
-            setData(JSON.stringify(res))
+            setData(prevState => {
+                return { ...prevState, committeeData: JSON.stringify(res) }
+            })
         })
     }
 
     async function getData() {
         await fetchData("/api/get/committee", user.sub, 'division').then((res) => {
-            if (JSON.stringify(res) !== JSON.stringify(data)) {
-                setData(JSON.stringify(res))
+            if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
+                setData(prevState => {
+                    return { ...prevState, committeeData: JSON.stringify(res) }
+                })
             }
         })
     }
 
-    getData().then(() => {
-        if (isLoading) {
-            setIsLoading(false)
-        }
-    })
+    if (isAuthenticated) {
+        getData().then(() => {
+            if (isLoading) {
+                setIsLoading(false)
+            }
+        })
+    }
 
     return !isLoading ? (
         <>
@@ -203,7 +214,7 @@ const CommitteeRoster = () => {
                     <CCard>
                         <CCardHeader>
                             Committee Roster
-                            <Export data={exportTable(JSON.parse(data))} filename="CommitteeRoster.csv" />
+                            <Export data={exportTable(JSON.parse(data.committeeData))} filename="CommitteeRoster.csv" />
                         </CCardHeader>
                         <CCardBody>
                             <CRow className="align-items-left">
@@ -213,7 +224,7 @@ const CommitteeRoster = () => {
                             </CRow>
                             <br></br>
                             <CDataTable
-                                items={JSON.parse(data)}
+                                items={JSON.parse(data.committeeData)}
                                 fields={fields}
                                 hover
                                 striped

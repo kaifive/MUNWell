@@ -300,7 +300,7 @@ const Documentation = () => {
                                                 <i><strong>POSITION INVOICING ACTIONS</strong></i>
                                                 <br />
                                                 To download a delegation’s position invoice, select <strong>Download Position Invoice</strong> from the actions dropdown.
-                                                </CCol>
+                                            </CCol>
                                         </CCardBody>
                                     </CCollapse>
                                 </CCard>
@@ -342,12 +342,12 @@ const Documentation = () => {
                                                 <br />
                                                 <i><strong>COMMITTEE ROSTER ACTIONS</strong></i>
                                                 <br />
-                                                Previously submitted entries can be edited by selecting <strong>Edit</strong> from the actions dropdown or deleted by selecting <strong>Delete</strong>. 
+                                                Previously submitted entries can be edited by selecting <strong>Edit</strong> from the actions dropdown or deleted by selecting <strong>Delete</strong>.
                                                 <br />
                                                 <br />
                                                 <i><strong>ADDING NEW COMMITTEE TO ROSTER</strong></i>
                                                 <br />
-                                                Above the “Committee Roster” table, there is an <strong>Add New</strong> button that allows conference organizers to add a new committee to their conference committee roster. This will open a form where required data can be inputed. Committee positions can be custom added through the text area and should be separated by a comma, or Manuel’s default list of positions can be imported by the positions needed. 
+                                                Above the “Committee Roster” table, there is an <strong>Add New</strong> button that allows conference organizers to add a new committee to their conference committee roster. This will open a form where required data can be inputed. Committee positions can be custom added through the text area and should be separated by a comma, or Manuel’s default list of positions can be imported by the positions needed.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -381,7 +381,7 @@ const Documentation = () => {
                                                 <br />
                                                 <i><strong>GENERATED DOCUMENTS</strong></i>
                                                 <br />
-                                                Below the “Position Assignments” table, each committee has a table of Manuel auto-generated files. The first file is a placard set for the committee, formatted using Manuel’s template file. The second file is an attendance sheet which lists all positions in a committee along with their corresponding assignments and empty space to mark a delegation's attendance status. This sheet can be reprinted for each committee session for chair usage. 
+                                                Below the “Position Assignments” table, each committee has a table of Manuel auto-generated files. The first file is a placard set for the committee, formatted using Manuel’s template file. The second file is an attendance sheet which lists all positions in a committee along with their corresponding assignments and empty space to mark a delegation's attendance status. This sheet can be reprinted for each committee session for chair usage.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -410,7 +410,7 @@ const Documentation = () => {
                                                 <br />
                                                 <i><strong>INDIVIDUAL AWARDS ACTIONS</strong></i>
                                                 <br />
-                                                Previously submitted entries can be edited by selecting <strong>Edit</strong> from the actions dropdown or deleted by selecting <strong>Delete</strong>. 
+                                                Previously submitted entries can be edited by selecting <strong>Edit</strong> from the actions dropdown or deleted by selecting <strong>Delete</strong>.
                                                 <br />
                                                 <br />
                                                 <i><strong>ADDING NEW INDIVIDUAL AWARDS</strong></i>

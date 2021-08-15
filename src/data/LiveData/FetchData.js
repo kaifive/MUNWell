@@ -8,8 +8,8 @@ const fetchData = async (url, user, key) => {
     response = await axios.get(url);
 
     let i;
-    for(i = 0; i < response.data.length; i++) {
-      if(response.data[i].user === user) {
+    for (i = 0; i < response.data.length; i++) {
+      if (response.data[i].user === user) {
         data.push(response.data[i])
       }
     }

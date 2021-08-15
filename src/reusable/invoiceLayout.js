@@ -15,7 +15,7 @@ export function invoiceLayout(doc, item, settings) {
 
     let fontSize = 14;
 
-    while((doc.getStringUnitWidth(settings.name ) * fontSize / 72) >= 4.75) {
+    while ((doc.getStringUnitWidth(settings.name) * fontSize / 72) >= 4.75) {
         fontSize--;
     }
 

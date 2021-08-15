@@ -37,6 +37,7 @@ let editItem;
 
 const Award = ({ match: { params: { committee } } }) => {
     const { user } = useAuth0()
+    const { isAuthenticated } = useAuth0()
 
     const [modalAdd, setModalAdd] = useState(false)
 
@@ -73,8 +74,7 @@ const Award = ({ match: { params: { committee } } }) => {
             let i;
 
             for (i = 0; i < res.length; i++) {
-                console.log(res[i]._id)
-                if (res[i]._id === committee) {
+                if (JSON.stringify(res[i].committee) === JSON.stringify(data.committee.committee)) {
                     awards.push(res[i])
                 }
             }
@@ -169,20 +169,26 @@ const Award = ({ match: { params: { committee } } }) => {
             delegate2: awardsState.delegate2
         }
 
-        axios({
-            url: '/api/save/individualAward',
-            method: 'POST',
-            data: payload
-        })
-            .then(() => {
-                console.log('Data has been sent to the server')
-                if (!status) {
-                    deleteAwards(editItem)
-                }
+        if (status) {
+            axios({
+                url: '/api/save/individualAward',
+                method: 'POST',
+                data: payload
             })
-            .catch(() => {
-                console.log('Internal server error')
-            })
+                .then(() => {
+                    console.log('Data has been sent to the server')
+                })
+                .catch(() => {
+                    console.log('Internal server error')
+                })
+        } else {
+            axios.put('/api/update/individualAward', {
+                data: {
+                    id: editItem._id,
+                    update: payload
+                },
+            });
+        }
 
         fetchData("/api/get/individualAward", user.sub, 'position').then((res) => {
             let awards = []
@@ -241,9 +247,9 @@ const Award = ({ match: { params: { committee } } }) => {
         })
     }
 
-    getData()
-
-    console.log("Here", data.awards)
+    if (isAuthenticated) {
+        getData()
+    }
 
     return data.committee.length !== 0 ? (
         <>

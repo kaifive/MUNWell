@@ -63,7 +63,7 @@ const CommitteeAllotments = () => {
     })
 
     //const [allotmentsState, setAllotmentsState] = useState(defaultState())
-    
+
     function editAllotments(item) {
         let i;
         for (i = 0; i < allotmentData.length; i++) {
@@ -76,7 +76,7 @@ const CommitteeAllotments = () => {
                     console.log(committee + allotment)
 
                     test[committee] = allotment
-                    
+
                     console.log(test)
                 }
             }
@@ -96,7 +96,7 @@ const CommitteeAllotments = () => {
                     <CCol md="7">
                         <CLabel htmlFor={committee}>{committee}</CLabel>
                     </CCol>
-                    <CCol xs="12" md="4"> 
+                    <CCol xs="12" md="4">
                         <CInput type="number" name="numPositions" placeholder="Number of Positions" value={test[committee]} onChange={e => {
                             const val = e.target.value
                             test[committee] = val

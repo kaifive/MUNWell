@@ -7,7 +7,7 @@ const RegistrationDataSchema = new Schema({
     user: String,
     type: String,
     division: String,
-    delegation: String, 
+    delegation: String,
     street: String,
     city: String,
     state: String,

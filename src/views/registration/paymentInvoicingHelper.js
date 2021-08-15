@@ -27,7 +27,7 @@ export function getDelegations(registrationData) {
     let i;
     for (i = 0; i < registrationData.length; i++) {
         let temp = registrationData[i].delegation
-        delegations[i + 1] = <option value={temp} key={temp+Math.random()}>{temp}</option>
+        delegations[i + 1] = <option value={temp} key={temp + Math.random()}>{temp}</option>
     }
 
     return delegations

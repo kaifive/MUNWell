@@ -2,7 +2,7 @@ export function exportTable(registrationData) {
     let data = registrationData
 
     let i;
-    for(i = 0; i < data.length; i++) {
+    for (i = 0; i < data.length; i++) {
         delete data[i]._id
         delete data[i].id
         delete data[i].user

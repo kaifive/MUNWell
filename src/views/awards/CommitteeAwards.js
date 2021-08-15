@@ -36,6 +36,7 @@ const fields = [
 
 const CommitteeAwards = () => {
     const { user } = useAuth0()
+    const { isAuthenticated } = useAuth0()
 
     const [modalAdd, setModalAdd] = useState(false)
 
@@ -125,11 +126,13 @@ const CommitteeAwards = () => {
         })
     }
 
-    getData().then(() => {
-        if (isLoading) {
-            setIsLoading(false)
-        }
-    })
+    if (isAuthenticated) {
+        getData().then(() => {
+            if (isLoading) {
+                setIsLoading(false)
+            }
+        })
+    }
 
     return !isLoading ? (
         <>
