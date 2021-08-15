@@ -66,7 +66,7 @@ export function participationLayout1(doc, item, settings) {
     doc.text("Committee Chair", 8, 7.25, { align: "center" })
 }
 
-export function committeeLayout1(doc, item, settings) {
+export function committeeLayout1(doc, committee, item, settings) {
     doc.setFont(font, "bold")
 
     let fontSize = 33;
@@ -125,7 +125,7 @@ export function committeeLayout1(doc, item, settings) {
     doc.setFont(font, "normal")
     doc.setFontSize(14)
     doc.text(settings.secgen, 3, 7, { align: "center" })
-    doc.text(item.chair, 8, 7, { align: "center" })
+    doc.text(committee.chair, 8, 7, { align: "center" })
 
     doc.setFont(font, "italic")
     doc.setFontSize(12)

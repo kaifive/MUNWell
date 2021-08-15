@@ -167,7 +167,7 @@ const ParticipationAwards = () => {
                                     'download':
                                         (item) => (
                                             <td>
-                                                <CButton block color="primary" onClick={() => participationAwardsPDFLayout1(item, "Committee", data.settings)}>Download</CButton>
+                                                <CButton block color="primary" onClick={() => participationAwardsPDFLayout1(item, "Committee", data.settings, data.committeeData)}>Download</CButton>
                                             </td>
                                         )
                                 }}
@@ -201,7 +201,7 @@ const ParticipationAwards = () => {
                                     'download':
                                         (item) => (
                                             <td>
-                                                <CButton block color="primary" onClick={() => participationAwardsPDFLayout1(item, "Delegation", data.settings)}>Download</CButton>
+                                                <CButton block color="primary" onClick={() => participationAwardsPDFLayout1(item, "Delegation", data.settings, data.committeeData)}>Download</CButton>
                                             </td>
                                         )
                                 }}

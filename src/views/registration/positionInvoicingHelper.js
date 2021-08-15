@@ -45,11 +45,11 @@ export function getStatus(item) {
 }
 
 
-export function downloadPositionInvoice(item) {
+export function downloadPositionInvoice(item, committeeData) {
   if (getStatus(item) === "Unbalanced") {
     alert(item.delegation + " is unbalanced. Balance the delegation before downloading position invoices.")
     return
   }
 
-  positionPDF(item)
+  positionPDF(item, committeeData)
 }

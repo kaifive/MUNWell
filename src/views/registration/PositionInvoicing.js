@@ -39,14 +39,27 @@ const PositionInvoicing = () => {
   const { user } = useAuth0()
   const { isAuthenticated } = useAuth0()
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    registrationData: [],
+    committeeData: []
+  });
 
   const [isLoading, setIsLoading] = useState(true)
 
   async function getData() {
     await fetchData("/api/get/registrationData", user.sub).then((res) => {
-      if (JSON.stringify(res) !== JSON.stringify(data)) {
-        setData(res)
+      if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+        setData(prevState => {
+          return { ...prevState, registrationData: JSON.stringify(res) }
+        })
+      }
+    })
+
+    await fetchData("/api/get/committee", user.sub, 'division').then((res) => {
+      if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
+        setData(prevState => {
+          return { ...prevState, committeeData: JSON.stringify(res) }
+        })
       }
     })
   }
@@ -69,7 +82,7 @@ const PositionInvoicing = () => {
             </CCardHeader>
             <CCardBody>
               <CDataTable
-                items={data}
+                items={JSON.parse(data.registrationData)}
                 fields={fields}
                 hover
                 striped
@@ -95,7 +108,7 @@ const PositionInvoicing = () => {
                             Select Action
                           </CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => downloadPositionInvoice(item)}>Download Position Invoice</CDropdownItem>
+                            <CDropdownItem onClick={() => downloadPositionInvoice(item, JSON.parse(data.committeeData))}>Download Position Invoice</CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </td>

@@ -1,9 +1,6 @@
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 
-import committeeData from "src/data/MockData/MockCommittees";
-import awardData from "src/data/MockData/MockAwards";
-
 import logo from '../assets/branding/Logo.png'
 
 import { participationLayout1, committeeLayout1 } from "./awardLayouts";
@@ -133,7 +130,7 @@ export function receiptPDF(item, settings) {
     doc.save(item.delegation + " Payment Receipt.pdf");
 }
 
-export function positionPDF(item) {
+export function positionPDF(item, committeeData) {
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
@@ -165,13 +162,13 @@ export function positionPDF(item) {
 
     let i;
     for (i = 0; i < committeeData.length; i++) {
-        let entry = []
-
         let positions = committeeData[i].positions.split(",")
         let assignments = committeeData[i].assignments.split(",")
 
         let j;
         for (j = 0; j < positions.length; j++) {
+            let entry = []
+
             if (assignments[j] === item.delegation) {
                 entry[0] = committeeData[i].division + " - " + committeeData[i].category + " | " + committeeData[i].type
                 entry[1] = committeeData[i].committee
@@ -214,7 +211,7 @@ export function positionPDF(item) {
 
 }
 
-export function committeeAwardsPDFLayout1(item, settings) {
+export function committeeAwardsPDFLayout1(item, settings, awardData) {
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
@@ -238,7 +235,7 @@ export function committeeAwardsPDFLayout1(item, settings) {
                 award = true;
                 awardData[i]["delegate"] = names[j]
 
-                committeeLayout1(doc, awardData[i], settings)
+                committeeLayout1(doc, item, awardData[i], settings)
 
                 doc.addPage()
             }
@@ -255,7 +252,7 @@ export function committeeAwardsPDFLayout1(item, settings) {
     }
 }
 
-export function participationAwardsPDFLayout1(item, type, settings) {
+export function participationAwardsPDFLayout1(item, type, settings, committeeData) {
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
@@ -297,17 +294,17 @@ export function participationAwardsPDFLayout1(item, type, settings) {
 
                     data["position"] = positions[j]
                     data["delegation"] = assignments[j]
-                    data["chair"] = item.chair
+                    data["committee"] = committeeData[i].committee
+                    data["chair"] = committeeData[i].chair
 
                     participationLayout1(doc, data, settings)
 
-                    doc.addPage();
+                    if (i !== committeeData.length - 1) {
+                        doc.addPage();
+                    }
                 }
             }
         }
-
-        let pageCount = doc.internal.getNumberOfPages();
-        doc.deletePage(pageCount)
 
         doc.save(item.delegation + " Awards.pdf");
     }
@@ -320,7 +317,7 @@ export function customCommitteeAwardLayout1(item, settings) {
         format: [11, 8.5]
     });
 
-    committeeLayout1(doc, item, settings)
+    committeeLayout1(doc, item, item, settings)
 
     doc.save(item.delegate + " Custom Committee Award.pdf");
 }

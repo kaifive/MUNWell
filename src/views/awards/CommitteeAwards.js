@@ -52,7 +52,8 @@ const CommitteeAwards = () => {
         registrationData: [],
         committeeData: [],
         awardTypes: [],
-        settings: []
+        settings: [],
+        awards: []
     });
 
     const [isLoading, setIsLoading] = useState(true)
@@ -124,6 +125,14 @@ const CommitteeAwards = () => {
                 })
             }
         })
+
+        await fetchData("/api/get/individualAward", user.sub, 'position').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.awards)) {
+                setData(prevState => {
+                    return { ...prevState, awards: res }
+                })
+            }
+        })
     }
 
     if (isAuthenticated) {
@@ -161,7 +170,7 @@ const CommitteeAwards = () => {
                                     'download':
                                         (item) => (
                                             <td>
-                                                <CButton block color="primary" onClick={() => committeeAwardsPDFLayout1(item, data.settings)}>Download</CButton>
+                                                <CButton block color="primary" onClick={() => committeeAwardsPDFLayout1(item, data.settings, data.awards)}>Download</CButton>
                                             </td>
                                         )
                                 }}
