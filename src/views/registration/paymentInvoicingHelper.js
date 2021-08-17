@@ -33,3 +33,49 @@ export function getDelegations(registrationData) {
     return delegations
 }
 
+export function getDelegateFee(item, settings) {
+    if (settings !== undefined) {
+        let multiplier = 0;
+
+        if (item.window === "Early") {
+            multiplier = Number(settings.earlydelfee)
+        } else if (item.window === "Regular") {
+            multiplier = Number(settings.regdelfee)
+        } else if (item.window === "Late") {
+            multiplier = Number(settings.latedelfee)
+        }
+
+        let amount = 0
+        amount = item.delegates * multiplier
+        amount = amount.toFixed(2)
+        return amount
+    } else {
+        return 0.00
+    }
+}
+
+export function getInvoiceTotal(item, settings) {
+    if (settings !== undefined) {
+        let amount = 0;
+        amount = + getDelegateFee(item)
+
+        let schoolfee = 0;
+
+        if (item.window === "Early") {
+            schoolfee = Number(settings.earlyschoolfee)
+        } else if (item.window === "Regular") {
+            schoolfee = Number(settings.regschoolfee)
+        } else if (item.window === "Late") {
+            schoolfee = Number(settings.lateschoolfee)
+        }
+
+        if (item.type === 'Delegation') {
+            amount = amount + schoolfee
+        }
+
+        amount = amount.toFixed(2)
+        return amount
+    } else {
+        return 0.00
+    }
+}

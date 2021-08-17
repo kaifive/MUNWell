@@ -86,7 +86,7 @@ const Registration = () => {
   })
 
   const [data, setData] = useState({
-    registrationData: []
+    registrationData: ["", ""]
   });
 
   const [isLoading, setIsLoading] = useState(true)
@@ -203,9 +203,11 @@ const Registration = () => {
     });
 
     fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
-      setData(prevState => {
-        return { ...prevState, registrationData: JSON.stringify(res) }
-      })
+      if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+        setData(prevState => {
+          return { ...prevState, registrationData: JSON.stringify(res) }
+        })
+      }
     })
   }
 
@@ -235,8 +237,10 @@ const Registration = () => {
   async function getData() {
     await fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
       if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+        let string = JSON.stringify(res)
+
         setData(prevState => {
-          return { ...prevState, registrationData: JSON.stringify(res) }
+          return { ...prevState, registrationData: string }
         })
       }
     })

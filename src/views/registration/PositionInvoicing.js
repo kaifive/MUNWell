@@ -40,8 +40,8 @@ const PositionInvoicing = () => {
   const { isAuthenticated } = useAuth0()
 
   const [data, setData] = useState({
-    registrationData: [],
-    committeeData: []
+    registrationData: ["", ""],
+    committeeData: ["", ""]
   });
 
   const [isLoading, setIsLoading] = useState(true)

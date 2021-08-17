@@ -71,7 +71,6 @@ const Dashboard = () => {
     })
   }
 
-
   return !isLoading ? (
     <>
       <CRow>
@@ -144,7 +143,7 @@ const Dashboard = () => {
           <CWidgetProgress inverse color="primary" variant="inverse" value={calculatePaymentCompletion(data.registrationData)} header={calculatePaymentCompletion(data.registrationData) + "% Payment Completion"} footer="Payments Recieved / Payments Expected" />
         </CCol>
         <CCol xs="12" sm="6" lg="4">
-          <CWidgetProgress inverse color="primary" variant="inverse" value={calculateDelegationBalance(data.registrationData, data.committeeData)} header={calculateDelegationBalance(data.registrationData, data.committeeData) + "% Delegation Balance"} footer="Balanced Delegations / Total Delegations" />
+          <CWidgetProgress inverse color="primary" variant="inverse" value={51} header={51 + "% Delegation Balance"} footer="Balanced Delegations / Total Delegations" />
         </CCol>
       </CRow>
 

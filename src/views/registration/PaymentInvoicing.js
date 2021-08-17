@@ -31,7 +31,7 @@ import { Export } from 'src/reusable'
 import fetchData from '../../data/LiveData/FetchData'
 
 import { invoicePDF, receiptPDF } from 'src/reusable/jsPDF'
-import { exportTable, getDelegations } from './paymentInvoicingHelper'
+import { exportTable, getDelegations, getDelegateFee, getInvoiceTotal } from './paymentInvoicingHelper'
 import { checkLicense } from 'src/reusable/checkLicense';
 
 const getBadge = label => {
@@ -84,50 +84,11 @@ const PaymentInvoicing = () => {
   })
 
   const [data, setData] = useState({
-    registrationData: [],
+    registrationData: ["", ""],
     settings: []
   });
 
   const [isLoading, setIsLoading] = useState(true)
-
-  function getDelegateFee(item) {
-    let multiplier = 0;
-
-    if (item.window === "Early") {
-      multiplier = Number(data.settings.earlydelfee)
-    } else if (item.window === "Regular") {
-      multiplier = Number(data.settings.regdelfee)
-    } else if (item.window === "Late") {
-      multiplier = Number(data.settings.latedelfee)
-    }
-
-    let amount = 0
-    amount = item.delegates * multiplier
-    amount = amount.toFixed(2)
-    return amount
-  }
-
-  function getInvoiceTotal(item) {
-    let amount = 0;
-    amount = + getDelegateFee(item)
-
-    let schoolfee = 0;
-
-    if (item.window === "Early") {
-      schoolfee = Number(data.settings.earlyschoolfee)
-    } else if (item.window === "Regular") {
-      schoolfee = Number(data.settings.regschoolfee)
-    } else if (item.window === "Late") {
-      schoolfee = Number(data.settings.lateschoolfee)
-    }
-
-    if (item.type === 'Delegation') {
-      amount = amount + schoolfee
-    }
-
-    amount = amount.toFixed(2)
-    return amount
-  }
 
   function openInvoiceModal() {
     setInvoiceState({
@@ -319,13 +280,13 @@ const PaymentInvoicing = () => {
                   'delegateFee':
                     (item) => (
                       <td>
-                        ${getDelegateFee(item)}
+                        ${getDelegateFee(item, data.settings)}
                       </td>
                     ),
                   'invoiceTotal':
                     (item) => (
                       <td>
-                        ${getInvoiceTotal(item)}
+                        ${getInvoiceTotal(item, data.settings)}
                       </td>
                     ),
                   'actions':

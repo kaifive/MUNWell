@@ -10,6 +10,9 @@ import banner from '../../../assets/branding/PageBanner.svg'
 import testPicture from "../../../assets/home/hero.png"
 
 import documents from "../../../assets/home/screenshots/Documents.png"
+import dashboard from "../../../assets/home/screenshots/Dashboard.png"
+import alerts from "../../../assets/home/screenshots/Alerts.png"
+import delegationAwards from "../../../assets/home/screenshots/DelegationAwards.png"
 
 
 const Home = () => {
@@ -171,15 +174,15 @@ const Home = () => {
 
             <div className="row portfolio-container">
               <div className="col-lg-12 col-md-6 portfolio-item">
-                <img src={testPicture} className="img-fluid" alt="" />
+                <img src={dashboard} className="img-fluid" alt="" />
               </div>
 
-              <div className="col-lg-6 col-md-6 portfolio-item">
-                <img src={testPicture} className="img-fluid" alt="" />
+              <div className="col-lg-12 col-md-6 portfolio-item">
+                <img src={alerts} className="img-fluid" alt="" />
               </div>
 
-              <div className="col-lg-6 col-md-6 portfolio-item">
-                <img src={testPicture} className="img-fluid" alt="" />
+              <div className="col-lg-12 col-md-6 portfolio-item">
+                <img src={delegationAwards} className="img-fluid" alt="" />
               </div>
             </div>
 

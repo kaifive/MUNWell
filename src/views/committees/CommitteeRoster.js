@@ -74,7 +74,7 @@ const CommitteeRoster = () => {
     })
 
     const [data, setData] = useState({
-        committeeData: []
+        committeeData: ["", ""]
     });
 
     const [isLoading, setIsLoading] = useState(true)

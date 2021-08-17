@@ -48,15 +48,17 @@ export function receiptLayout(doc, item, settings) {
     let multiplier = 0;
     let schoolFee = 0;
 
-    if (item.window === "Early") {
-        multiplier = Number(settings.earlydelfee)
-        schoolFee = Number(settings.earlyschoolfee)
-    } else if (item.window === "Regular") {
-        multiplier = Number(settings.regdelfee)
-        schoolFee = Number(settings.regschoolfee)
-    } else if (item.window === "Late") {
-        multiplier = Number(settings.latedelfee)
-        schoolFee = Number(settings.lateschoolfee)
+    if (settings !== undefined) {
+        if (item.window === "Early") {
+            multiplier = Number(settings.earlydelfee)
+            schoolFee = Number(settings.earlyschoolfee)
+        } else if (item.window === "Regular") {
+            multiplier = Number(settings.regdelfee)
+            schoolFee = Number(settings.regschoolfee)
+        } else if (item.window === "Late") {
+            multiplier = Number(settings.latedelfee)
+            schoolFee = Number(settings.lateschoolfee)
+        }
     }
 
     let delFee = item.delegates * multiplier

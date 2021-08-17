@@ -22,34 +22,38 @@ export function countTotalDelegates(registrationData) {
 }
 
 export function getIncome(registrationData, settings) {
-    let count = 0;
+    if (settings !== undefined) {
+        let count = 0;
 
-    let i;
-    for (i = 0; i < registrationData.length; i++) {
-        let multiplier = 0;
-        let schoolfee = 0;
+        let i;
+        for (i = 0; i < registrationData.length; i++) {
+            let multiplier = 0;
+            let schoolfee = 0;
 
-        if (registrationData[i].window === "Early") {
-            multiplier = Number(settings.earlydelfee)
-            schoolfee = Number(settings.earlyschoolfee)
-        } else if (registrationData[i].window === "Regular") {
-            multiplier = Number(settings.regdelfee)
-            schoolfee = Number(settings.regschoolfee)
-        } else if (registrationData[i].window === "Late") {
-            multiplier = Number(settings.latedelfee)
-            schoolfee = Number(settings.lateschoolfee)
+            if (registrationData[i].window === "Early") {
+                multiplier = Number(settings.earlydelfee)
+                schoolfee = Number(settings.earlyschoolfee)
+            } else if (registrationData[i].window === "Regular") {
+                multiplier = Number(settings.regdelfee)
+                schoolfee = Number(settings.regschoolfee)
+            } else if (registrationData[i].window === "Late") {
+                multiplier = Number(settings.latedelfee)
+                schoolfee = Number(settings.lateschoolfee)
+            }
+
+            count = count + (Number(registrationData[i].delegates) * multiplier)
+
+            if (registrationData[i].type === 'Delegation') {
+                count = count + schoolfee
+            }
         }
 
-        count = count + (Number(registrationData[i].delegates) * multiplier)
+        count = count.toFixed(2)
 
-        if (registrationData[i].type === 'Delegation') {
-            count = count + schoolfee
-        }
+        return count
+    } else {
+        return 0.00
     }
-
-    count = count.toFixed(2)
-
-    return count
 }
 
 export function getCommitteeList(committeeData) {
