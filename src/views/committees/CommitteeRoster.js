@@ -192,8 +192,16 @@ const CommitteeRoster = () => {
     async function getData() {
         await fetchData("/api/get/committee", user.sub, 'division').then((res) => {
             if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
+                let response = res
+
+                let i;
+                for(i = 0; i < response.length; i++) {
+                    response[i]["delegates"] = count(response[i].assignments)
+                    response[i]["positionCount"] = count(response[i].positions)
+                }
+
                 setData(prevState => {
-                    return { ...prevState, committeeData: JSON.stringify(res) }
+                    return { ...prevState, committeeData: JSON.stringify(response) }
                 })
             }
         })
@@ -245,20 +253,7 @@ const CommitteeRoster = () => {
                                                     </CDropdownMenu>
                                                 </CDropdown>
                                             </td>
-                                        ),
-                                    'delegates':
-                                        (item) => (
-                                            <td>
-                                                {count(item.assignments)}
-                                            </td>
-                                        ),
-                                    'positionCount':
-                                        (item) => (
-                                            <td>
-                                                {count(item.positions)}
-                                            </td>
-                                        ),
-
+                                        )
                                 }}
                             />
                         </CCardBody>

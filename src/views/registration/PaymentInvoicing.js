@@ -210,8 +210,16 @@ const PaymentInvoicing = () => {
   async function getData() {
     await fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
       if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+        let registration = res
+
+        let i;
+        for(i = 0; i < registration.length; i++) {
+          registration[i]["delegateFee"] = "$" + getDelegateFee(registration[i], data.settings)
+          registration[i]["invoiceTotal"] = "$" + getInvoiceTotal(registration[i], data.settings)
+        }
+
         setData(prevState => {
-          return { ...prevState, registrationData: JSON.stringify(res) }
+          return { ...prevState, registrationData: JSON.stringify(registration) }
         })
       }
     })
@@ -275,18 +283,6 @@ const PaymentInvoicing = () => {
                         <CBadge color={getBadge(item.window)}>
                           {item.window}
                         </CBadge>
-                      </td>
-                    ),
-                  'delegateFee':
-                    (item) => (
-                      <td>
-                        ${getDelegateFee(item, data.settings)}
-                      </td>
-                    ),
-                  'invoiceTotal':
-                    (item) => (
-                      <td>
-                        ${getInvoiceTotal(item, data.settings)}
                       </td>
                     ),
                   'actions':

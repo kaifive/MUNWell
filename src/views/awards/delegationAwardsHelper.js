@@ -37,7 +37,7 @@ function getAwards(item, award, awardData) {
     return count
 }
 
-function getRawScore(item, awardTypes, awardData) {
+export function getRawScore(item, awardTypes, awardData) {
     let score = 0;
 
     let i;
@@ -48,7 +48,7 @@ function getRawScore(item, awardTypes, awardData) {
     return score
 }
 
-function getPerCapitaScore(item, committeeData, awardTypes, awardData) {
+export function getPerCapitaScore(item, committeeData, awardTypes, awardData) {
     let delegations = 0
 
     let i;
@@ -85,19 +85,6 @@ export function getScopedSlots(awardTypes, awardData, committeeData) {
             )
     }
 
-    scopedSlots['raw'] =
-        (item) => (
-            <td>
-                {getRawScore(item, awardTypes, awardData)}
-            </td>
-        )
-
-    scopedSlots['score'] =
-        (item) => (
-            <td>
-                {getPerCapitaScore(item, committeeData, awardTypes, awardData)}
-            </td>
-        )
 
     return scopedSlots
 }

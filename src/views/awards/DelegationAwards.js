@@ -10,7 +10,7 @@ import {
 } from '@coreui/react'
 import { Export } from 'src/reusable'
 
-import { getFields, exportTable, getScopedSlots } from './delegationAwardsHelper';
+import { getFields, exportTable, getScopedSlots, getPerCapitaScore, getRawScore } from './delegationAwardsHelper';
 
 import fetchData from '../../data/LiveData/FetchData'
 
@@ -30,7 +30,7 @@ const DelegationAwards = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     async function getData() {
-        fetchData('/api/get/awardType', user.sub).then((res) => {
+        await fetchData('/api/get/awardType', user.sub).then((res) => {
             if (JSON.stringify(res) !== JSON.stringify(data.awardType)) {
                 setData(prevState => {
                     return { ...prevState, awardType: res }
@@ -38,7 +38,7 @@ const DelegationAwards = () => {
             }
         })
 
-        fetchData('/api/get/committee', user.sub).then((res) => {
+        await fetchData('/api/get/committee', user.sub).then((res) => {
             if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
                 setData(prevState => {
                     return { ...prevState, committeeData: res }
@@ -46,7 +46,7 @@ const DelegationAwards = () => {
             }
         })
 
-        fetchData('/api/get/individualAward', user.sub).then((res) => {
+        await fetchData('/api/get/individualAward', user.sub).then((res) => {
             if (JSON.stringify(res) !== JSON.stringify(data.awardData)) {
                 setData(prevState => {
                     return { ...prevState, awardData: res }
@@ -54,8 +54,16 @@ const DelegationAwards = () => {
             }
         })
 
-        fetchData('/api/get/registrationData', user.sub, 'division').then((res) => {
+        await fetchData('/api/get/registrationData', user.sub, 'division').then((res) => {
             if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+                let response = res
+
+                let i;
+                for(i = 0; i < response.length; i++) {
+                    response[i]["raw"] = getRawScore(response[i], data.awardType, data.awardData)
+                    response[i]["score"] = getPerCapitaScore(response[i], data.committeeData, data.awardType, data.awardData)
+                }
+
                 setData(prevState => {
                     return { ...prevState, registrationData: res }
                 })

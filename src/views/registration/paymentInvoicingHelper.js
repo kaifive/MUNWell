@@ -57,7 +57,7 @@ export function getDelegateFee(item, settings) {
 export function getInvoiceTotal(item, settings) {
     if (settings !== undefined) {
         let amount = 0;
-        amount = + getDelegateFee(item)
+        amount = + getDelegateFee(item, settings)
 
         let schoolfee = 0;
 

@@ -7,8 +7,6 @@ import './home.css'
 
 import banner from '../../../assets/branding/PageBanner.svg'
 
-import testPicture from "../../../assets/home/hero.png"
-
 import documents from "../../../assets/home/screenshots/Documents.png"
 import dashboard from "../../../assets/home/screenshots/Dashboard.png"
 import alerts from "../../../assets/home/screenshots/Alerts.png"
