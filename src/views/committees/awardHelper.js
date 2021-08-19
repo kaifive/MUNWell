@@ -34,13 +34,13 @@ export function getDelegations(registrationData) {
 }
 
 export function getPositions(committee) {
-    let data = [<option value="" disabled hidden>Select Position</option>]
+    let data = [<option value="" disabled hidden key="">Select Position</option>]
 
     let positions = committee.positions.split(",")
 
     let i;
     for (i = 0; i < positions.length; i++) {
-        data[i + 1] = <option value={positions[i]}>{positions[i]}</option>
+        data[i + 1] = <option value={positions[i]} key={positions[i]}>{positions[i]}</option>
 
     }
 
@@ -61,14 +61,14 @@ export function exportTable(committee, awardData) {
 }
 
 export function getAllDelegations(json, registrationData) {
-    let delegations = [<option value="" hidden>Select Delegation</option>]
+    let delegations = [<option value="" hidden key="">Select Delegation</option>]
 
     let i;
     for (i = 0; i < registrationData.length; i++) {
         if (json.division.includes(registrationData[i].division) || registrationData[i].division.includes(json.division)) {
             let temp = registrationData[i].delegation
 
-            delegations.push(<option value={temp}>{temp}</option>)
+            delegations.push(<option value={temp} key={temp}>{temp}</option>)
         }
     }
 

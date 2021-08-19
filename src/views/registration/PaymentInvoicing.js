@@ -324,7 +324,7 @@ const PaymentInvoicing = () => {
                     return { ...prevState, delegation: val }
                   });
                 }}>
-                  {getDelegations(data.registrationData)}
+                  {getDelegations("PaymentInvoice", data.registrationData)}
                 </CSelect>
               </CCol>
             </CFormGroup>
@@ -563,7 +563,7 @@ const PaymentInvoicing = () => {
                     return { ...prevState, delegation: val }
                   });
                 }}>
-                  {getDelegations(data.registrationData)}
+                  {getDelegations("PaymentReceipt", data.registrationData)}
                 </CSelect>
               </CCol>
             </CFormGroup>

@@ -8,8 +8,8 @@ import {
 import registrationData from '../../data/MockData/MockRegistration'
 import allotmentData from '../../data/MockData/MockAllotments'
 
-export function getAllDelegations(json, registrationData) {
-    let delegations = [<option value="">Select Delegation</option>]
+export function getAllDelegations(item, json, registrationData) {
+    let delegations = [<option value="" key={item.position}>Select Delegation</option>]
 
     let i;
     for (i = 0; i < registrationData.length; i++) {
@@ -17,7 +17,7 @@ export function getAllDelegations(json, registrationData) {
 
             let temp = registrationData[i].delegation
 
-            delegations.push(<option value={temp}>{temp}</option>)
+            delegations.push(<option value={temp} key={item.position + temp}>{temp}</option>)
         }
     }
 

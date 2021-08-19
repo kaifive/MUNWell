@@ -21,13 +21,15 @@ export function exportTable(registrationData) {
     return data
 }
 
-export function getDelegations(registrationData) {
-    let delegations = [<option value="" disabled hidden key="">Select Delegation</option>]
+export function getDelegations(preKey, registrationData) {
+    let delegations = [<option value="" disabled hidden key={preKey}>Select Delegation</option>]
 
     let i;
     for (i = 0; i < registrationData.length; i++) {
         let temp = registrationData[i].delegation
-        delegations[i + 1] = <option value={temp} key={temp + Math.random()}>{temp}</option>
+        if(temp !== undefined) {
+            delegations[i + 1] = <option value={temp} key={preKey + "_" + temp}>{temp}</option>
+        }
     }
 
     return delegations

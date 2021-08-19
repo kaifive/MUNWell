@@ -330,7 +330,7 @@ const Committee = ({ match: { params: { committee } } }) => {
                                                         });
                                                     }}
                                                 >
-                                                    {getAllDelegations(data.committee, data.registrationData)}
+                                                    {getAllDelegations(item, data.committee, data.registrationData)}
                                                 </CSelect>
                                             </td>
                                         ),
@@ -342,8 +342,8 @@ const Committee = ({ match: { params: { committee } } }) => {
                                                         Select Action
                                                     </CDropdownToggle>
                                                     <CDropdownMenu>
-                                                        <CDropdownItem onClick={() => editPosition(item)}>Edit</CDropdownItem>
-                                                        <CDropdownItem onClick={() => deletePosition(item)}>Delete</CDropdownItem>
+                                                        <CDropdownItem onClick={() => editPosition(item)} key="Edit">Edit</CDropdownItem>
+                                                        <CDropdownItem onClick={() => deletePosition(item)} key="Delete">Delete</CDropdownItem>
                                                     </CDropdownMenu>
                                                 </CDropdown>
                                             </td>
