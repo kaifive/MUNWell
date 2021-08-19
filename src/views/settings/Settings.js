@@ -172,7 +172,7 @@ const Settings = () => {
                             data: payload
                         })
                             .then(() => {
-                                console.log('Data has been sent to the server')
+                                alert("Award Type: " + awardsState.awardType + " added successfully!")
                             })
                             .catch(() => {
                                 console.log('Internal server error')
@@ -183,7 +183,13 @@ const Settings = () => {
                                 id: editItem._id,
                                 update: { type: awardsState.awardType, value: awardsState.awardValue }
                             },
-                        });
+                        })
+                            .then(() => {
+                                alert("Award Type: " + awardsState.awardType + " updated successfully!")
+                            })
+                            .catch(() => {
+                                console.log('Internal server error')
+                            })
                     }
 
                 }
@@ -216,7 +222,13 @@ const Settings = () => {
             data: {
                 id: item._id,
             },
-        });
+        })
+            .then(() => {
+                alert("Award Type: " + item.awardType + " deleted successfully!")
+            })
+            .catch(() => {
+                console.log('Internal server error')
+            })
 
         fetchData("/api/get/awardType", user.sub, 'value').then((res) => {
             setData(prevState => {
@@ -250,7 +262,7 @@ const Settings = () => {
                         data: payload
                     })
                         .then(() => {
-                            console.log('Data has been sent to the server')
+                            alert("Manuel License added successfully!")
                             fetchData("/api/get/license", user.sub, 'start').then((res) => {
                                 setData(prevState => {
                                     return { ...prevState, licenses: res }
@@ -276,7 +288,13 @@ const Settings = () => {
             data: {
                 id: item._id,
             },
-        });
+        })
+            .then(() => {
+                alert("Manuel License deleted successfully!")
+            })
+            .catch(() => {
+                console.log('Internal server error')
+            })
 
         fetchData("/api/get/license", user.sub, 'start').then((res) => {
             setData(prevState => {
@@ -344,7 +362,7 @@ const Settings = () => {
                         data: payload
                     })
                         .then(() => {
-                            console.log('Data has been sent to the server')
+                            alert("Manuel Settings saved successfully!")
                         })
                         .catch(() => {
                             console.log('Internal server error')

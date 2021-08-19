@@ -157,7 +157,13 @@ const Committee = ({ match: { params: { committee } } }) => {
                             id: data.committee._id,
                             update: { positions: newPositions, assignments: newAssignments }
                         },
-                    });
+                    })
+                        .then(() => {
+                            alert(positionState.position + " added to " + data.committee.committee + " successfully!")
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
                 }
             })
 
@@ -197,7 +203,7 @@ const Committee = ({ match: { params: { committee } } }) => {
                 if (result === 0) {
                     alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
                 } else {
-                    let index = data.committee.positions.indexOf(item.position)
+                    let index = data.committee.positions.split(",").indexOf(item.position)
 
                     let newPositions = data.committee.positions.split(",")
                     newPositions.splice(index, 1)
@@ -212,26 +218,30 @@ const Committee = ({ match: { params: { committee } } }) => {
                             id: data.committee._id,
                             update: { positions: newPositions, assignments: newAssignments }
                         },
-                    });
+                    })
+                        .then(() => {
+                            alert(item.position + " deleted successfully!")
+
+                            fetchData('/api/get/committee', user.sub).then((res) => {
+                                let i;
+                                for (i = 0; i < res.length; i++) {
+                                    if (res[i]._id === committee) {
+                                        let committeeData = res[i]
+
+                                        if (JSON.stringify(committeeData) !== JSON.stringify(data.committee)) {
+                                            setData(prevState => {
+                                                return { ...prevState, committee: committeeData }
+                                            })
+                                        }
+                                    }
+                                }
+                            })
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
                 }
             })
-
-        fetchData('/api/get/committee', user.sub).then((res) => {
-            let i;
-            for (i = 0; i < res.length; i++) {
-                if (res[i]._id === committee) {
-                    let committeeData = res[i]
-
-                    if (JSON.stringify(committeeData) !== JSON.stringify(data.committee)) {
-                        setData(prevState => {
-                            return { ...prevState, committee: committeeData }
-                        })
-                    }
-                }
-            }
-        })
-
-        setModalAdd(false)
     }
 
     function getValue(item) {
@@ -252,7 +262,13 @@ const Committee = ({ match: { params: { committee } } }) => {
                             id: data.committee._id,
                             update: { assignments: newAssignments }
                         },
-                    });
+                    })
+                        .then(() => {
+                            alert(data.committee.committee + " position assignments saved successfully!")
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
                 }
             })
 

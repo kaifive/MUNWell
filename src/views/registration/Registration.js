@@ -146,7 +146,7 @@ const Registration = () => {
               data: payload
             })
               .then(() => {
-                console.log('Data has been sent to the server')
+                alert(registrationState.delegation + " added successfully!")
               })
               .catch(() => {
                 console.log('Internal server error')
@@ -157,7 +157,13 @@ const Registration = () => {
                 id: editItem._id,
                 update: payload
               },
-            });
+            })
+              .then(() => {
+                alert(registrationState.delegation + " updated successfully!")
+              })
+              .catch(() => {
+                console.log('Internal server error')
+              })
           }
         }
       })
@@ -200,7 +206,13 @@ const Registration = () => {
       data: {
         id: item._id,
       },
-    });
+    })
+      .then(() => {
+        alert(item.delegation + " deleted successfully!")
+      })
+      .catch(() => {
+        console.log('Internal server error')
+      })
 
     fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
       if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {

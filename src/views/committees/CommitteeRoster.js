@@ -131,7 +131,7 @@ const CommitteeRoster = () => {
                             data: payload
                         })
                             .then(() => {
-                                console.log('Data has been sent to the server')
+                                alert(committeeState.committee + " added successfully")
                             })
                             .catch(() => {
                                 console.log('Internal server error')
@@ -142,7 +142,13 @@ const CommitteeRoster = () => {
                                 id: editItem._id,
                                 update: payload
                             },
-                        });
+                        })
+                            .then(() => {
+                                alert(committeeState.committee + " updated successfully!")
+                            })
+                            .catch(() => {
+                                console.log('Internal server error')
+                            })
                     }
                 }
             })
@@ -180,7 +186,13 @@ const CommitteeRoster = () => {
             data: {
                 id: item._id,
             },
-        });
+        })
+            .then(() => {
+                alert(item.committee + " deleted successfully!")
+            })
+            .catch(() => {
+                console.log('Internal server error')
+            })
 
         fetchData("/api/get/committee", user.sub, 'division').then((res) => {
             setData(prevState => {
@@ -195,7 +207,7 @@ const CommitteeRoster = () => {
                 let response = res
 
                 let i;
-                for(i = 0; i < response.length; i++) {
+                for (i = 0; i < response.length; i++) {
                     response[i]["delegates"] = count(response[i].assignments)
                     response[i]["positionCount"] = count(response[i].positions)
                 }

@@ -198,7 +198,13 @@ const PaymentInvoicing = () => {
         id: item._id,
         update: { status: newStatus }
       },
-    });
+    })
+      .then(() => {
+        alert(item.delegation + " payment status reversed successfully!")
+      })
+      .catch(() => {
+        console.log('Internal server error')
+      })
 
     fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
       setData(prevState => {
@@ -213,7 +219,7 @@ const PaymentInvoicing = () => {
         let registration = res
 
         let i;
-        for(i = 0; i < registration.length; i++) {
+        for (i = 0; i < registration.length; i++) {
           registration[i]["delegateFee"] = "$" + getDelegateFee(registration[i], data.settings)
           registration[i]["invoiceTotal"] = "$" + getInvoiceTotal(registration[i], data.settings)
         }

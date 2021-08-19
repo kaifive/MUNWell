@@ -176,7 +176,7 @@ const Award = ({ match: { params: { committee } } }) => {
                 data: payload
             })
                 .then(() => {
-                    console.log('Data has been sent to the server')
+                    alert(data.committee.committee + " " + awardsState.type + " award added successfully!")
                 })
                 .catch(() => {
                     console.log('Internal server error')
@@ -187,7 +187,13 @@ const Award = ({ match: { params: { committee } } }) => {
                     id: editItem._id,
                     update: payload
                 },
-            });
+            })
+                .then(() => {
+                    alert(data.committee.committee + " " + awardsState.type + " award updated successfully!")
+                })
+                .catch(() => {
+                    console.log('Internal server error')
+                })
         }
 
         fetchData("/api/get/individualAward", user.sub, 'position').then((res) => {
@@ -229,7 +235,13 @@ const Award = ({ match: { params: { committee } } }) => {
             data: {
                 id: item._id,
             },
-        });
+        })
+            .then(() => {
+                alert(data.committee.committee + " " + awardsState.type + " award deleted successfully!")
+            })
+            .catch(() => {
+                console.log('Internal server error')
+            })
 
         fetchData("/api/get/individualAward", user.sub, 'position').then((res) => {
             let awards = []
