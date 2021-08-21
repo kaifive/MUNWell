@@ -1,54 +1,8 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 
-export function getNav(committeeData) {
-  insertCommittees(committeeData);
 
-  return _nav
-}
-
-function getIndividualCommittees(name, id) {
-  let item =
-  {
-    _tag: 'CSidebarNavDropdown',
-    name: name,
-    route: '/base',
-    icon: 'cil-puzzle',
-    _children: [
-      {
-        _tag: 'CSidebarNavItem',
-        name: 'Position Assignments',
-        to: '/committees/' + id,
-      },
-      {
-        _tag: 'CSidebarNavItem',
-        name: 'Individual Awards',
-        to: '/award/' + id,
-      }
-    ],
-  }
-
-  return item
-}
-
-function insertCommittees(committeeData) {
-  let i;
-  for (i = 0; i < committeeData.length; i++) {
-    let name = ""
-
-    if (committeeData[i].abbreviation !== "") {
-      name = committeeData[i].abbreviation
-    } else {
-      name = committeeData[i].committee
-    }
-
-    if (!_nav.some(item => item.name === name)) {
-      _nav.splice(_nav.length - 4, 0, getIndividualCommittees(name, committeeData[i]._id))
-    }
-  }
-}
-
-let _nav = [
+const _nav = [
   {
     _tag: 'CSidebarNavItem',
     name: 'Dashboard',
@@ -133,5 +87,63 @@ let _nav = [
     icon: 'cil-list-numbered',
   }
 ]
+
+export function getNav(committeeData) {
+
+  return insertCommittees(committeeData);
+
+}
+
+function getIndividualCommittees(name, id) {
+  let item =
+  {
+    _tag: 'CSidebarNavDropdown',
+    name: name,
+    route: '/base',
+    icon: 'cil-puzzle',
+    _id: id,
+    _children: [
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Position Assignments',
+        to: '/committees/' + id,
+      },
+      {
+        _tag: 'CSidebarNavItem',
+        name: 'Individual Awards',
+        to: '/award/' + id,
+      }
+    ],
+  }
+
+  return item
+}
+
+function insertCommittees(committeeData) {
+  let navBar = _nav
+
+  let j;
+  for (j = 0; j < navBar.length; j++) {
+    if (navBar[j]._id !== undefined) {
+      navBar.splice(j, 1)
+      j--;
+    }
+  }
+
+  let i;
+  for (i = 0; i < committeeData.length; i++) {
+    let name = ""
+
+    if (committeeData[i].abbreviation !== "") {
+      name = committeeData[i].abbreviation
+    } else {
+      name = committeeData[i].committee
+    }
+
+    navBar.splice(navBar.length - 4, 0, getIndividualCommittees(name, committeeData[i]._id))
+  }
+
+  return navBar
+}
 
 

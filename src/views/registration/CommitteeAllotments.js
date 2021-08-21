@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from 'axios'
 import {
     CButton,
     CCard,
@@ -26,30 +28,20 @@ import {
 } from '@coreui/react'
 import { Export } from 'src/reusable'
 
-import registrationData from '../../data/MockData/MockRegistration'
-import committeeData from '../../data/MockData/MockCommittees'
+
+import fetchData from '../../data/LiveData/FetchData'
+import { checkLicense } from 'src/reusable/checkLicense';
+
 import allotmentData from '../../data/MockData/MockAllotments'
 
 import { exportTable } from './committeeAllotmentsHelper'
 
-function defaultState() {
-    let state = {}
-
-    let i;
-    for (i = 0; i < committeeData.length; i++) {
-        state[committeeData[i].committee] = 0
-    }
-
-    return state
-}
-
-let test = defaultState()
-
 const CommitteeAllotments = () => {
+    const { user } = useAuth0()
+    const { isAuthenticated } = useAuth0()
+
     const [modal, setModal] = useState(false)
     const [modalAllotments, setModalAllotments] = useState(false)
-
-    const fields = getFields()
 
     const [committeeState, setCommitteeState] = useState({
         division: '',
@@ -62,23 +54,29 @@ const CommitteeAllotments = () => {
         assignments: ''
     })
 
-    //const [allotmentsState, setAllotmentsState] = useState(defaultState())
+    const [data, setData] = useState({
+        registrationData: [],
+        committeeData: []
+    });
+
+    const [allotmentsState, setAllotmentsState] = useState('')
+
+    const [isLoading, setIsLoading] = useState(true)
 
     function editAllotments(item) {
         let i;
         for (i = 0; i < allotmentData.length; i++) {
             if (allotmentData[i].delegation === item.delegation) {
+                let allotments = {}
+                let init = allotmentData[i].allotments.split(",")
+
                 let j;
-                for (j = 0; j < committeeData.length; j++) {
-                    let committee = committeeData[j].committee
-                    let allotment = allotmentData[i].allotments[committee]
+                for (j = 0; j < init.length; j++) {
+                    let arr = init[j].split(":")
 
-                    console.log(committee + allotment)
-
-                    test[committee] = allotment
-
-                    console.log(test)
+                    allotments[arr[0]] = arr[1]
                 }
+                setAllotmentsState(allotments)
             }
         }
 
@@ -89,17 +87,21 @@ const CommitteeAllotments = () => {
         let rows = []
 
         let i;
-        for (i = 0; i < committeeData.length; i++) {
-            let committee = committeeData[i].committee
+        for (i = 0; i < data.committeeData.length; i++) {
+            let committee = data.committeeData[i].committee
+
             let temp =
                 <CFormGroup row>
                     <CCol md="7">
                         <CLabel htmlFor={committee}>{committee}</CLabel>
                     </CCol>
                     <CCol xs="12" md="4">
-                        <CInput type="number" name="numPositions" placeholder="Number of Positions" value={test[committee]} onChange={e => {
+                        <CInput type="number" name="numPositions" placeholder="Number of Positions" value={allotmentsState[committee]} onChange={e => {
                             const val = e.target.value
-                            test[committee] = val
+
+                            setAllotmentsState(prevState => {
+                                return { ...prevState, [committee]: val }
+                            })
                         }} />
                     </CCol>
                 </CFormGroup>
@@ -110,14 +112,13 @@ const CommitteeAllotments = () => {
         return rows
     }
 
-
     function openCommitteeModal(committee) {
         let item;
 
         let i;
-        for (i = 0; i < committeeData.length; i++) {
-            if (committeeData[i].committee === committee) {
-                item = committeeData[i]
+        for (i = 0; i < data.committeeData.length; i++) {
+            if (data.committeeData[i].committee === committee) {
+                item = data.committeeData[i]
             }
         }
 
@@ -140,38 +141,39 @@ const CommitteeAllotments = () => {
 
         committeeList[0] = 'delegation'
 
-        let i;
-        for (i = 0; i < committeeData.length; i++) {
-            let name;
-            let committee = committeeData[i].committee
-            let temp = committeeData[i].assignments.split(",")
-            if (committeeData[i].abbreviation === '') {
-                name = committeeData[i].committee
-            } else {
-                name = committeeData[i].abbreviation
-            }
-
-            let count = 0
-
-            let j;
-            for (j = 0; j < temp.length; j++) {
-                if (temp[j] !== '') {
-                    count = count + 1
+        if (data.committeeData !== undefined) {
+            let i;
+            for (i = 0; i < data.committeeData.length; i++) {
+                let name;
+                let committee = data.committeeData[i].committee
+                let temp = data.committeeData[i].assignments.split(",")
+                if (data.committeeData[i].abbreviation === '') {
+                    name = data.committeeData[i].committee
+                } else {
+                    name = data.committeeData[i].abbreviation
                 }
+
+                let count = 0
+
+                let j;
+                for (j = 0; j < temp.length; j++) {
+                    if (temp[j] !== '') {
+                        count = count + 1
+                    }
+                }
+
+                let item = {
+                    key: name,
+                    label: <CButton block variant="outline" color="primary" onClick={() => openCommitteeModal(committee)}> {name + " | " + count} </CButton>
+                }
+
+                committeeList[i + 1] = item
             }
 
-            let item = {
-                key: name,
-                label: <CButton block variant="outline" color="primary" onClick={() => openCommitteeModal(committee)}> {name + " | " + count} </CButton>
-            }
-
-            committeeList[i + 1] = item
+            committeeList[i + 1] = 'actions'
         }
-
-        committeeList[i + 1] = 'actions'
         return committeeList
     }
-
 
     function getScopedSlots(committeeData) {
         let scopedSlots = {}
@@ -226,14 +228,51 @@ const CommitteeAllotments = () => {
         let i;
         for (i = 0; i < allotmentData.length; i++) {
             if (allotmentData[i].delegation === item.delegation) {
-                return allotmentData[i].allotments[committee]
+                let allotments = allotmentData[i].allotments.split(",")
+
+                let j;
+                for (j = 0; j < allotments.length; j++) {
+                    let arr = allotments[j].split(":")
+
+                    if (arr[0] === committee) {
+                        return arr[1]
+                    }
+                }
             }
         }
 
         return 0
     }
 
-    return (
+    async function getData() {
+        await fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
+                setData(prevState => {
+                    return { ...prevState, registrationData: res }
+                })
+            }
+        })
+
+        await fetchData("/api/get/committee", user.sub, 'division').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
+                setData(prevState => {
+                    return { ...prevState, committeeData: res }
+                })
+            }
+        })
+    }
+
+    if (isAuthenticated) {
+        getData().then(() => {
+            if (isLoading) {
+                setIsLoading(false)
+            }
+        })
+    }
+
+    const fields = getFields()
+
+    return !isLoading ? (
         <>
             <CRow>
                 <CCol>
@@ -244,7 +283,7 @@ const CommitteeAllotments = () => {
                         </CCardHeader>
                         <CCardBody>
                             <CDataTable
-                                items={registrationData}
+                                items={data.registrationData}
                                 fields={fields}
                                 hover
                                 striped
@@ -254,7 +293,7 @@ const CommitteeAllotments = () => {
                                 itemsPerPage={10}
                                 pagination
                                 scopedSlots={
-                                    getScopedSlots(committeeData)
+                                    getScopedSlots(data.committeeData)
                                 }
                             />
                         </CCardBody>
@@ -470,7 +509,7 @@ const CommitteeAllotments = () => {
                 </CModalFooter>
             </CModal>
         </>
-    )
+    ) : (<p>Waiting for Data...</p>)
 }
 
 export default CommitteeAllotments

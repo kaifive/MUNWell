@@ -12,38 +12,16 @@ import {
   CRow
 } from '@coreui/react'
 
-import fetchData from '../data/LiveData/FetchData'
-
 import '../views/pages/page404/404.css'
 
 const TheLayout = () => {
-  const { user } = useAuth0()
-
   const { isAuthenticated, loginWithRedirect } = useAuth0()
-
-  const [data, setData] = useState({
-    committeeData: []
-  });
 
   const [isLoading, setIsLoading] = useState(true)
 
-  async function getData() {
-    if (isAuthenticated) {
-      await fetchData("/api/get/committee", user.sub, 'division').then((res) => {
-        if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
-          setData(prevState => {
-            return { ...prevState, committeeData: JSON.stringify(res) }
-          })
-        }
-      })
-    }
+  if (isLoading && isAuthenticated) {
+    setIsLoading(false)
   }
-
-  getData().then(() => {
-    if (isLoading) {
-      setIsLoading(false)
-    }
-  })
 
   return !isLoading ? (
     <div className="c-app c-default-layout">

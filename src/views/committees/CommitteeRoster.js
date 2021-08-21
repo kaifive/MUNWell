@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
 import {
     CButton,
     CCard,
@@ -79,6 +80,8 @@ const CommitteeRoster = () => {
 
     const [isLoading, setIsLoading] = useState(true)
 
+    const dispatch = useDispatch()
+
     function openModal() {
         setCommitteeState({
             division: '',
@@ -132,6 +135,8 @@ const CommitteeRoster = () => {
                         })
                             .then(() => {
                                 alert(committeeState.committee + " added successfully")
+                                dispatch({ type: 'set', sidebarShow: false })
+                                dispatch({ type: 'set', sidebarShow: true })
                             })
                             .catch(() => {
                                 console.log('Internal server error')
@@ -145,6 +150,8 @@ const CommitteeRoster = () => {
                         })
                             .then(() => {
                                 alert(committeeState.committee + " updated successfully!")
+                                dispatch({ type: 'set', sidebarShow: false })
+                                dispatch({ type: 'set', sidebarShow: true })
                             })
                             .catch(() => {
                                 console.log('Internal server error')
@@ -189,6 +196,8 @@ const CommitteeRoster = () => {
         })
             .then(() => {
                 alert(item.committee + " deleted successfully!")
+                dispatch({ type: 'set', sidebarShow: false })
+                dispatch({ type: 'set', sidebarShow: true })
             })
             .catch(() => {
                 console.log('Internal server error')
@@ -450,7 +459,7 @@ const CommitteeRoster = () => {
                                 <CLabel htmlFor="committee-positions">Committee Positions</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CTextarea name="committeePositions" rows="9" placeholder='Committee Positions - Separate multiple positions with a comma (",")' value={committeeState.positions} onChange={e => {
+                                <CTextarea disabled={!status} name="committeePositions" rows="9" placeholder='Committee Positions - Separate multiple positions with a comma (",")' value={committeeState.positions} onChange={e => {
                                     const val = e.target.value
                                     setCommitteeState(prevState => {
                                         return { ...prevState, positions: val }
