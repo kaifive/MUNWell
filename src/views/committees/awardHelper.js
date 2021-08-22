@@ -53,6 +53,10 @@ export function exportTable(committee, awardData) {
     let i;
     for (i = 0; i < awardData.length; i++) {
         if (awardData[i].committee === committee.committee) {
+            delete awardData[i]._id
+            delete awardData[i].user
+            delete awardData[i].__v
+
             data.push(awardData[i])
         }
     }

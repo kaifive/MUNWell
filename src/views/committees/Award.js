@@ -30,6 +30,7 @@ import { Redirect } from 'react-router-dom'
 import fetchData from '../../data/LiveData/FetchData'
 
 import { getAwardTypes, getPositions, getAllDelegations, exportTable, } from './awardHelper'
+import { checkLicense } from 'src/reusable/checkLicense';
 
 let header = ""
 let status = true
@@ -159,42 +160,50 @@ const Award = ({ match: { params: { committee } } }) => {
     function addAwards(event) {
         event.preventDefault();
 
-        const payload = {
-            user: user.sub,
-            committee: data.committee.committee,
-            type: awardsState.type,
-            position: awardsState.position,
-            delegation: awardsState.delegation,
-            delegate1: awardsState.delegate1,
-            delegate2: awardsState.delegate2
-        }
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
 
-        if (status) {
-            axios({
-                url: '/api/save/individualAward',
-                method: 'POST',
-                data: payload
+                    const payload = {
+                        user: user.sub,
+                        committee: data.committee.committee,
+                        type: awardsState.type,
+                        position: awardsState.position,
+                        delegation: awardsState.delegation,
+                        delegate1: awardsState.delegate1,
+                        delegate2: awardsState.delegate2
+                    }
+
+                    if (status) {
+                        axios({
+                            url: '/api/save/individualAward',
+                            method: 'POST',
+                            data: payload
+                        })
+                            .then(() => {
+                                alert(data.committee.committee + " " + awardsState.type + " award added successfully!")
+                            })
+                            .catch(() => {
+                                console.log('Internal server error')
+                            })
+                    } else {
+                        axios.put('/api/update/individualAward', {
+                            data: {
+                                id: editItem._id,
+                                update: payload
+                            },
+                        })
+                            .then(() => {
+                                alert(data.committee.committee + " " + awardsState.type + " award updated successfully!")
+                            })
+                            .catch(() => {
+                                console.log('Internal server error')
+                            })
+                    }
+                }
             })
-                .then(() => {
-                    alert(data.committee.committee + " " + awardsState.type + " award added successfully!")
-                })
-                .catch(() => {
-                    console.log('Internal server error')
-                })
-        } else {
-            axios.put('/api/update/individualAward', {
-                data: {
-                    id: editItem._id,
-                    update: payload
-                },
-            })
-                .then(() => {
-                    alert(data.committee.committee + " " + awardsState.type + " award updated successfully!")
-                })
-                .catch(() => {
-                    console.log('Internal server error')
-                })
-        }
 
         fetchData("/api/get/individualAward", user.sub, 'position').then((res) => {
             let awards = []
@@ -231,16 +240,23 @@ const Award = ({ match: { params: { committee } } }) => {
     }
 
     function deleteAwards(item) {
-        axios.delete('/api/delete/individualAward', {
-            data: {
-                id: item._id,
-            },
-        })
-            .then(() => {
-                alert(data.committee.committee + " " + awardsState.type + " award deleted successfully!")
-            })
-            .catch(() => {
-                console.log('Internal server error')
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
+                    axios.delete('/api/delete/individualAward', {
+                        data: {
+                            id: item._id,
+                        },
+                    })
+                        .then(() => {
+                            alert(data.committee.committee + " " + awardsState.type + " award deleted successfully!")
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
+                }
             })
 
         fetchData("/api/get/individualAward", user.sub, 'position').then((res) => {

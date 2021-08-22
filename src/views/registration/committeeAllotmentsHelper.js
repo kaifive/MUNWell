@@ -1,8 +1,4 @@
-import allotmentData from '../../data/MockData/MockAllotments'
-import registrationData from '../../data/MockData/MockRegistration'
-import committeeData from '../../data/MockData/MockCommittees'
-
-export function exportTable() {
+export function exportTable(registrationData, committeeData, allotmentData) {
     let data = []
 
     let i;
@@ -20,7 +16,7 @@ export function exportTable() {
                 name = committeeData[j].abbreviation
             }
 
-            entry[name] = getAssigned(registrationData[i], committeeData[j].committee)
+            entry[name] = getAssigned(registrationData[i], committeeData[j].committee, allotmentData)
         }
 
         data.push(entry)
@@ -29,11 +25,20 @@ export function exportTable() {
     return data
 }
 
-function getAssigned(item, committee) {
+function getAssigned(item, committee, allotmentData) {
     let i;
     for (i = 0; i < allotmentData.length; i++) {
-        if (allotmentData[i].delegation === item.delegation) {
-            return allotmentData[i].allotments[committee]
+        if (allotmentData[i].delegationId === item._id) {
+            let allotments = allotmentData[i].allotments.split(",")
+
+            let j;
+            for(j = 0; j < allotments.length; j++) {
+                let arr = allotments[j].split(":")
+
+                if(arr[0] === committee) {
+                    return arr[1]
+                }
+            }
         }
     }
 

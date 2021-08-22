@@ -256,32 +256,39 @@ const Registration = () => {
   }
 
   function deleteRegistration(item) {
-    axios.delete('/api/delete/registrationData', {
-      data: {
-        id: item._id,
-      },
-    })
-      .then(() => {
-        fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
-          let j;
-          for (j = 0; j < res.length; j++) {
-            if (res[j].delegationId === item._id) {
-              axios.delete('/api/delete/allotments', {
-                data: {
-                  id: res[j]._id,
-                },
+    checkLicense(user.sub)
+      .then(result => {
+        if (result === 0) {
+          alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+        } else {
+          axios.delete('/api/delete/registrationData', {
+            data: {
+              id: item._id,
+            },
+          })
+            .then(() => {
+              fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+                let j;
+                for (j = 0; j < res.length; j++) {
+                  if (res[j].delegationId === item._id) {
+                    axios.delete('/api/delete/allotments', {
+                      data: {
+                        id: res[j]._id,
+                      },
+                    })
+                      .then(() => {
+                        alert(item.delegation + " deleted successfully!")
+                      })
+                  }
+                }
               })
-                .then(() => {
-                  alert(item.delegation + " deleted successfully!")
-                })
-            }
-          }
-        })
+            })
+            .catch(() => {
+              console.log('Internal server error')
+            })
+        }
       })
-      .catch(() => {
-        console.log('Internal server error')
-      })
-
+      
     fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
       if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
         setData(prevState => {

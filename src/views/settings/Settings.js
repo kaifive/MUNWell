@@ -218,18 +218,25 @@ const Settings = () => {
     }
 
     function deleteAwards(item) {
-        axios.delete('/api/delete/awardType', {
-            data: {
-                id: item._id,
-            },
-        })
-            .then(() => {
-                alert("Award Type: " + item.awardType + " deleted successfully!")
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
+                    axios.delete('/api/delete/awardType', {
+                        data: {
+                            id: item._id,
+                        },
+                    })
+                        .then(() => {
+                            alert("Award Type: " + item.awardType + " deleted successfully!")
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
+                }
             })
-            .catch(() => {
-                console.log('Internal server error')
-            })
-
+            
         fetchData("/api/get/awardType", user.sub, 'value').then((res) => {
             setData(prevState => {
                 return { ...prevState, awardTypes: res }

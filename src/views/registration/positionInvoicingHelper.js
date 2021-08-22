@@ -48,8 +48,8 @@ export function getStatus(item, committeeData, allotmentData) {
 }
 
 
-export function downloadPositionInvoice(item, committeeData) {
-  if (getStatus(item) === "Unbalanced") {
+export function downloadPositionInvoice(item, committeeData, allotmentData) {
+  if (getStatus(item, committeeData, allotmentData) === "Unbalanced") {
     alert(item.delegation + " is unbalanced. Balance the delegation before downloading position invoices.")
     return
   }

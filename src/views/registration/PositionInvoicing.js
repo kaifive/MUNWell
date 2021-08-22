@@ -117,7 +117,7 @@ const PositionInvoicing = () => {
                             Select Action
                           </CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => downloadPositionInvoice(item, JSON.parse(data.committeeData))}>Download Position Invoice</CDropdownItem>
+                            <CDropdownItem onClick={() => downloadPositionInvoice(item, JSON.parse(data.committeeData), data.allotmentData)}>Download Position Invoice</CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </td>

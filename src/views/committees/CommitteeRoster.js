@@ -230,44 +230,51 @@ const CommitteeRoster = () => {
     }
 
     function deleteCommittee(item) {
-        axios.delete('/api/delete/committee', {
-            data: {
-                id: item._id,
-            },
-        })
-            .then(() => {
-                fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
-                    let j;
-                    for (j = 0; j < res.length; j++) {
-                        let original = res[j].allotments.split(",")
-                        let i;
-                        for (i = 0; i < original.length; i++) {
-                            let arr = original[i].split(":")
-                            if (arr[0] === item.committee) {
-                                original.splice(i, 1)
-                            }
-                        }
-
-                        let allotments = { allotments: original.join() }
-
-                        axios.put('/api/update/allotments', {
-                            data: {
-                                id: res[j]._id,
-                                update: allotments
-                            },
-                        })
-                    }
-                })
-                    .then(() => {
-                        alert(item.committee + " deleted successfully!")
-                        dispatch({ type: 'set', sidebarShow: false })
-                        dispatch({ type: 'set', sidebarShow: true })
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
+                    axios.delete('/api/delete/committee', {
+                        data: {
+                            id: item._id,
+                        },
                     })
-            })
-            .catch(() => {
-                console.log('Internal server error')
-            })
+                        .then(() => {
+                            fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+                                let j;
+                                for (j = 0; j < res.length; j++) {
+                                    let original = res[j].allotments.split(",")
+                                    let i;
+                                    for (i = 0; i < original.length; i++) {
+                                        let arr = original[i].split(":")
+                                        if (arr[0] === item.committee) {
+                                            original.splice(i, 1)
+                                        }
+                                    }
 
+                                    let allotments = { allotments: original.join() }
+
+                                    axios.put('/api/update/allotments', {
+                                        data: {
+                                            id: res[j]._id,
+                                            update: allotments
+                                        },
+                                    })
+                                }
+                            })
+                                .then(() => {
+                                    alert(item.committee + " deleted successfully!")
+                                    dispatch({ type: 'set', sidebarShow: false })
+                                    dispatch({ type: 'set', sidebarShow: true })
+                                })
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
+                }
+            })
+            
         fetchData("/api/get/committee", user.sub, 'division').then((res) => {
             setData(prevState => {
                 return { ...prevState, committeeData: JSON.stringify(res) }
@@ -530,7 +537,7 @@ const CommitteeRoster = () => {
                                         return { ...prevState, positions: val }
                                     });
                                 }} />
-                                <CFormText>
+                                <CFormText hidden={!status}>
                                     <p>Import Default Positions: &emsp; &ensp;
                                         <span id="defaultPosition" style={{ "border": "none", "backgroundColor": "inherit", "color": "#636f83" }} onClick={() => setCommitteeState(prevState => {
                                             return { ...prevState, positions: "China,Estonia,France,India,Ireland,Kenya,Mexico,Niger,Norway,Russian Federation,Saint Vincent and the Grenadines,Tunisia,United Kingdom of Great Britain and Northern Ireland,United States of America,Viet Nam" }

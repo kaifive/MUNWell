@@ -328,7 +328,7 @@ const CommitteeAllotments = () => {
                     <CCard>
                         <CCardHeader>
                             Committee Allotments
-                            <Export data={exportTable()} filename="CommitteeAllotments.csv" />
+                            <Export data={exportTable(data.registrationData, data.committeeData, data.allotmentData)} filename="CommitteeAllotments.csv" />
                         </CCardHeader>
                         <CCardBody>
                             <CDataTable

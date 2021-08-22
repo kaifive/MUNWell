@@ -185,27 +185,34 @@ const PaymentInvoicing = () => {
   }
 
   function reverseStatus(item) {
-    let newStatus = ""
+    checkLicense(user.sub)
+      .then(result => {
+        if (result === 0) {
+          alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+        } else {
+          let newStatus = ""
 
-    if (item.status === "Pending") {
-      newStatus = "Paid"
-    } else {
-      newStatus = "Pending"
-    }
+          if (item.status === "Pending") {
+            newStatus = "Paid"
+          } else {
+            newStatus = "Pending"
+          }
 
-    axios.put('/api/update/registrationData', {
-      data: {
-        id: item._id,
-        update: { status: newStatus }
-      },
-    })
-      .then(() => {
-        alert(item.delegation + " payment status reversed successfully!")
+          axios.put('/api/update/registrationData', {
+            data: {
+              id: item._id,
+              update: { status: newStatus }
+            },
+          })
+            .then(() => {
+              alert(item.delegation + " payment status reversed successfully!")
+            })
+            .catch(() => {
+              console.log('Internal server error')
+            })
+        }
       })
-      .catch(() => {
-        console.log('Internal server error')
-      })
-
+      
     fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
       setData(prevState => {
         return { ...prevState, registrationData: JSON.stringify(res) }
