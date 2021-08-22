@@ -41,7 +41,8 @@ const PositionInvoicing = () => {
 
   const [data, setData] = useState({
     registrationData: ["", ""],
-    committeeData: ["", ""]
+    committeeData: ["", ""],
+    allotmentData: []
   });
 
   const [isLoading, setIsLoading] = useState(true)
@@ -59,6 +60,14 @@ const PositionInvoicing = () => {
       if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
         setData(prevState => {
           return { ...prevState, committeeData: JSON.stringify(res) }
+        })
+      }
+    })
+
+    await fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+      if (JSON.stringify(res) !== JSON.stringify(data.allotmentData)) {
+        setData(prevState => {
+          return { ...prevState, allotmentData: res }
         })
       }
     })
@@ -95,8 +104,8 @@ const PositionInvoicing = () => {
                   'status':
                     (item) => (
                       <td>
-                        <CBadge color={getBadge(getStatus(item))}>
-                          {getStatus(item)}
+                        <CBadge color={getBadge(getStatus(item, JSON.parse(data.committeeData), data.allotmentData))}>
+                          {getStatus(item, JSON.parse(data.committeeData), data.allotmentData)}
                         </CBadge>
                       </td>
                     ),

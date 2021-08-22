@@ -66,6 +66,7 @@ const Committee = ({ match: { params: { committee } } }) => {
         registrationData: [],
         settings: [],
         committee: [],
+        allotmentData: [],
         redirect: false
     })
 
@@ -108,6 +109,14 @@ const Committee = ({ match: { params: { committee } } }) => {
             if (data.committee.length === 0) {
                 setData(prevState => {
                     return { ...prevState, redirect: true }
+                })
+            }
+        })
+
+        await fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.allotmentData)) {
+                setData(prevState => {
+                    return { ...prevState, allotmentData: res }
                 })
             }
         })
@@ -307,7 +316,7 @@ const Committee = ({ match: { params: { committee } } }) => {
 
     return data.committee.length !== 0 ? (
         <>
-            {getAlerts(data.committee)}
+            {getAlerts(data.committee, data.registrationData, data.allotmentData)}
 
             <CRow>
                 <CCol>

@@ -32,7 +32,8 @@ const Dashboard = () => {
   const [data, setData] = useState({
     committeeData: [],
     registrationData: [],
-    settings: []
+    settings: [],
+    allotmentData: []
   });
 
   const [isLoading, setIsLoading] = useState(true)
@@ -58,6 +59,14 @@ const Dashboard = () => {
       if (JSON.stringify(res[res.length - 1]) !== JSON.stringify(data.settings)) {
         setData(prevState => {
           return { ...prevState, settings: res[res.length - 1] }
+        })
+      }
+    })
+
+    await fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+      if (JSON.stringify(res) !== JSON.stringify(data.allotmentData)) {
+        setData(prevState => {
+          return { ...prevState, allotmentData: res }
         })
       }
     })
@@ -143,7 +152,7 @@ const Dashboard = () => {
           <CWidgetProgress inverse color="primary" variant="inverse" value={calculatePaymentCompletion(data.registrationData)} header={calculatePaymentCompletion(data.registrationData) + "% Payment Completion"} footer="Payments Recieved / Payments Expected" />
         </CCol>
         <CCol xs="12" sm="6" lg="4">
-          <CWidgetProgress inverse color="primary" variant="inverse" value={calculateDelegationBalance(data.registrationData, data.committeeData)} header={calculateDelegationBalance(data.registrationData, data.committeeData) + "% Delegation Balance"} footer="Balanced Delegations / Total Delegations" />
+          <CWidgetProgress inverse color="primary" variant="inverse" value={calculateDelegationBalance(data.registrationData, data.committeeData, data.allotmentData)} header={calculateDelegationBalance(data.registrationData, data.committeeData, data.allotmentData) + "% Delegation Balance"} footer="Balanced Delegations / Total Delegations" />
         </CCol>
       </CRow>
 

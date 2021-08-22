@@ -32,8 +32,6 @@ import { Export } from 'src/reusable'
 import fetchData from '../../data/LiveData/FetchData'
 import { checkLicense } from 'src/reusable/checkLicense';
 
-import allotmentData from '../../data/MockData/MockAllotments'
-
 import { exportTable } from './committeeAllotmentsHelper'
 
 let editItem;

@@ -116,7 +116,7 @@ export function calculatePaymentCompletion(registrationData) {
     return isNaN(Math.round((count / registrationData.length) * 100)) ? 0 : Math.round((count / registrationData.length) * 100)
 }
 
-export function calculateDelegationBalance(registrationData, committeeData) {
+export function calculateDelegationBalance(registrationData, committeeData, allotmentData) {
     let balanced = 0
 
     let i;
@@ -134,15 +134,24 @@ export function calculateDelegationBalance(registrationData, committeeData) {
                     assignedPositions = assignedPositions + 1
                 }
             }
-            /*
-                    let l;
-                    for (l = 0; l < allotmentData.length; l++) {
-                      if (allotmentData[l].delegation === registrationData[i].delegation) {
-                        allottedPositions = allottedPositions + allotmentData[l].allotments[committeeData[j].committee]
-                      }
-                    }*/
         }
 
+        let l;
+        for (l = 0; l < allotmentData.length; l++) {
+            if (allotmentData[l].delegationId === registrationData[i]._id) {
+                let allotments = allotmentData[l].allotments.split(",")
+
+                let m;
+                for (m = 0; m < allotments.length; m++) {
+                    let arr = allotments[m].split(":")
+
+                    if (arr[1] !== undefined) {
+                        allottedPositions = allottedPositions + Number(arr[1])
+                    }
+                }
+            }
+        }
+        
         if (assignedPositions - allottedPositions === 0) {
             balanced = balanced + 1
         }

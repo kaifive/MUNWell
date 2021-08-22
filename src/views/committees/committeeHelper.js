@@ -5,9 +5,6 @@ import {
     CRow
 } from '@coreui/react'
 
-import registrationData from '../../data/MockData/MockRegistration'
-import allotmentData from '../../data/MockData/MockAllotments'
-
 export function getAllDelegations(item, json, registrationData) {
     let delegations = [<option value="" key={item.position}>Select Delegation</option>]
 
@@ -60,16 +57,26 @@ export function exportTable(committee) {
     return data
 }
 
-export function getAlerts(committee) {
+export function getAlerts(committee, registrationData, allotmentData) {
     let alerts = []
 
     let i;
     for (i = 0; i < registrationData.length; i++) {
         let assignedPositions = 0;
+
         let j;
         for (j = 0; j < allotmentData.length; j++) {
-            if (registrationData[i].delegation === allotmentData[j].delegation) {
-                assignedPositions = allotmentData[j].allotments[committee.committee]
+            if (registrationData[i]._id === allotmentData[j].delegationId) {
+                let allotments = allotmentData[j].allotments.split(",")
+
+                let k;
+                for(k = 0; k < allotments.length; k++) {
+                    let arr = allotments[k].split(":")
+
+                    if(arr[0] === committee.committee) {
+                        assignedPositions = arr[1]
+                    }
+                }
             }
         }
 
@@ -122,7 +129,7 @@ function autoAssign(committee, delegation, alertNumber) {
     let openPositions = 0
 
     let i;
-    for (i = 0; i < assignments.length; i++) {
+    for (i = 0; i < positions.length; i++) {
         if (alertNumber > 0) {
             if (assignments[i] === "") {
                 indexes.push(i)
