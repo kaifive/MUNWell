@@ -86,7 +86,8 @@ const Registration = () => {
   })
 
   const [data, setData] = useState({
-    registrationData: ["", ""]
+    registrationData: ["", ""],
+    committeeData: ["", ""]
   });
 
   const [isLoading, setIsLoading] = useState(true)
@@ -139,6 +140,12 @@ const Registration = () => {
             window: registrationState.window
           }
 
+          let allotment = ""
+          let i;
+          for (i = 0; i < data.committeeData.length; i++) {
+            allotment = allotment + data.committeeData[i].committee + ":" + 0 + ","
+          }
+
           if (!header.includes("Edit")) {
             axios({
               url: '/api/save/registrationData',
@@ -146,7 +153,31 @@ const Registration = () => {
               data: payload
             })
               .then(() => {
-                alert(registrationState.delegation + " added successfully!")
+                const allotments = {
+                  user: user.sub,
+                  delegation: registrationState.delegation,
+                  delegationId: '',
+                  allotments: allotment.substring(0, allotment.length - 1)
+                }
+
+                fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
+                  let j;
+                  for (j = 0; j < res.length; j++) {
+                    if (res[j].delegation === payload.delegation) {
+                      allotments.delegationId = res[j]._id
+                    }
+                  }
+                })
+                  .then(() => {
+                    axios({
+                      url: '/api/save/allotments',
+                      method: 'POST',
+                      data: allotments
+                    })
+                      .then(() => {
+                        alert(registrationState.delegation + " added successfully!")
+                      })
+                  })
               })
               .catch(() => {
                 console.log('Internal server error')
@@ -159,7 +190,30 @@ const Registration = () => {
               },
             })
               .then(() => {
-                alert(registrationState.delegation + " updated successfully!")
+                const allotments = {
+                  user: user.sub,
+                  delegation: registrationState.delegation,
+                  delegationId: editItem._id,
+                  allotments: ''
+                }
+
+                fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+                  let j;
+                  for (j = 0; j < res.length; j++) {
+                    if (res[j].delegationId === allotments.delegationId) {
+                      allotments.allotments = res[j].allotments
+
+                      axios.put('/api/update/allotments', {
+                        data: {
+                          id: res[j]._id,
+                          update: allotments
+                        },
+                      }).then(() => {
+                        alert(registrationState.delegation + " updated successfully!")
+                      })
+                    }
+                  }
+                })
               })
               .catch(() => {
                 console.log('Internal server error')
@@ -208,7 +262,21 @@ const Registration = () => {
       },
     })
       .then(() => {
-        alert(item.delegation + " deleted successfully!")
+        fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+          let j;
+          for (j = 0; j < res.length; j++) {
+            if (res[j].delegationId === item._id) {
+              axios.delete('/api/delete/allotments', {
+                data: {
+                  id: res[j]._id,
+                },
+              })
+                .then(() => {
+                  alert(item.delegation + " deleted successfully!")
+                })
+            }
+          }
+        })
       })
       .catch(() => {
         console.log('Internal server error')
@@ -253,6 +321,14 @@ const Registration = () => {
 
         setData(prevState => {
           return { ...prevState, registrationData: string }
+        })
+      }
+    })
+
+    await fetchData("/api/get/committee", user.sub, 'division').then((res) => {
+      if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
+        setData(prevState => {
+          return { ...prevState, committeeData: res }
         })
       }
     })
@@ -577,7 +653,7 @@ const Registration = () => {
           <CModalTitle>Full Registration Email List</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          {getEmailList(data.registrationData)}
+          {getEmailList(JSON.parse(data.registrationData))}
         </CModalBody>
         <CModalFooter>
           <CButton color="primary" onClick={() => setModalEmail(false)}>Close</CButton>

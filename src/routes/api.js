@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
+const Allotments = require('../models/allotmentsModel')
 const AwardType = require('../models/awardTypeModel')
 const Committee = require('../models/committeeModel')
 const IndividualAward = require('../models/individualAwardModel')
@@ -11,6 +12,16 @@ const ValidLicense = require('../models/validLicenseModel')
 const Settings = require('../models/settingsModel')
 
 /**GETTING DATA FROM MONGODB */
+router.get('/get/allotments', (req, res) => {
+    Allotments.find({})
+        .then((data) => {
+            res.json(data);
+        })
+        .catch((error) => {
+            console.log('error: ', error);
+        });
+});
+
 router.get('/get/awardType', (req, res) => {
     AwardType.find({})
         .then((data) => {
@@ -82,6 +93,14 @@ router.get('/get/settings', (req, res) => {
 });
 
 /**DELETING DATA FROM MONGODB */
+router.delete('/delete/allotments', (req, res) => {
+    const { id } = req.body;
+    Allotments.findByIdAndDelete(id, err => {
+        if (err) return res.send(err);
+        return res.json({ success: true });
+    });
+});
+
 router.delete('/delete/awardType', (req, res) => {
     const { id } = req.body;
     AwardType.findByIdAndDelete(id, err => {
@@ -123,6 +142,14 @@ router.delete('/delete/license', (req, res) => {
 });
 
 /**UPDATING DATA FROM MONGODB */
+router.put('/update/allotments', (req, res) => {
+    const { id, update } = req.body.data;
+    Allotments.findByIdAndUpdate(id, update, err => {
+        if (err) return res.send(err);
+        return res.json({ success: true });
+    });
+});
+
 router.put('/update/awardType', (req, res) => {
     const { id, update } = req.body.data;
     AwardType.findByIdAndUpdate(id, update, err => {
@@ -156,6 +183,22 @@ router.put('/update/individualAward', (req, res) => {
 });
 
 /**SAVING DATA TO MONGODB */
+router.post('/save/allotments', (req, res) => {
+    const data = req.body
+    const newAllotments = new Allotments(data)
+
+    newAllotments.save((error) => {
+        if (error) {
+            res.status(500).json({ msg: 'Sorry, internal server errors' })
+            return;
+        }
+
+        return res.json({
+            msg: 'We received your data.'
+        });
+    })
+});
+
 router.post('/save/awardType', (req, res) => {
     const data = req.body
     const newAwardType = new AwardType(data)

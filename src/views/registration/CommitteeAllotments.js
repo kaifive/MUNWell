@@ -36,6 +36,8 @@ import allotmentData from '../../data/MockData/MockAllotments'
 
 import { exportTable } from './committeeAllotmentsHelper'
 
+let editItem;
+
 const CommitteeAllotments = () => {
     const { user } = useAuth0()
     const { isAuthenticated } = useAuth0()
@@ -56,7 +58,8 @@ const CommitteeAllotments = () => {
 
     const [data, setData] = useState({
         registrationData: [],
-        committeeData: []
+        committeeData: [],
+        allotmentData: []
     });
 
     const [allotmentsState, setAllotmentsState] = useState('')
@@ -65,10 +68,10 @@ const CommitteeAllotments = () => {
 
     function editAllotments(item) {
         let i;
-        for (i = 0; i < allotmentData.length; i++) {
-            if (allotmentData[i].delegation === item.delegation) {
+        for (i = 0; i < data.allotmentData.length; i++) {
+            if (data.allotmentData[i].delegationId === item._id) {
                 let allotments = {}
-                let init = allotmentData[i].allotments.split(",")
+                let init = data.allotmentData[i].allotments.split(",")
 
                 let j;
                 for (j = 0; j < init.length; j++) {
@@ -79,6 +82,8 @@ const CommitteeAllotments = () => {
                 setAllotmentsState(allotments)
             }
         }
+
+        editItem = item
 
         setModalAllotments(!modalAllotments)
     }
@@ -96,7 +101,7 @@ const CommitteeAllotments = () => {
                         <CLabel htmlFor={committee}>{committee}</CLabel>
                     </CCol>
                     <CCol xs="12" md="4">
-                        <CInput type="number" name="numPositions" placeholder="Number of Positions" value={allotmentsState[committee]} onChange={e => {
+                        <CInput type="number" min="0" name="numPositions" placeholder="Number of Positions" value={allotmentsState[committee]} onChange={e => {
                             const val = e.target.value
 
                             setAllotmentsState(prevState => {
@@ -226,9 +231,9 @@ const CommitteeAllotments = () => {
 
     function getAssigned(item, committee) {
         let i;
-        for (i = 0; i < allotmentData.length; i++) {
-            if (allotmentData[i].delegation === item.delegation) {
-                let allotments = allotmentData[i].allotments.split(",")
+        for (i = 0; i < data.allotmentData.length; i++) {
+            if (data.allotmentData[i].delegationId === item._id) {
+                let allotments = data.allotmentData[i].allotments.split(",")
 
                 let j;
                 for (j = 0; j < allotments.length; j++) {
@@ -244,6 +249,44 @@ const CommitteeAllotments = () => {
         return 0
     }
 
+    function submitAllotments(event) {
+        event.preventDefault();
+
+        checkLicense(user.sub)
+            .then(result => {
+                if (result === 0) {
+                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                } else {
+                    const payload = {
+                        allotments: JSON.stringify(allotmentsState).replace(/"/g, "").replace("{", "").replace("}", "")
+                    }
+
+                    fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+                        let j;
+                        for (j = 0; j < res.length; j++) {
+                            if (res[j].delegationId === editItem._id) {
+                                axios.put('/api/update/allotments', {
+                                    data: {
+                                        id: res[j]._id,
+                                        update: payload
+                                    },
+                                })
+                            }
+                        }
+                    })
+                        .then(() => {
+                            alert(editItem.delegation + " allotments updated successfully")
+
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
+                }
+            })
+
+        setModalAllotments(false)
+    }
+
     async function getData() {
         await fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
             if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
@@ -257,6 +300,14 @@ const CommitteeAllotments = () => {
             if (JSON.stringify(res) !== JSON.stringify(data.committeeData)) {
                 setData(prevState => {
                     return { ...prevState, committeeData: res }
+                })
+            }
+        })
+
+        await fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.allotmentData)) {
+                setData(prevState => {
+                    return { ...prevState, allotmentData: res }
                 })
             }
         })
@@ -505,7 +556,7 @@ const CommitteeAllotments = () => {
                 </CModalBody>
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setModalAllotments(false)}>Cancel</CButton>
-                    <CButton color="primary" onClick={() => setModalAllotments(false)}>Submit</CButton>
+                    <CButton color="primary" onClick={event => submitAllotments(event)}>Submit</CButton>
                 </CModalFooter>
             </CModal>
         </>

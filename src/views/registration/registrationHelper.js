@@ -16,7 +16,9 @@ export function getEmailList(registrationData) {
     let emailList = ""
     let i;
     for (i = 0; i < registrationData.length; i++) {
-        emailList = emailList + registrationData[i].email + ",\n"
+        if(registrationData[i].email !== "") {
+            emailList = emailList + registrationData[i].email + ",\n"
+        }
     }
 
     emailList = emailList.substring(0, emailList.length - 2)

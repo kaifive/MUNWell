@@ -134,14 +134,31 @@ const CommitteeRoster = () => {
                             data: payload
                         })
                             .then(() => {
-                                alert(committeeState.committee + " added successfully")
-                                dispatch({ type: 'set', sidebarShow: false })
-                                dispatch({ type: 'set', sidebarShow: true })
+                                fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+                                    let j;
+                                    for (j = 0; j < res.length; j++) {
+                                        let allotments = { allotments: res[j].allotments + "," + committeeState.committee + ":0" }
+
+                                        axios.put('/api/update/allotments', {
+                                            data: {
+                                                id: res[j]._id,
+                                                update: allotments
+                                            },
+                                        })
+                                    }
+                                })
+                                    .then(() => {
+                                        alert(committeeState.committee + " added successfully")
+                                        dispatch({ type: 'set', sidebarShow: false })
+                                        dispatch({ type: 'set', sidebarShow: true })
+                                    })
                             })
                             .catch(() => {
                                 console.log('Internal server error')
                             })
                     } else {
+                        payload.assignments = editItem.assignments
+
                         axios.put('/api/update/committee', {
                             data: {
                                 id: editItem._id,
@@ -149,12 +166,36 @@ const CommitteeRoster = () => {
                             },
                         })
                             .then(() => {
-                                alert(committeeState.committee + " updated successfully!")
-                                dispatch({ type: 'set', sidebarShow: false })
-                                dispatch({ type: 'set', sidebarShow: true })
-                            })
-                            .catch(() => {
-                                console.log('Internal server error')
+                                fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+                                    let j;
+                                    for (j = 0; j < res.length; j++) {
+                                        let original = res[j].allotments.split(",")
+                                        let i;
+                                        for (i = 0; i < original.length; i++) {
+                                            let arr = original[i].split(":")
+                                            if (arr[0] === editItem.committee) {
+                                                original.splice(i, 1, committeeState.committee + ":" + arr[1])
+                                            }
+                                        }
+
+                                        let allotments = { allotments: original.join() }
+
+                                        axios.put('/api/update/allotments', {
+                                            data: {
+                                                id: res[j]._id,
+                                                update: allotments
+                                            },
+                                        })
+                                    }
+                                })
+                                    .then(() => {
+                                        alert(committeeState.committee + " updated successfully!")
+                                        dispatch({ type: 'set', sidebarShow: false })
+                                        dispatch({ type: 'set', sidebarShow: true })
+                                    })
+                                    .catch(() => {
+                                        console.log('Internal server error')
+                                    })
                             })
                     }
                 }
@@ -195,9 +236,33 @@ const CommitteeRoster = () => {
             },
         })
             .then(() => {
-                alert(item.committee + " deleted successfully!")
-                dispatch({ type: 'set', sidebarShow: false })
-                dispatch({ type: 'set', sidebarShow: true })
+                fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+                    let j;
+                    for (j = 0; j < res.length; j++) {
+                        let original = res[j].allotments.split(",")
+                        let i;
+                        for (i = 0; i < original.length; i++) {
+                            let arr = original[i].split(":")
+                            if (arr[0] === item.committee) {
+                                original.splice(i, 1)
+                            }
+                        }
+
+                        let allotments = { allotments: original.join() }
+
+                        axios.put('/api/update/allotments', {
+                            data: {
+                                id: res[j]._id,
+                                update: allotments
+                            },
+                        })
+                    }
+                })
+                    .then(() => {
+                        alert(item.committee + " deleted successfully!")
+                        dispatch({ type: 'set', sidebarShow: false })
+                        dispatch({ type: 'set', sidebarShow: true })
+                    })
             })
             .catch(() => {
                 console.log('Internal server error')
