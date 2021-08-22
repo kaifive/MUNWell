@@ -64,7 +64,7 @@ export function invoiceLayout(doc, item, settings) {
     let multiplier = 0;
     let schoolFee = 0;
 
-    if(settings !== undefined) {
+    if (settings !== undefined) {
         if (item.window === "Early") {
             multiplier = Number(settings.earlydelfee)
             schoolFee = Number(settings.earlyschoolfee)
@@ -75,7 +75,7 @@ export function invoiceLayout(doc, item, settings) {
             multiplier = Number(settings.latedelfee)
             schoolFee = Number(settings.lateschoolfee)
         }
-    } 
+    }
 
     let delFee = item.delegates * multiplier
 

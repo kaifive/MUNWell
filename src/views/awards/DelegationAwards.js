@@ -59,7 +59,7 @@ const DelegationAwards = () => {
                 let response = res
 
                 let i;
-                for(i = 0; i < response.length; i++) {
+                for (i = 0; i < response.length; i++) {
                     response[i]["raw"] = getRawScore(response[i], data.awardType, data.awardData)
                     response[i]["score"] = getPerCapitaScore(response[i], data.committeeData, data.awardType, data.awardData)
                 }

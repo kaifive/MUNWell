@@ -70,10 +70,10 @@ export function getAlerts(committee, registrationData, allotmentData) {
                 let allotments = allotmentData[j].allotments.split(",")
 
                 let k;
-                for(k = 0; k < allotments.length; k++) {
+                for (k = 0; k < allotments.length; k++) {
                     let arr = allotments[k].split(":")
 
-                    if(arr[0] === committee.committee) {
+                    if (arr[0] === committee.committee) {
                         assignedPositions = arr[1]
                     }
                 }

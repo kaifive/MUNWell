@@ -27,7 +27,7 @@ export function getDelegations(preKey, registrationData) {
     let i;
     for (i = 0; i < registrationData.length; i++) {
         let temp = registrationData[i].delegation
-        if(temp !== undefined) {
+        if (temp !== undefined) {
             delegations[i + 1] = <option value={temp} key={preKey + "_" + temp}>{temp}</option>
         }
     }

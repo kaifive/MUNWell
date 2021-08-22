@@ -236,7 +236,7 @@ const Settings = () => {
                         })
                 }
             })
-            
+
         fetchData("/api/get/awardType", user.sub, 'value').then((res) => {
             setData(prevState => {
                 return { ...prevState, awardTypes: res }

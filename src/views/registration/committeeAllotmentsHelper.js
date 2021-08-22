@@ -32,10 +32,10 @@ function getAssigned(item, committee, allotmentData) {
             let allotments = allotmentData[i].allotments.split(",")
 
             let j;
-            for(j = 0; j < allotments.length; j++) {
+            for (j = 0; j < allotments.length; j++) {
                 let arr = allotments[j].split(":")
 
-                if(arr[0] === committee) {
+                if (arr[0] === committee) {
                     return arr[1]
                 }
             }

@@ -212,7 +212,7 @@ const PaymentInvoicing = () => {
             })
         }
       })
-      
+
     fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
       setData(prevState => {
         return { ...prevState, registrationData: JSON.stringify(res) }

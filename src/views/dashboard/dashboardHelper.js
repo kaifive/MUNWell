@@ -151,7 +151,7 @@ export function calculateDelegationBalance(registrationData, committeeData, allo
                 }
             }
         }
-        
+
         if (assignedPositions - allottedPositions === 0) {
             balanced = balanced + 1
         }

@@ -288,7 +288,7 @@ const Registration = () => {
             })
         }
       })
-      
+
     fetchData("/api/get/registrationData", user.sub, 'delegates').then((res) => {
       if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
         setData(prevState => {

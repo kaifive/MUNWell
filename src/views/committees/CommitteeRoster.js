@@ -274,7 +274,7 @@ const CommitteeRoster = () => {
                         })
                 }
             })
-            
+
         fetchData("/api/get/committee", user.sub, 'division').then((res) => {
             setData(prevState => {
                 return { ...prevState, committeeData: JSON.stringify(res) }
