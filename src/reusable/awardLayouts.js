@@ -18,7 +18,14 @@ export function participationLayout1(doc, item, settings) {
     doc.text(settings.name + " recognizes the delegation of", 5.5, 2.25, { align: "center" })
 
     doc.setFont(font, "bold")
-    doc.setFontSize(30)
+
+    let fontSize = 30
+
+    while ((doc.getStringUnitWidth(item.position) * fontSize / 72) >= 7.75) {
+        fontSize--;
+    }
+
+    doc.setFontSize(fontSize)
     doc.text(item.position, 5.5, 2.85, { align: "center" })
 
     doc.setFont(font, "normal")

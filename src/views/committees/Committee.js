@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
 import {
+    CAlert,
     CButton,
     CCard,
     CCardBody,
@@ -33,7 +34,7 @@ import fetchData from '../../data/LiveData/FetchData'
 import { checkLicense } from 'src/reusable/checkLicense';
 
 
-import { getAllDelegations, getCommitteeData, exportTable, getAlerts } from './committeeHelper'
+import { getAllDelegations, getCommitteeData, exportTable } from './committeeHelper'
 
 const buttons = [{ void: 'void' }]
 
@@ -74,6 +75,8 @@ const Committee = ({ match: { params: { committee } } }) => {
         positions: [],
         assignments: [],
     })
+
+    const [alerts, setAlerts] = useState([])
 
     async function getData() {
         await fetchData('/api/get/registrationData', user.sub).then((res) => {
@@ -294,6 +297,125 @@ const Committee = ({ match: { params: { committee } } }) => {
                     }
                 }
             }
+        }).then(() => {
+            setAlerts(getAlerts(data.committee, data.registrationData, data.allotmentData))                    
+        })
+    }
+
+    function getAlerts(committee, registrationData, allotmentData) {
+        let alerts = [<p>{committee.committee} - Alerts</p>]
+    
+        let i;
+        for (i = 0; i < registrationData.length; i++) {
+            let assignedPositions = 0;
+    
+            let j;
+            for (j = 0; j < allotmentData.length; j++) {
+                if (registrationData[i]._id === allotmentData[j].delegationId) {
+                    let allotments = allotmentData[j].allotments.split(",")
+    
+                    let k;
+                    for (k = 0; k < allotments.length; k++) {
+                        let arr = allotments[k].split(":")
+    
+                        if (arr[0] === committee.committee) {
+                            assignedPositions = arr[1]
+                        }
+                    }
+                }
+            }
+    
+            let assignments = committee.assignments.split(",")
+            let actualPositions = 0;
+            let k;
+            for (k = 0; k < assignments.length; k++) {
+                if (assignments[k] === registrationData[i].delegation) {
+                    actualPositions = actualPositions + 1
+                }
+            }
+    
+            let alertNumber = assignedPositions - actualPositions
+    
+            let position = "position"
+            if (alertNumber !== 1) {
+                position = "positions"
+            }
+    
+            let delegation = registrationData[i].delegation
+    
+            let alert =
+                <CRow>
+                    <CCol lg="12">
+                        <CAlert color="danger">
+                            <CRow>
+                                <CCol lg="9">
+                                    {delegation} requires <strong>{alertNumber}</strong> {position} in the {committee.committee}
+                                </CCol>
+                                <CCol lg="3">
+                                    <CButton block color="primary" onClick={() => autoAssign(committee, delegation, alertNumber)}>Auto Assign</CButton>
+                                </CCol>
+                            </CRow>
+                        </CAlert>
+                    </CCol>
+                </CRow>
+    
+            if (alertNumber !== 0) {
+                alerts.push(alert)
+            }
+        }
+
+        if(alerts.length === 1) {
+            alerts = []
+        }
+    
+        return alerts
+    }
+    
+    function autoAssign(committee, delegation, alertNumber) {
+        let positions = committee.positions.split(",")
+        let assignments = committee.assignments.split(",")
+        let indexes = []
+        let openPositions = 0
+    
+        let i;
+        for (i = 0; i < positions.length; i++) {
+            if (alertNumber > 0) {
+                if (assignments[i] === "") {
+                    indexes.push(i)
+                }
+            } else {
+                if (assignments[i] === delegation) {
+                    indexes.push(i)
+                }
+            }
+    
+            if (assignments[i] === "") {
+                openPositions = openPositions + 1
+            }
+        }
+    
+        if (openPositions < alertNumber) {
+            alert("Not enough positions to assign to " + delegation)
+            return
+        }
+    
+        let j;
+        for (j = 0; j < Math.abs(alertNumber); j++) {
+            let index = indexes[parseInt(Math.random() * (indexes.length))];
+            
+            if(assignments[index] === "") {
+                assignments[index] = delegation
+            } else {
+                assignments[index] = ""
+            }
+    
+            indexes.splice(indexes.indexOf(index), 1)
+        }
+
+        alert(delegation + " has been randomly auto assigned")
+
+        setAssignments(prevState => {
+            return { ...prevState, assignments: assignments }
         })
     }
 
@@ -308,6 +430,8 @@ const Committee = ({ match: { params: { committee } } }) => {
                     setAssignments(prevState => {
                         return { ...prevState, assignments: data.committee.assignments.split(',') }
                     })
+
+                    setAlerts(getAlerts(data.committee, data.registrationData, data.allotmentData))                    
                 }
             }
         })
@@ -316,7 +440,7 @@ const Committee = ({ match: { params: { committee } } }) => {
 
     return data.committee.length !== 0 ? (
         <>
-            {getAlerts(data.committee, data.registrationData, data.allotmentData)}
+            {alerts}
 
             <CRow>
                 <CCol>
