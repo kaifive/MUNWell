@@ -145,12 +145,8 @@ const CommitteeAllotments = () => {
         committeeList[0] = {
             key: 'delegation', label:
                 <div>
-                    <p>
-                        Committee
-                    </p>
-                    <p>
-                        Assigned/Expected:
-                    </p>
+                    <CButton block variant="outline" color="primary">Committee (Assigned/Expected)</CButton>
+                    <p>&ensp;</p>
                     <p>
                         Delegation
                     </p>
@@ -181,26 +177,24 @@ const CommitteeAllotments = () => {
                 let expected = 0
 
                 let k;
-                for(k = 0; k < data.allotmentData.length; k++) {
+                for (k = 0; k < data.allotmentData.length; k++) {
                     let allotments = data.allotmentData[k].allotments.split(",")
 
                     let l;
-                    for(l = 0; l < allotments.length; l++) {
+                    for (l = 0; l < allotments.length; l++) {
                         let arr = allotments[l].split(":")
 
-                        if(arr[0] === committee) {
+                        if (arr[0] === committee) {
                             expected = expected + Number(arr[1])
                         }
-                    }   
+                    }
                 }
 
                 let item = {
                     key: name,
                     label: <div>
-                        <CButton block variant="outline" color="primary" onClick={() => openCommitteeModal(committee)}> {name} </CButton>
-                        <p>
-                            {assigned} / {expected}
-                        </p>
+                        <CButton block variant="outline" color="primary" onClick={() => openCommitteeModal(committee)}> {name} ({assigned}/{expected}) </CButton>
+                        <p>&ensp;</p>
                         <p>&ensp;</p>
                     </div>
                 }
@@ -208,7 +202,7 @@ const CommitteeAllotments = () => {
                 committeeList[i + 1] = item
             }
 
-            committeeList[i + 1] =  {
+            committeeList[i + 1] = {
                 key: 'actions', label:
                     <div>
                         <p>&ensp;</p>
