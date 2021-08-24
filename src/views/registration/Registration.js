@@ -208,9 +208,32 @@ const Registration = () => {
                           id: res[j]._id,
                           update: allotments
                         },
-                      }).then(() => {
-                        alert(registrationState.delegation + " updated successfully!")
                       })
+                        .then(() => {
+                          fetchData("/api/get/committee", user.sub, 'division').then((res) => {
+                            let i;
+                            for (i = 0; i < res.length; i++) {
+                              let newAssignments = res[i].assignments.split(",")
+
+                              let j;
+                              for (j = 0; j < newAssignments.length; j++) {
+                                if (newAssignments[j] === editItem.delegation) {
+                                  newAssignments[j] = registrationState.delegation
+                                }
+                              }
+
+                              axios.put('/api/update/committee', {
+                                data: {
+                                  id: res[i]._id,
+                                  update: { assignments: newAssignments.join() }
+                                },
+                              })
+                            }
+                          })
+                            .then(() => {
+                              alert(registrationState.delegation + " updated successfully!")
+                            })
+                        })
                     }
                   }
                 })
@@ -277,7 +300,29 @@ const Registration = () => {
                       },
                     })
                       .then(() => {
-                        alert(item.delegation + " deleted successfully!")
+                        fetchData("/api/get/committee", user.sub, 'division').then((res) => {
+                          let i;
+                          for (i = 0; i < res.length; i++) {
+                            let newAssignments = res[i].assignments.split(",")
+
+                            let j;
+                            for (j = 0; j < newAssignments.length; j++) {
+                              if (newAssignments[j] === item.delegation) {
+                                newAssignments[j] = ""
+                              }
+                            }
+
+                            axios.put('/api/update/committee', {
+                              data: {
+                                id: res[i]._id,
+                                update: { assignments: newAssignments.join() }
+                              },
+                            })
+                          }
+                        })
+                          .then(() => {
+                            alert(item.delegation + " deleted successfully!")
+                          })
                       })
                   }
                 }
