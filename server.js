@@ -9,9 +9,7 @@ const PORT = process.env.PORT || 8080
 
 const routes = require('./src/routes/api')
 
-const MONGODB_URI = process.env.REACT_MONGO_URI
-
-mongoose.connect(MONGODB_URI, {
+mongoose.connect(process.env.REACT_MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
@@ -23,6 +21,10 @@ mongoose.connection.on('connected', () => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static('./build'))
+}
 
 app.use('/api', routes);
 

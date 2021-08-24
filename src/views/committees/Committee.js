@@ -276,6 +276,8 @@ const Committee = ({ match: { params: { committee } } }) => {
                         },
                     })
                         .then(() => {
+                            setAlerts(getAlerts(data.committee, data.registrationData, data.allotmentData))                    
+
                             alert(data.committee.committee + " position assignments saved successfully!")
                         })
                         .catch(() => {
@@ -297,8 +299,6 @@ const Committee = ({ match: { params: { committee } } }) => {
                     }
                 }
             }
-        }).then(() => {
-            setAlerts(getAlerts(data.committee, data.registrationData, data.allotmentData))                    
         })
     }
 
