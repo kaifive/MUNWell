@@ -1,5 +1,5 @@
 {
-  "name": "Manuel",
+  "name": "manuel",
   "version": "1.0.0",
   "description": "The Future of Organizing MUN Well",
   "author": {
@@ -40,7 +40,6 @@
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.15",
     "mongoose": "^5.13.8",
-    "mongoose-auto-increment": "^5.0.1",
     "morgan": "^1.10.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
@@ -51,7 +50,8 @@
     "react-router-dom": "^5.2.0",
     "react-scroll": "^1.8.3",
     "redux": "^4.0.5",
-    "sass": "^1.32.8"
+    "sass": "^1.32.8",
+    "typescript": "^4.3.5"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
@@ -61,7 +61,7 @@
   "scripts": {
     "start": "react-scripts start",
     "dev": "concurrently -n 'SERVER,CLIENT' -c 'red,green' \"nodemon server.js --ignore client\" \"react-scripts start\"",
-    "build": "npm install && react-scripts build",
+    "build": "npm install --legacy-peer-deps && react-scripts build",
     "heroku-postbuild": "npm run build",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",
