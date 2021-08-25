@@ -56,13 +56,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
-    "auto-changelog": "~2.2.1",
-    "react-scripts": "^4.0.3"
+    "auto-changelog": "~2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "dev": "concurrently -n 'SERVER,CLIENT' -c 'red,green' \"nodemon server.js --ignore client\" \"react-scripts start\"",
-    "build": "npm install --legacy-peer-deps && react-scripts build",
+    "build": "npm install && npm install --only=dev --no-shrinkwrap && react-scripts build",
     "heroku-postbuild": "npm run build",
     "test": "react-scripts test",
     "test:cov": "npm test -- --coverage --watchAll=false",

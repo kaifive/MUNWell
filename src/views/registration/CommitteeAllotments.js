@@ -142,16 +142,7 @@ const CommitteeAllotments = () => {
     function getFields() {
         let committeeList = []
 
-        committeeList[0] = {
-            key: 'delegation', label:
-                <div>
-                    <CButton block variant="outline" color="primary">Committee (Assigned/Expected)</CButton>
-                    <p>&ensp;</p>
-                    <p>
-                        Delegation
-                    </p>
-                </div>
-        }
+        committeeList[0] = 'delegation'
 
         if (data.committeeData !== undefined) {
             let i;
@@ -192,26 +183,15 @@ const CommitteeAllotments = () => {
 
                 let item = {
                     key: name,
-                    label: <div>
+                    label: 
                         <CButton block variant="outline" color="primary" onClick={() => openCommitteeModal(committee)}> {name} ({assigned}/{expected}) </CButton>
-                        <p>&ensp;</p>
-                        <p>&ensp;</p>
-                    </div>
+
                 }
 
                 committeeList[i + 1] = item
             }
 
-            committeeList[i + 1] = {
-                key: 'actions', label:
-                    <div>
-                        <p>&ensp;</p>
-                        <p>&ensp;</p>
-                        <p>
-                            Actions
-                        </p>
-                    </div>
-            }
+            committeeList[i + 1] = 'actions'
         }
         return committeeList
     }
@@ -365,7 +345,7 @@ const CommitteeAllotments = () => {
                 <CCol>
                     <CCard>
                         <CCardHeader>
-                            Committee Allotments
+                            Committee Allotments | Committee (Assigned Positions/Expected Positions)
                             <Export data={exportTable(data.registrationData, data.committeeData, data.allotmentData)} filename="CommitteeAllotments.csv" />
                         </CCardHeader>
                         <CCardBody>
