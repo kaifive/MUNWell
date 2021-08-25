@@ -7,6 +7,8 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 8080
 
+app.set("port", PORT)
+
 const routes = require('./src/routes/api')
 
 mongoose.connect(process.env.REACT_MONGO_URI, {
