@@ -93,13 +93,31 @@ const CommitteeAllotments = () => {
         for (i = 0; i < data.committeeData.length; i++) {
             let committee = data.committeeData[i].committee
 
+            let disabled = true;
+
+            if(editItem !== undefined) {
+                let committeeDivision = data.committeeData[i].division.split(", ")
+                let delegationDivision = editItem.division.split(", ")
+
+                let j;
+                for(j = 0; j < committeeDivision.length; j++) {
+                    let k;
+                    for(k = 0; k < delegationDivision.length; k++) {
+                        if(committeeDivision[j] === delegationDivision[k]) {
+                            disabled = false;
+                        }
+                    }
+                }
+                
+            }
+
             let temp =
                 <CFormGroup row>
                     <CCol md="7">
                         <CLabel htmlFor={committee}>{committee}</CLabel>
                     </CCol>
                     <CCol xs="12" md="4">
-                        <CInput type="number" min="0" name="numPositions" placeholder="Number of Positions" value={allotmentsState[committee]} onChange={e => {
+                        <CInput disabled={disabled} type="number" min="0" name="numPositions" placeholder="Number of Positions" value={allotmentsState[committee]} onChange={e => {
                             const val = e.target.value
 
                             setAllotmentsState(prevState => {
