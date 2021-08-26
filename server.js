@@ -7,7 +7,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 8080
 
-app.set("port", PORT)
+app.set('port', (process.env.PORT || 8080))
 
 const routes = require('./src/routes/api')
 
@@ -24,10 +24,12 @@ mongoose.connection.on('connected', () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-if(process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
     app.use(express.static('./build'))
 }
 
 app.use('/api', routes);
 
-app.listen(PORT, console.log(`Server is running at ${PORT}...`))
+app.listen(app.get('port'), function () {
+    console.log('Node server is running on port ' + app.get('port'));
+});
