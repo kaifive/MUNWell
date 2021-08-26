@@ -41,6 +41,7 @@
     "jspdf-autotable": "^3.5.15",
     "mongoose": "^5.13.8",
     "morgan": "^1.10.0",
+    "nodemon": "^2.0.12",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-app-polyfill": "^2.0.0",
@@ -59,7 +60,7 @@
     "auto-changelog": "~2.2.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server.js",
     "dev": "concurrently -n 'SERVER,CLIENT' -c 'red,green' \"nodemon server.js --ignore client\" \"react-scripts start\"",
     "build": "npm install && npm install --only=dev --no-shrinkwrap && react-scripts build",
     "heroku-postbuild": "npm run build",
