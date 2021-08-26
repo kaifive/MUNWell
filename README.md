@@ -1,4 +1,4 @@
-# *The Future of Organizing *MUNWell
+# *The Future of Organizing* MUNWell
 The MUNWell Mission is to develop a web application that allows everyone in the MUN community to easily organize a Model UN conference, regardless of experience level, influencing their greater area to inspire the next generation of MUN leaders.
 
 ## MUNWell v.1.0.0 is now live
