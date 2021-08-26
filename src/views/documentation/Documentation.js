@@ -18,7 +18,7 @@ const Documentation = () => {
                 <CCol>
                     <CCard>
                         <CCardHeader>
-                            Manuel Documentation
+                            MUNWell Documentation
                         </CCardHeader>
                         <CCardBody>
                             <div id="accordion">
@@ -38,7 +38,7 @@ const Documentation = () => {
                                             <CCol xs="12" md="12">
                                                 <i><strong>OVERHEAD STATISTICS</strong></i>
                                                 <br />
-                                                Manuel provides 4 overhead statistics at the top of the <strong>Dashboard</strong> page for immediate access. The “committees” statistics card displays the number of committees currently created for the conference. More committees can be added from the <strong>Committee Roster</strong> page. The “delegations” statistics card displays the number of delegations currently registered for the conference. More delegations and other relevant registration information can be inputted on the <strong>Registration Data</strong> page. The “delegates” statistics card displays the number of delegates currently registered for the conference. This number combines the number of registered delegates of a delegation and independent delegates from the <strong>Registration Data</strong> page. The “income” statistics card displays the total sum of income a conference is expected to make based on the number of registered delegates and delegations accounting for different registration time windows and corresponding registration fees specified in the “Registration Settings” tab of the <strong>Settings</strong> page.
+                                                MUNWell provides 4 overhead statistics at the top of the <strong>Dashboard</strong> page for immediate access. The “committees” statistics card displays the number of committees currently created for the conference. More committees can be added from the <strong>Committee Roster</strong> page. The “delegations” statistics card displays the number of delegations currently registered for the conference. More delegations and other relevant registration information can be inputted on the <strong>Registration Data</strong> page. The “delegates” statistics card displays the number of delegates currently registered for the conference. This number combines the number of registered delegates of a delegation and independent delegates from the <strong>Registration Data</strong> page. The “income” statistics card displays the total sum of income a conference is expected to make based on the number of registered delegates and delegations accounting for different registration time windows and corresponding registration fees specified in the “Registration Settings” tab of the <strong>Settings</strong> page.
                                                 <br />
                                                 <br />
                                                 <i><strong>COMMITTEE CAPACITY BAR CHART</strong></i>
@@ -133,12 +133,12 @@ const Documentation = () => {
                                                 Previously submitted entries can be edited by selecting <strong>Edit</strong> from the actions dropdown or deleted by selecting <strong>Delete</strong>.
                                                 <br />
                                                 <br />
-                                                <i><strong>MANUEL LICENSE</strong></i>
+                                                <i><strong>MUNWELL LICENSE</strong></i>
                                                 <br />
-                                                Manuel account’s require a license file to unlock full functionality. Manuel implements a tier based structure for conferences to manage expenses dependent on their conference size. Each license type provides conference organizers access to all of Manuel’s features, however the scale in which a conference can operate is dependent on the plan purchased. Plans are sold on an annual term, after which a conference organizer can renew, upgrade, or delete their Manuel account.
+                                                MUNWell account’s require a license file to unlock full functionality. MUNWell implements a tier based structure for conferences to manage expenses dependent on their conference size. Each license type provides conference organizers access to all of MUNWell’s features, however the scale in which a conference can operate is dependent on the plan purchased. Plans are sold on an annual term, after which a conference organizer can renew, upgrade, or delete their MUNWell account.
                                                 <br />
                                                 <br />
-                                                Once a plan is purchased and processed, the conference organizer will be contacted via email with their Manuel license within 48 hours upon which the organizer can begin utilizing all of the features that Manuel has to offer.
+                                                Once a plan is purchased and processed, the conference organizer will be contacted via email with their MUNWell license within 48 hours upon which the organizer can begin utilizing all of the features that MUNWell has to offer.
                                                 <br />
                                                 <br />
                                                 To upload a license file, click the <strong>Upload License</strong> button, select your license file, and click <strong>Submit</strong>.
@@ -182,7 +182,7 @@ const Documentation = () => {
                                                 The “Registration Data” table consolidates all conference registration entries into a single table. It’s filterable headers allow conference organizers to easily sort registration data, and plan accordingly.
                                                 <br />
                                                 <br />
-                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, MUNWell’s export feature is available on this table.
                                                 <br />
                                                 <br />
                                                 <i><strong>ADDING REGISTRATION ENTRIES</strong></i>
@@ -221,7 +221,7 @@ const Documentation = () => {
                                                 The “Committee Allotments” table represents the number of positions a delegation should have in a committee. Conference organizers should use the <strong>Edit</strong> action to indicate the final number of positions a delegation should have in a committee. This number will be cross-referenced with the number of actual assigned positions for each committee to ensure that delegations are receiving the correct number of positions. Any differences will result in overhead alerts appearing on <strong>Position Assignments</strong> pages under individual committees, as well as an unbalanced tag appearing on the <strong>Position Invoicing</strong> page.
                                                 <br />
                                                 <br />
-                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, MUNWell’s export feature is available on this table.
                                                 <br />
                                                 <br />
                                                 <i><strong>COMMITTEE DETAILS BUTTON</strong></i>
@@ -255,7 +255,7 @@ const Documentation = () => {
                                                 The “Payment Invoicing” table displays all payment information for a delegation registered at the conference. The status column indicates whether or not a payment has been received from a delegation, and can be toggled between “Paid” or “Unpaid” via the <strong>Reverse Status</strong> option on the actions dropdown. The window column indicates the time window of a registration entry and the delegate fee and invoice total is calculated according to the conference registration settings.
                                                 <br />
                                                 <br />
-                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, MUNWell’s export feature is available on this table.
                                                 <br />
                                                 <br />
                                                 <i><strong>PAYMENT INVOICING ACTIONS</strong></i>
@@ -294,7 +294,7 @@ const Documentation = () => {
                                                 The “Position Invoicing” table displays the relevant registered delegation data and its position invoicing status. A delegation’s status is determined by the number of allotted positions for each committee, versus the number of assigned positions for each committee a delegation has. Should there be no discrepancies, a delegation is marked as “Balanced” otherwise “Unbalanced”. Specific alerts will appear on individual committee <strong>Position Assignment</strong> pages if adjustments should be made in order to balance a delegation status, ensuring that all delegations receive the proper number of positions in a committee.
                                                 <br />
                                                 <br />
-                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, MUNWell’s export feature is available on this table.
                                                 <br />
                                                 <br />
                                                 <i><strong>POSITION INVOICING ACTIONS</strong></i>
@@ -337,7 +337,7 @@ const Documentation = () => {
                                                 The “Committee Roster” table displays all committees that a conference currently has set up for the conference. Each committee found on the committee roster will generate its own set of subpages, <strong>Position Assignments</strong> and <strong>Individual Awards</strong>, where committee specific actions can be taken. The table additionally gives a quick overview at all committees, displaying the number of assigned positions and total positions.
                                                 <br />
                                                 <br />
-                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, MUNWell’s export feature is available on this table.
                                                 <br />
                                                 <br />
                                                 <i><strong>COMMITTEE ROSTER ACTIONS</strong></i>
@@ -347,7 +347,7 @@ const Documentation = () => {
                                                 <br />
                                                 <i><strong>ADDING NEW COMMITTEE TO ROSTER</strong></i>
                                                 <br />
-                                                Above the “Committee Roster” table, there is an <strong>Add New</strong> button that allows conference organizers to add a new committee to their conference committee roster. This will open a form where required data can be inputed. Committee positions can be custom added through the text area and should be separated by a comma, or Manuel’s default list of positions can be imported by the positions needed.
+                                                Above the “Committee Roster” table, there is an <strong>Add New</strong> button that allows conference organizers to add a new committee to their conference committee roster. This will open a form where required data can be inputed. Committee positions can be custom added through the text area and should be separated by a comma, or MUNWell’s default list of positions can be imported by the positions needed.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -371,7 +371,7 @@ const Documentation = () => {
                                                 Each individual committee from the <strong>Committee Roster</strong> page generates a corresponding “Position Assignments” table which displays all the positions in a committee in the leftmost column. On the rightmost column, assignment, conference organizers can select a registered delegation to assign the position to.
                                                 <br />
                                                 <br />
-                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, MUNWell’s export feature is available on this table.
                                                 <br />
                                                 <br />
                                                 <i><strong>TRIGGERED ALERTS</strong></i>
@@ -381,7 +381,7 @@ const Documentation = () => {
                                                 <br />
                                                 <i><strong>GENERATED DOCUMENTS</strong></i>
                                                 <br />
-                                                Below the “Position Assignments” table, each committee has a table of Manuel auto-generated files. The first file is a placard set for the committee, formatted using Manuel’s template file. The second file is an attendance sheet which lists all positions in a committee along with their corresponding assignments and empty space to mark a delegation's attendance status. This sheet can be reprinted for each committee session for chair usage.
+                                                Below the “Position Assignments” table, each committee has a table of MUNWell auto-generated files. The first file is a placard set for the committee, formatted using MUNWell’s template file. The second file is an attendance sheet which lists all positions in a committee along with their corresponding assignments and empty space to mark a delegation's attendance status. This sheet can be reprinted for each committee session for chair usage.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -405,7 +405,7 @@ const Documentation = () => {
                                                 Each individual committee from the <strong>Committee Roster</strong> page generates a corresponding “Individual Awards” table which displays all the committee awards that have been submitted. The table displays all information that will used in generating committee awards and therefore should be verified to be accurate.
                                                 <br />
                                                 <br />
-                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, MUNWell’s export feature is available on this table.
                                                 <br />
                                                 <br />
                                                 <i><strong>INDIVIDUAL AWARDS ACTIONS</strong></i>
@@ -450,7 +450,7 @@ const Documentation = () => {
                                             <CCol xs="12" md="12">
                                                 <i><strong>DOWNLOADING AWARDS</strong></i>
                                                 <br />
-                                                The <strong>Committee Awards</strong> page allows you to download awards submitted on the <strong>Individual Awards</strong> page for each of the committees. Selecting the <strong>Download</strong> button from the download column will open a PDF file containing all of the committee’s awards using Manuel’s prebuilt committee awards template.
+                                                The <strong>Committee Awards</strong> page allows you to download awards submitted on the <strong>Individual Awards</strong> page for each of the committees. Selecting the <strong>Download</strong> button from the download column will open a PDF file containing all of the committee’s awards using MUNWell’s prebuilt committee awards template.
                                                 <br />
                                                 <br />
                                                 <i><strong>CREATING CUSTOM AWARDS</strong></i>
@@ -460,7 +460,7 @@ const Documentation = () => {
                                                 <br />
                                                 <i><strong>ADJUSTING TEMPLATE BORDERS</strong></i>
                                                 <br />
-                                                By default, Manuel template awards leave a margin of ~1.25” on all sides to account for the award being printed onto paper with a border design. If however, the paper borders exceed this margin, awards can be scaled by going to the print menu, selecting <strong>More Settings</strong>, and using the <strong>Scale (%)</strong> to scale awards to the necessary size.
+                                                By default, MUNWell template awards leave a margin of ~1.25” on all sides to account for the award being printed onto paper with a border design. If however, the paper borders exceed this margin, awards can be scaled by going to the print menu, selecting <strong>More Settings</strong>, and using the <strong>Scale (%)</strong> to scale awards to the necessary size.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -484,7 +484,7 @@ const Documentation = () => {
                                                 The “Delegation Awards” table calculates a score for every delegation in the event that a conference wants to distribute delegation awards. The leftmost columns list a delegation's name and their division, allowing conference organizers to sort delegations by different delegation award divisions. The next columns list each type of award specified in the award settings on the <strong>Settings</strong> page, along with its corresponding point value, as well as the number of each award that the delegation received. The “Raw Score” of a delegation is calculated by the sum of all of their awards taking into consideration the different point values of each award. The “Per Capita Score” of a delegation is calculated by dividing a delegation’s raw score by the number of delegations/number of assigned positions a delegation has.
                                                 <br />
                                                 <br />
-                                                Should conference organizers filter this data further, to organize this data into more specific categories, Manuel’s export feature is available on this table.
+                                                Should conference organizers filter this data further, to organize this data into more specific categories, MUNWell’s export feature is available on this table.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -505,7 +505,7 @@ const Documentation = () => {
                                             <CCol xs="12" md="12">
                                                 <i><strong>DOWNLOADING AWARDS</strong></i>
                                                 <br />
-                                                The <strong>Participation Awards</strong> page allows you to download participation awards for delegates at the conference. Two separate tables exist in order to provide multiple options for conference organizers to choose from. The “Participation Awards by Committee” table organizes participation awards by different committees, allowing for easy distribution during committee sessions. The “Participation Awards by Delegation” table organizes participation awards by different delegations, including independent delegates, allowing for easy distribution during check in. Selecting the <strong>Download</strong> button from the download column on either table will open a PDF file containing all of the participation awards using Manuel’s prebuilt participation awards template.
+                                                The <strong>Participation Awards</strong> page allows you to download participation awards for delegates at the conference. Two separate tables exist in order to provide multiple options for conference organizers to choose from. The “Participation Awards by Committee” table organizes participation awards by different committees, allowing for easy distribution during committee sessions. The “Participation Awards by Delegation” table organizes participation awards by different delegations, including independent delegates, allowing for easy distribution during check in. Selecting the <strong>Download</strong> button from the download column on either table will open a PDF file containing all of the participation awards using MUNWell’s prebuilt participation awards template.
                                                 <br />
                                                 <br />
                                                 <i><strong>CREATING CUSTOM AWARDS</strong></i>
@@ -515,7 +515,7 @@ const Documentation = () => {
                                                 <br />
                                                 <i><strong>ADJUSTING TEMPLATE BORDERS</strong></i>
                                                 <br />
-                                                By default, Manuel template awards leave a margin of ~1.25” on all sides to account for the award being printed onto paper with a border design. If however, the paper borders exceed this margin, awards can be scaled by going to the print menu, selecting <strong>More Settings</strong>, and using the <strong>Scale (%)</strong> to scale awards to the necessary size.
+                                                By default, MUNWell template awards leave a margin of ~1.25” on all sides to account for the award being printed onto paper with a border design. If however, the paper borders exceed this margin, awards can be scaled by going to the print menu, selecting <strong>More Settings</strong>, and using the <strong>Scale (%)</strong> to scale awards to the necessary size.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -548,9 +548,9 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 12}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
-                                                <i><strong>EXPORTING MANUEL TABLE DATA</strong></i>
+                                                <i><strong>EXPORTING MUNWELL TABLE DATA</strong></i>
                                                 <br />
-                                                Manuel integrates exporting functionality into specific tables to provide conference organizers with full flexibility with their data should they have a need for it outside of Manuel’s built in features. The following tables have exportable functionality supported which allows conference organizers to download table contents as an Excel/CSV file:
+                                                MUNWell integrates exporting functionality into specific tables to provide conference organizers with full flexibility with their data should they have a need for it outside of MUNWell’s built in features. The following tables have exportable functionality supported which allows conference organizers to download table contents as an Excel/CSV file:
                                                 <ol>
                                                     <li>Registration Data from the <strong>Registration Data</strong> page</li>
                                                     <li>Committee Allotments from the <strong>Committee Allotments</strong> page</li>
@@ -559,7 +559,7 @@ const Documentation = () => {
                                                     <li>Position Assignments Table from individual committee position assignments pages</li>
                                                     <li>Individual Awards Table from individual committee individual awards pages</li>
                                                 </ol>
-                                                This feature can be utilized to generate documents with custom template files and mail merging rather than using the built in Manuel templates.
+                                                This feature can be utilized to generate documents with custom template files and mail merging rather than using the built in MUNWell templates.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>
@@ -578,14 +578,14 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 13}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
-                                                <i><strong>MAIL MERGING WITH MANUEL EXPORTED DATA</strong></i>
+                                                <i><strong>MAIL MERGING WITH MUNWELL EXPORTED DATA</strong></i>
                                                 <br />
                                                 Microsoft mail merging allows you to create a batch of documents that are personalized for each recipient based on data from an associated Excel/CSV file. Placeholders, or merge fields, tell Microsoft Word or Publisher template files where in the document to include information for the data source.
                                                 <br />
                                                 <br />
-                                                Manuel creators have constructed the following mail merge guide for conference organizers to follow should they want to export their data from Manuel and utilize it in generating their own respective documents with custom template files:
+                                                MUNWell creators have constructed the following mail merge guide for conference organizers to follow should they want to export their data from MUNWell and utilize it in generating their own respective documents with custom template files:
                                                 <ol>
-                                                    <li>After saving the exported Excel/CSV file to your local computer using the Manuel export button, create your template file using either Microsoft Word or Publisher. </li>
+                                                    <li>After saving the exported Excel/CSV file to your local computer using the MUNWell export button, create your template file using either Microsoft Word or Publisher. </li>
                                                     <li>On the <strong>Mailings</strong> tab click on <strong>Select Recipients</strong>, choose <strong>Use Existing List…</strong>, and on the popup, click on <strong>OK</strong>. </li>
                                                     <li>In your template file, click on where you would like to insert a field from the excel file, and then on the <strong>Mailings</strong> tab, select <strong>Insert Merge Field</strong>, and choose the field you want to insert. </li>
                                                     <li>Repeat the previous step for all the fields you want on your template file. </li>
@@ -610,9 +610,9 @@ const Documentation = () => {
                                     <CCollapse show={accordion === 14}>
                                         <CCardBody>
                                             <CCol xs="12" md="12">
-                                                <i><strong>MANUEL SUGGESTIONS</strong></i>
+                                                <i><strong>MUNWELL SUGGESTIONS</strong></i>
                                                 <br />
-                                                Have a recommendation for the Manuel development team? Fill out the <strong>Suggestions</strong> form located on the overhead navigation bar for any issues you may have encountered or future features you want to see implemented.
+                                                Have a recommendation for the MUNWell development team? Fill out the <strong>Suggestions</strong> form located on the overhead navigation bar for any issues you may have encountered or future features you want to see implemented.
                                             </CCol>
                                         </CCardBody>
                                     </CCollapse>

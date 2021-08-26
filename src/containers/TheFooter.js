@@ -6,7 +6,7 @@ const TheFooter = () => {
     <div style={{ height: "10px" }}>
       <CFooter fixed={false}>
         <div>
-          <a href="/"><strong>Manuel:</strong></a><span className="ml-1"><i>The Future of Organizing MUN Well</i></span>
+        <span className="ml-1"><i>The Future of Organizing </i></span><a href="/"><strong>MUNWell</strong></a>
         </div>
       </CFooter>
     </div>

@@ -157,7 +157,7 @@ const Settings = () => {
         checkLicense(user.sub)
             .then(result => {
                 if (result === 0) {
-                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                    alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
                     if (status) {
                         const payload = {
@@ -221,7 +221,7 @@ const Settings = () => {
         checkLicense(user.sub)
             .then(result => {
                 if (result === 0) {
-                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                    alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
                     axios.delete('/api/delete/awardType', {
                         data: {
@@ -248,7 +248,7 @@ const Settings = () => {
         event.preventDefault();
 
         fetchData("/api/get/validlicense", user.sub, 'start').then((res) => {
-            let msg = "Invalid Manuel License Key";
+            let msg = "Invalid MUNWell License Key";
 
             let i;
             for (i = 0; i < res.length; i++) {
@@ -269,7 +269,7 @@ const Settings = () => {
                         data: payload
                     })
                         .then(() => {
-                            alert("Manuel License added successfully!")
+                            alert("MUNWell License added successfully!")
                             fetchData("/api/get/license", user.sub, 'start').then((res) => {
                                 setData(prevState => {
                                     return { ...prevState, licenses: res }
@@ -297,7 +297,7 @@ const Settings = () => {
             },
         })
             .then(() => {
-                alert("Manuel License deleted successfully!")
+                alert("MUNWell License deleted successfully!")
             })
             .catch(() => {
                 console.log('Internal server error')
@@ -333,7 +333,7 @@ const Settings = () => {
         checkLicense(user.sub)
             .then(result => {
                 if (result === 0) {
-                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                    alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
                     const payload = {
                         user: user.sub,
@@ -369,7 +369,7 @@ const Settings = () => {
                         data: payload
                     })
                         .then(() => {
-                            alert("Manuel Settings saved successfully!")
+                            alert("MUNWell Settings saved successfully!")
                         })
                         .catch(() => {
                             console.log('Internal server error')
@@ -429,7 +429,7 @@ const Settings = () => {
                 <CCol>
                     <CCard>
                         <CCardHeader>
-                            Manuel Settings
+                            MUNWell Settings
                         </CCardHeader>
                         <CCardBody>
                             <div id="accordion">
@@ -873,7 +873,7 @@ const Settings = () => {
                                             className="text-left m-0 p-0"
                                             onClick={() => setAccordion(accordion === 3 ? null : 3)}
                                         >
-                                            <h5 className="m-0 p-0"><strong>Manuel License</strong></h5>
+                                            <h5 className="m-0 p-0"><strong>MUNWell License</strong></h5>
                                         </CButton>
                                     </CCardHeader>
                                     <CCollapse show={accordion === 3}>
@@ -968,7 +968,7 @@ const Settings = () => {
 
             <CModal show={modalLicense} onClose={setModalLicense} size="lg">
                 <CModalHeader>
-                    <CModalTitle>Upload Manuel License</CModalTitle>
+                    <CModalTitle>Upload MUNWell License</CModalTitle>
                 </CModalHeader>
                 <CModalBody>
                     <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
@@ -977,7 +977,7 @@ const Settings = () => {
                                 <CLabel htmlFor="license-file">License Product Key</CLabel>
                             </CCol>
                             <CCol xs="12" md="8">
-                                <CInput type="text" name="productKey" placeholder="Manuel License Product Key" value={licenseState.productKey} onChange={e => {
+                                <CInput type="text" name="productKey" placeholder="MUNWell License Product Key" value={licenseState.productKey} onChange={e => {
                                     const val = e.target.value
                                     setLicenseState(prevState => {
                                         return { ...prevState, productKey: val }

@@ -42,7 +42,7 @@ const TheLayout = () => {
 
       <div id="notfound">
         <div className="notfound">
-          <h2>Login before accessing Manuel!</h2>
+          <h2>Login before accessing MUNWell!</h2>
           <p>The page you are looking for requires a login before access.</p>
 
           <CRow className="justify-content-center">

@@ -121,7 +121,7 @@ const Registration = () => {
     checkLicense(user.sub)
       .then(result => {
         if (result === 0) {
-          alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+          alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
         } else {
           const payload = {
             user: user.sub,
@@ -282,7 +282,7 @@ const Registration = () => {
     checkLicense(user.sub)
       .then(result => {
         if (result === 0) {
-          alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+          alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
         } else {
           axios.delete('/api/delete/registrationData', {
             data: {

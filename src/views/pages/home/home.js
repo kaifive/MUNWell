@@ -46,8 +46,8 @@ const Home = () => {
 
       <section id="hero" className="d-flex align-items-center">
         <div className="container" data-aos="zoom-out" data-aos-delay="100">
-          <h1 style={{ color: "white" }}>Introducing <span>MANUEL</span></h1>
-          <h2><i>The Future of Organizing MUN Well</i></h2>
+          <h1 style={{ color: "white" }}>The Future of Organizing <span>MUNWell</span></h1>
+          <h2></h2>
           <CButton style={{ width: "200px", margin: "auto" }} block color="primary" onClick={() => loginWithRedirect()}>Login / Register</CButton>
 
           {/*
@@ -71,7 +71,7 @@ const Home = () => {
                 <div className="icon-box" data-aos="fade-up" data-aos-delay="200">
                   <div className="icon"><i className="fas fa-shopping-cart"></i> </div>
                   <h4 className="title"><span>1. Purchase a License</span></h4>
-                  <p className="description">Create an account and purchase an affordable Manuel license plan under pricing.</p>
+                  <p className="description">Create an account and purchase an affordable MUNWell license plan under pricing.</p>
                 </div>
               </div>
 
@@ -88,7 +88,7 @@ const Home = () => {
                 <div className="icon-box" data-aos="fade-up" data-aos-delay="400">
                   <div className="icon"><i className="fas fa-sitemap"></i> </div>
                   <h4 className="title"><span>3. Start Organizing</span></h4>
-                  <p className="description">Using Manuel's graphical user interface you can organize your conference in
+                  <p className="description">Using MUNWell's graphical user interface you can organize your conference in
                     minutes.</p>
                 </div>
               </div>
@@ -100,14 +100,14 @@ const Home = () => {
           <div className="container" data-aos="fade-up">
             <div className="section-title">
               <h2>Features</h2>
-              <h3>Why You'll Love <span>Organizing With Manuel</span></h3>
+              <h3>Why You'll Love <span>Organizing With MUNWell</span></h3>
             </div>
 
             <div className="row">
               <div className="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
                 <div className="icon-box">
                   <h4><span>Integrated Dashboard</span></h4>
-                  <p>Away with dozens of spreadsheets to run a conference. With Manuel’s integrated dashboard, any
+                  <p>Away with dozens of spreadsheets to run a conference. With MUNWell’s integrated dashboard, any
                     information you could need is selectively curated into an unmatched graphical user interface, where
                     organizers can monitor trends and distributions to optimize their conference. </p>
                 </div>
@@ -117,7 +117,7 @@ const Home = () => {
                 data-aos-delay="200">
                 <div className="icon-box">
                   <h4><span>Optimization Algorithm</span></h4>
-                  <p>No more position assignment complaints. Manuel’s optimization algorithm is designed to randomize
+                  <p>No more position assignment complaints. MUNWell’s optimization algorithm is designed to randomize
                     position assignments regardless of delegation, eliminating bias. However, manual mode is additionally
                     available for conference organizers. </p>
                 </div>
@@ -127,7 +127,7 @@ const Home = () => {
                 data-aos-delay="300">
                 <div className="icon-box">
                   <h4><span>Document Generation</span></h4>
-                  <p>The days of endless copy and paste or cumbersome mail merging is now over. Manuel utilizes internal
+                  <p>The days of endless copy and paste or cumbersome mail merging is now over. MUNWell utilizes internal
                     mail merging with conference settings to generate formatted invoices, receipts, placard sets,
                     awards, and more which can be easily downloaded and distributed.</p>
                 </div>
@@ -136,8 +136,8 @@ const Home = () => {
               <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="100">
                 <div className="icon-box">
                   <h4><span>Documented Support</span></h4>
-                  <p>While Manuel is designed for ease of use, utilizing an unmatched graphical user interface,
-                    documentation for nearly all of Manuel’s features are provided at the fingertips of conference
+                  <p>While MUNWell is designed for ease of use, utilizing an unmatched graphical user interface,
+                    documentation for nearly all of MUNWell’s features are provided at the fingertips of conference
                     organizers through the documentation menu.</p>
                 </div>
               </div>
@@ -145,7 +145,7 @@ const Home = () => {
               <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="200">
                 <div className="icon-box">
                   <h4><span>Exportable Data</span></h4>
-                  <p>Need to do something not yet supported by Manuel? Conference data can be exported to Excel/CSV
+                  <p>Need to do something not yet supported by MUNWell? Conference data can be exported to Excel/CSV
                     format giving full flexibility to organizers. Documentation on using Microsoft Office's mail
                     merging is also provided for organizers to use custom document templates.</p>
                 </div>
@@ -154,9 +154,9 @@ const Home = () => {
               <div className="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="300">
                 <div className="icon-box">
                   <h4><span>Consistently Evolving</span></h4>
-                  <p>While Manuel currently supports a multitude of features that assists conference organizers, the Manuel
+                  <p>While MUNWell currently supports a multitude of features that assists conference organizers, the MUNWell
                     team is consistently improving old features and introducing new ones. Public suggestions are welcome
-                    through our suggestions menu item for Manuel users.</p>
+                    through our suggestions menu item for MUNWell users.</p>
                 </div>
               </div>
             </div>
@@ -167,7 +167,7 @@ const Home = () => {
           <div className="container" data-aos="fade-up">
             <div className="section-title">
               <h2>Screenshots</h2>
-              <h3>Check Out Some Of Manuel’s <span>Views</span></h3>
+              <h3>Check Out Some Of MUNWell’s <span>Views</span></h3>
             </div>
 
             <div className="row portfolio-container">
@@ -185,7 +185,7 @@ const Home = () => {
             </div>
 
             <div className="section-title">
-              <h3>Check Out Some Of Manuel’s <span>Generated Documents</span></h3>
+              <h3>Check Out Some Of MUNWell’s <span>Generated Documents</span></h3>
             </div>
 
             <div className="row portfolio-container">
@@ -200,12 +200,12 @@ const Home = () => {
           <div className="container" data-aos="fade-up">
             <div className="section-title">
               <h2>Pricing</h2>
-              <h3>Available <span>Manuel Licenses</span></h3>
-              <p>While Manuel is in developmental and testing stages, the web application will be available for purchase at a fixed rate. This rate however will increase and fluctuate based on the number of committees and delegates a conference contains once the software has been debugged and new features are added.</p>
-              {/* <p>Manuel implements multiple license types for conferences to manage expenses dependent on their
-                conference size. Each license enables access to all of Manuel’s features, however the scale a
+              <h3>Available <span>MUNWell Licenses</span></h3>
+              <p>While MUNWell is in developmental and testing stages, the web application will be available for purchase at a fixed rate. This rate however will increase and fluctuate based on the number of committees and delegates a conference contains once the software has been debugged and new features are added.</p>
+              {/* <p>MUNWell implements multiple license types for conferences to manage expenses dependent on their
+                conference size. Each license enables access to all of MUNWell’s features, however the scale a
                 conference can operate is dependent on the license.</p> */}
-              <p>Once a plan is purchased and processed, the conference organizer will be contacted via email with their Manuel license within 48 hours upon which the organizer can begin utilizing all of the features that Manuel has to offer.</p>
+              <p>Once a plan is purchased and processed, the conference organizer will be contacted via email with their MUNWell license within 48 hours upon which the organizer can begin utilizing all of the features that Manuel has to offer.</p>
             </div>
 
             <div className="row-home">
@@ -218,7 +218,7 @@ const Home = () => {
                     <li>Unlimited Committees</li>
                     <li>Unlimited Delegations</li>
                     <li>Unlimited Independent Delegates</li>
-                    <li>1 Hour Manuel Training Session</li>
+                    <li>1 Hour MUNWell Training Session</li>
                   </ul>
                   <div className="btn-wrap">
                     <CButton color="primary">Buy Now</CButton>
@@ -283,7 +283,7 @@ const Home = () => {
       <div style={{ height: "10px" }}>
         <footer id="footer">
           <div className="footerDIV">
-            <Link to="hero" spy={true} smooth={true}><p className="footerLink"><strong style={{ color: "#321fdb" }}>Manuel:</strong> <i>The Future of Organizing MUN Well</i></p></Link>
+            <Link to="hero" spy={true} smooth={true}><p className="footerLink"><i>The Future of Organizing </i><strong style={{ color: "#321fdb" }}>MUNWell</strong></p></Link>
             <a href="mailto:munwell.with.manuel@gmail.com" target="_blank" rel="noreferrer">munwell.with.manuel@gmail.com</a>
           </div>
         </footer>
