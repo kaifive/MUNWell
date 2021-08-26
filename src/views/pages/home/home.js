@@ -218,6 +218,7 @@ const Home = () => {
                     <li>Unlimited Committees</li>
                     <li>Unlimited Delegations</li>
                     <li>Unlimited Independent Delegates</li>
+                    <li>1 Hour Manuel Training Session</li>
                   </ul>
                   <div className="btn-wrap">
                     <CButton color="primary">Buy Now</CButton>
@@ -283,7 +284,7 @@ const Home = () => {
         <footer id="footer">
           <div className="footerDIV">
             <Link to="hero" spy={true} smooth={true}><p className="footerLink"><strong style={{ color: "#321fdb" }}>Manuel:</strong> <i>The Future of Organizing MUN Well</i></p></Link>
-            <a href="mailto:tuongkhai.nguyen@gmail.com" target="_blank" rel="noreferrer">tuongkhai.nguyen@gmail.com</a>
+            <a href="mailto:munwell.with.manuel@gmail.com" target="_blank" rel="noreferrer">munwell.with.manuel@gmail.com</a>
           </div>
         </footer>
       </div>
