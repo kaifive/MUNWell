@@ -1,10 +1,10 @@
 {
-  "name": "manuel",
+  "name": "munwell",
   "version": "1.0.0",
-  "description": "The Future of Organizing MUN Well",
+  "description": "The Future of Organizing MUNWell",
   "author": {
-    "name": "Manuel",
-    "url": "https://google.com"
+    "name": "MUNWell",
+    "url": "https://www.munwell.com"
   },
   "homepage": ".",
   "copyright": "",
