@@ -205,7 +205,7 @@ const Home = () => {
               {/* <p>MUNWell implements multiple license types for conferences to manage expenses dependent on their
                 conference size. Each license enables access to all of MUNWell’s features, however the scale a
                 conference can operate is dependent on the license.</p> */}
-              <p>Once a plan is purchased and processed, the conference organizer will be contacted via email with their MUNWell license within 48 hours upon which the organizer can begin utilizing all of the features that Manuel has to offer.</p>
+              <p>Once a plan is purchased and processed, the conference organizer will be contacted via email with their MUNWell license within 48 hours upon which the organizer can begin utilizing all of the features that MUNWell has to offer.</p>
             </div>
 
             <div className="row-home">
