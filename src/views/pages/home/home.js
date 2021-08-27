@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 import './home.css'
 
-import banner from '../../../assets/branding/PageBanner.svg'
+import banner from '../../../assets/branding/Banner.svg'
 
 import documents from "../../../assets/home/screenshots/Documents.png"
 import dashboard from "../../../assets/home/screenshots/Dashboard.png"
@@ -284,7 +284,7 @@ const Home = () => {
         <footer id="footer">
           <div className="footerDIV">
             <Link to="hero" spy={true} smooth={true}><p className="footerLink"><i>The Future of Organizing </i><strong style={{ color: "#321fdb" }}>MUNWell</strong></p></Link>
-            <a href="mailto:munwell.with.manuel@gmail.com" target="_blank" rel="noreferrer">munwell.with.manuel@gmail.com</a>
+            <a href="mailto:contact.munwell@gmail.com" target="_blank" rel="noreferrer">contact.munwell@gmail.com</a>
           </div>
         </footer>
       </div>

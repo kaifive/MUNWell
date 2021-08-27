@@ -142,7 +142,7 @@ const Committee = ({ match: { params: { committee } } }) => {
         checkLicense(user.sub)
             .then(result => {
                 if (result === 0) {
-                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                    alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
                     let newPositions;
                     let newAssignments = data.committee.assignments
@@ -213,7 +213,7 @@ const Committee = ({ match: { params: { committee } } }) => {
         checkLicense(user.sub)
             .then(result => {
                 if (result === 0) {
-                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                    alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
                     let index = data.committee.positions.split(",").indexOf(item.position)
 
@@ -266,7 +266,7 @@ const Committee = ({ match: { params: { committee } } }) => {
         checkLicense(user.sub)
             .then(result => {
                 if (result === 0) {
-                    alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
+                    alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
                     let newAssignments = assignments.assignments.join()
                     axios.put('/api/update/committee', {
