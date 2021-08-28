@@ -453,8 +453,11 @@ const Committee = ({ match: { params: { committee } } }) => {
                         </CCardHeader>
                         <CCardBody>
                             <CRow className="align-items-left">
-                                <CCol lg="3">
-                                    <CButton block color="primary" onClick={() => openModal()}>Add New</CButton>
+                                <CCol lg="2">
+                                    <CButton block color="primary" onClick={() => openModal()}>Add New Position</CButton>
+                                </CCol>
+                                <CCol lg="2">
+                                    <CButton block color="primary" onClick={() => saveChanges()}>Save Changes</CButton>
                                 </CCol>
                             </CRow>
                             <br></br>
@@ -505,6 +508,9 @@ const Committee = ({ match: { params: { committee } } }) => {
                         </CCardBody>
                         <CCardFooter>
                             <CRow className="align-items-right">
+                                <CCol lg="2">
+                                    <CButton block color="primary" onClick={() => openModal()}>Add New Position</CButton>
+                                </CCol>
                                 <CCol lg="2">
                                     <CButton block color="primary" onClick={() => saveChanges()}>Save Changes</CButton>
                                 </CCol>

@@ -159,39 +159,52 @@ const Settings = () => {
                 if (result === 0) {
                     alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
-                    if (status) {
-                        const payload = {
-                            user: user.sub,
-                            type: awardsState.awardType,
-                            value: awardsState.awardValue
-                        }
+                    let exists = false;
 
-                        axios({
-                            url: '/api/save/awardType',
-                            method: 'POST',
-                            data: payload
-                        })
-                            .then(() => {
-                                alert("Award Type: " + awardsState.awardType + " added successfully!")
-                            })
-                            .catch(() => {
-                                console.log('Internal server error')
-                            })
-                    } else {
-                        axios.put('/api/update/awardType', {
-                            data: {
-                                id: editItem._id,
-                                update: { type: awardsState.awardType, value: awardsState.awardValue }
-                            },
-                        })
-                            .then(() => {
-                                alert("Award Type: " + awardsState.awardType + " updated successfully!")
-                            })
-                            .catch(() => {
-                                console.log('Internal server error')
-                            })
+                    let i;
+                    for (i = 0; i < data.awardTypes.length; i++) {
+                        if (data.awardTypes[i].type === awardsState.awardType) {
+                            exists = true;
+                        }
                     }
 
+                    if (!exists) {
+                        if (status) {
+                            const payload = {
+                                user: user.sub,
+                                type: awardsState.awardType,
+                                value: awardsState.awardValue
+                            }
+
+                            axios({
+                                url: '/api/save/awardType',
+                                method: 'POST',
+                                data: payload
+                            })
+                                .then(() => {
+                                    alert("Award Type: " + awardsState.awardType + " added successfully!")
+                                })
+                                .catch(() => {
+                                    console.log('Internal server error')
+                                })
+                        } else {
+                            axios.put('/api/update/awardType', {
+                                data: {
+                                    id: editItem._id,
+                                    update: { type: awardsState.awardType, value: awardsState.awardValue }
+                                },
+                            })
+                                .then(() => {
+                                    alert("Award Type: " + awardsState.awardType + " updated successfully!")
+                                })
+                                .catch(() => {
+                                    console.log('Internal server error')
+                                })
+                        }
+                    } else {
+                        alert("Award type already exists")
+                        setModalAwards(true)
+                    }
                 }
             })
 
@@ -513,7 +526,7 @@ const Settings = () => {
                                                         <CFormText className="help-block">Start Date</CFormText>
                                                     </CCol>
                                                     <CCol xs="12" md="4">
-                                                        <CInput type="date" name="confEnd" value={settingsState.end} onChange={e => {
+                                                        <CInput type="date" name="confEnd" value={settingsState.end} min={settingsState.start} onChange={e => {
                                                             const val = e.target.value
                                                             setSettingsState(prevState => {
                                                                 return { ...prevState, end: val }
