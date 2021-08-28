@@ -276,7 +276,22 @@ const Committee = ({ match: { params: { committee } } }) => {
                         },
                     })
                         .then(() => {
-                            setAlerts(getAlerts(data.committee, data.registrationData, data.allotmentData))                    
+                            fetchData('/api/get/committee', user.sub).then((res) => {
+                                let i;
+                                for (i = 0; i < res.length; i++) {
+                                    if (res[i]._id === committee) {
+                                        let committeeData = res[i]
+
+                                        if (JSON.stringify(committeeData) !== JSON.stringify(data.committee)) {
+                                            setData(prevState => {
+                                                return { ...prevState, committee: committeeData }
+                                            })
+
+                                            setAlerts(getAlerts(committeeData, data.registrationData, data.allotmentData))
+                                        }
+                                    }
+                                }
+                            })
 
                             alert(data.committee.committee + " position assignments saved successfully!")
                         })
@@ -286,45 +301,32 @@ const Committee = ({ match: { params: { committee } } }) => {
                 }
             })
 
-        fetchData('/api/get/committee', user.sub).then((res) => {
-            let i;
-            for (i = 0; i < res.length; i++) {
-                if (res[i]._id === committee) {
-                    let committeeData = res[i]
 
-                    if (JSON.stringify(committeeData) !== JSON.stringify(data.committee)) {
-                        setData(prevState => {
-                            return { ...prevState, committee: committeeData }
-                        })
-                    }
-                }
-            }
-        })
     }
 
     function getAlerts(committee, registrationData, allotmentData) {
-        let alerts = [<p>{committee.committee} - Alerts</p>]
-    
+        let alerts = [<p>{committee.committee} - Fired Alerts</p>]
+
         let i;
         for (i = 0; i < registrationData.length; i++) {
             let assignedPositions = 0;
-    
+
             let j;
             for (j = 0; j < allotmentData.length; j++) {
                 if (registrationData[i]._id === allotmentData[j].delegationId) {
                     let allotments = allotmentData[j].allotments.split(",")
-    
+
                     let k;
                     for (k = 0; k < allotments.length; k++) {
                         let arr = allotments[k].split(":")
-    
+
                         if (arr[0] === committee.committee) {
                             assignedPositions = arr[1]
                         }
                     }
                 }
             }
-    
+
             let assignments = committee.assignments.split(",")
             let actualPositions = 0;
             let k;
@@ -333,16 +335,16 @@ const Committee = ({ match: { params: { committee } } }) => {
                     actualPositions = actualPositions + 1
                 }
             }
-    
+
             let alertNumber = assignedPositions - actualPositions
-    
+
             let position = "position"
             if (alertNumber !== 1) {
                 position = "positions"
             }
-    
+
             let delegation = registrationData[i].delegation
-    
+
             let alert =
                 <CRow>
                     <CCol lg="12">
@@ -358,25 +360,25 @@ const Committee = ({ match: { params: { committee } } }) => {
                         </CAlert>
                     </CCol>
                 </CRow>
-    
+
             if (alertNumber !== 0) {
                 alerts.push(alert)
             }
         }
 
-        if(alerts.length === 1) {
+        if (alerts.length === 1) {
             alerts = []
         }
-    
+
         return alerts
     }
-    
+
     function autoAssign(committee, delegation, alertNumber) {
         let positions = committee.positions.split(",")
         let assignments = committee.assignments.split(",")
         let indexes = []
         let openPositions = 0
-    
+
         let i;
         for (i = 0; i < positions.length; i++) {
             if (alertNumber > 0) {
@@ -388,27 +390,27 @@ const Committee = ({ match: { params: { committee } } }) => {
                     indexes.push(i)
                 }
             }
-    
+
             if (assignments[i] === "") {
                 openPositions = openPositions + 1
             }
         }
-    
+
         if (openPositions < alertNumber) {
             alert("Not enough positions to assign to " + delegation)
             return
         }
-    
+
         let j;
         for (j = 0; j < Math.abs(alertNumber); j++) {
             let index = indexes[parseInt(Math.random() * (indexes.length))];
-            
-            if(assignments[index] === "") {
+
+            if (assignments[index] === "") {
                 assignments[index] = delegation
             } else {
                 assignments[index] = ""
             }
-    
+
             indexes.splice(indexes.indexOf(index), 1)
         }
 
@@ -431,7 +433,7 @@ const Committee = ({ match: { params: { committee } } }) => {
                         return { ...prevState, assignments: data.committee.assignments.split(',') }
                     })
 
-                    setAlerts(getAlerts(data.committee, data.registrationData, data.allotmentData))                    
+                    setAlerts(getAlerts(data.committee, data.registrationData, data.allotmentData))
                 }
             }
         })
