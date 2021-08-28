@@ -4,7 +4,7 @@ The MUNWell Mission is to develop a web application that allows everyone in the 
 ## MUNWell v.1.0.0 is now live
 1. Access MUNWell at www.munwell.com
 
-## v.Beta Installation
+## MUNWell v.Beta Installation
 1. Clone the repository: ```git clone https://github.com/kaifive/MUNWell.git```
 2. From the root /MUNWell directory, run ```npm install``` to install the Node.js dependencies.
 3. From the root /MUNWell directory, run ```npm run test``` (or a specific npm script) to rebuild distributed CSS, JavaScript files, and assets.
