@@ -24,6 +24,13 @@
     justify-content: center;
   }
   
+  @media (max-width: 1366px) {
+    .row-home {
+      display: block;
+      justify-content: center;
+    }
+  }
+
   /*--------------------------------------------------------------
   # Header
   --------------------------------------------------------------*/
