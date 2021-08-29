@@ -21,6 +21,7 @@ mongoose.connection.on('connected', () => {
     console.log('MongoDB has been connected!!!')
 })
 
+app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

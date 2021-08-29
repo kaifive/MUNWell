@@ -113,7 +113,15 @@ const Settings = () => {
         latedelfee: '',
         lateschoolfee: '',
         terms: ''
+
     })
+
+    const onFileChange = (event) => {
+        const val = event.target.files[0]
+         setSettingsState(prevState => {
+         return { ...prevState, logo: val }
+         })
+      };
 
     const [awardsState, setAwardsState] = useState({
         awardType: '',
@@ -341,52 +349,32 @@ const Settings = () => {
         return "Invalid"
     }
 
-    function saveSettings(event) {
+async  function saveSettings(event) {
         event.preventDefault();
         checkLicense(user.sub)
             .then(result => {
                 if (result === 0) {
                     alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
-                    const payload = {
-                        user: user.sub,
-                        name: settingsState.name,
-                        abbreviation: settingsState.abbreviation,
-                        organization: settingsState.organization,
-                        secgen: settingsState.secgen,
-                        start: settingsState.start,
-                        end: settingsState.end,
-                        street: settingsState.street,
-                        city: settingsState.city,
-                        state: settingsState.state,
-                        zipcode: settingsState.zipcode,
-                        logo: settingsState.logo,
-                        website: settingsState.website,
-
-                        invoiceStreet: settingsState.invoiceStreet,
-                        invoiceCity: settingsState.invoiceCity,
-                        invoiceState: settingsState.invoiceState,
-                        invoiceZipcode: settingsState.invoiceZipcode,
-                        earlydelfee: settingsState.earlydelfee,
-                        earlyschoolfee: settingsState.earlyschoolfee,
-                        regdelfee: settingsState.regdelfee,
-                        regschoolfee: settingsState.regschoolfee,
-                        latedelfee: settingsState.latedelfee,
-                        lateschoolfee: settingsState.lateschoolfee,
-                        terms: settingsState.terms
+                    const formData = new FormData();
+                    formData.append("file", settingsState.logo);
+                    for (let element of Object.keys(settingsState))
+                    {
+                        if(element!=="logo"&&element!=="_id")
+                        formData.append([element], settingsState[element]);
                     }
 
                     axios({
                         url: '/api/save/settings',
                         method: 'POST',
-                        data: payload
+                        data: formData
                     })
-                        .then(() => {
-                            alert("MUNWell Settings saved successfully!")
-                        })
-                        .catch(() => {
-                            console.log('Internal server error')
-                        })
+                    .then(() => {
+                        alert("MUNWell Settings saved successfully!")
+                    })
+                    .catch(() => {
+                        console.log('Internal server error')
+                    })
                 }
             })
 
@@ -443,6 +431,8 @@ const Settings = () => {
                     <CCard>
                         <CCardHeader>
                             MUNWell Settings
+        {/* <img src={`${`http://localhost:8080\uploads/1009852_568223396579267_691861760_n_small.jpg`}`}/> */}
+
                         </CCardHeader>
                         <CCardBody>
                             <div id="accordion">
@@ -580,12 +570,11 @@ const Settings = () => {
                                                 <CFormGroup row>
                                                     <CLabel col md="2" htmlFor="conf-logo">Conference Logo</CLabel>
                                                     <CCol xs="12" md="9">
-                                                        <CInputFile name="confLogo" value={settingsState.logo} onChange={e => {
-                                                            const val = e.target.value
-                                                            setSettingsState(prevState => {
-                                                                return { ...prevState, logo: val }
-                                                            })
-                                                        }} />
+                                                        <CInputFile name="confLogo"
+                                                        onChange={onFileChange} 
+                                                        
+                                                        
+                                                        />
                                                         <CFormText className="help-block">Recommended Image With 1:1 Aspect Ratio</CFormText>
                                                     </CCol>
                                                 </CFormGroup>

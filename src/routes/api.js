@@ -10,6 +10,8 @@ const RegistrationData = require('../models/registrationDataModel')
 const License = require('../models/licenseModel')
 const ValidLicense = require('../models/validLicenseModel')
 const Settings = require('../models/settingsModel')
+const multer = require("multer");
+
 
 /**GETTING DATA FROM MONGODB */
 router.get('/get/allotments', (req, res) => {
@@ -278,13 +280,40 @@ router.post('/save/license', (req, res) => {
         });
     })
 });
-
-router.post('/save/settings', (req, res) => {
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "./uploads/");
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    },
+  });
+  
+  const fileFilter = async (req, file, cb) => {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  };
+  
+  const upload = multer({
+    storage: storage,
+    limits: { fieldSize: 1024 * 1024 * 8 },
+    fileFilter: fileFilter,
+  });
+  
+router.post('/save/settings',upload.single( "file"), (req, res) => {
+    let address = "http://localhost:8080/uploads/";
     const data = req.body
+    let filePath=req.file.path
+    filePath=filePath.substring(8)
+    data.logo=address.concat(filePath)
     const newSettings = new Settings(data)
 
     newSettings.save((error) => {
         if (error) {
+            console.log('error',error);
             res.status(500).json({ msg: 'Sorry, internal server errors' })
             return;
         }
