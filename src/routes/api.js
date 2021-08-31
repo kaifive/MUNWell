@@ -312,8 +312,8 @@ const upload = multer({
 });
 
 router.post('/save/settings', upload.single("file"), (req, res) => {
-    let address = "http://localhost:8080/uploads/";
-    console.log("HERE", process.env.NODE_ENV)
+    //let address = "http://localhost:8080/uploads/";
+    let address = "https://munwell.herokuapp.com/uploads";
     const data = req.body
     let filePath = ""
 

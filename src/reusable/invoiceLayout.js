@@ -19,7 +19,7 @@ function toDataUrl(url, callback) {
 export function invoiceLayout(doc, item, settings) {
     let image = new Image();
 
-    if(settings.logo === "http://localhost:8080/uploads/") {
+    if(settings.logo === "http://localhost:8080/uploads/" || settings.logo === "https://munwell.herokuapp.com/uploads") {
         image.src = defaultLogo
     } else {
         var convertedPath = settings.logo
