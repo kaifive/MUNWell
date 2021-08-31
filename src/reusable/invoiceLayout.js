@@ -1,3 +1,5 @@
+import defaultLogo from '../assets/branding/Logo.png'
+
 const font = "times"
 
 function toDataUrl(url, callback) {
@@ -16,12 +18,18 @@ function toDataUrl(url, callback) {
 
 export function invoiceLayout(doc, item, settings) {
     let image = new Image();
-    var convertedPath = settings.logo
 
-    toDataUrl(settings.logo, function (myBase64) {
-        convertedPath = myBase64
-    });
-    image.src = convertedPath;
+    if(settings.logo === "http://localhost:8080/uploads/") {
+        image.src = defaultLogo
+    } else {
+        var convertedPath = settings.logo
+
+        toDataUrl(settings.logo, function (myBase64) {
+            convertedPath = myBase64
+        });
+
+        image.src = convertedPath;
+    }
 
     let extension = image.src.split(".").pop().toUpperCase()
     doc.addImage(image, extension, 6, .75, 1.5, 1.5);

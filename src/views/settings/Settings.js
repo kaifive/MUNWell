@@ -360,6 +360,11 @@ const Settings = () => {
                 } else {
                     const formData = new FormData();
                     formData.append("file", settingsState.logo);
+                    
+                    if(settingsState.user === undefined) {
+                        formData.append("user", user.sub);
+                    }
+
                     for (let element of Object.keys(settingsState)) {
                         if (element !== "logo" && element !== "_id")
                             formData.append([element], settingsState[element]);
