@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios'
+import { useDispatch } from 'react-redux'
 import {
     CBadge,
     CButton,
@@ -82,6 +83,8 @@ const Settings = () => {
     const { user } = useAuth0()
     const { isAuthenticated } = useAuth0()
 
+    const dispatch = useDispatch()
+
     const [accordion, setAccordion] = useState()
 
     const [modalAwards, setModalAwards] = useState(false)
@@ -118,10 +121,10 @@ const Settings = () => {
 
     const onFileChange = (event) => {
         const val = event.target.files[0]
-         setSettingsState(prevState => {
-         return { ...prevState, logo: val }
-         })
-      };
+        setSettingsState(prevState => {
+            return { ...prevState, logo: val }
+        })
+    };
 
     const [awardsState, setAwardsState] = useState({
         awardType: '',
@@ -349,7 +352,7 @@ const Settings = () => {
         return "Invalid"
     }
 
-async  function saveSettings(event) {
+    async function saveSettings(event) {
         event.preventDefault();
         checkLicense(user.sub)
             .then(result => {
@@ -358,10 +361,9 @@ async  function saveSettings(event) {
                 } else {
                     const formData = new FormData();
                     formData.append("file", settingsState.logo);
-                    for (let element of Object.keys(settingsState))
-                    {
-                        if(element!=="logo"&&element!=="_id")
-                        formData.append([element], settingsState[element]);
+                    for (let element of Object.keys(settingsState)) {
+                        if (element !== "logo" && element !== "_id")
+                            formData.append([element], settingsState[element]);
                     }
 
                     axios({
@@ -369,12 +371,12 @@ async  function saveSettings(event) {
                         method: 'POST',
                         data: formData
                     })
-                    .then(() => {
-                        alert("MUNWell Settings saved successfully!")
-                    })
-                    .catch(() => {
-                        console.log('Internal server error')
-                    })
+                        .then(() => {
+                            alert("MUNWell Settings saved successfully!")
+                        })
+                        .catch(() => {
+                            console.log('Internal server error')
+                        })
                 }
             })
 
@@ -385,6 +387,96 @@ async  function saveSettings(event) {
             })
         })
     }
+/*
+    function resetAccount() {
+        let alert = window.confirm("This action is irreversable, are you sure you want to delete all MUNWell data?")
+
+        if (alert) {
+            fetchData("/api/get/allotments", user.sub).then((res) => {
+                let i;
+                for(i = 0; i < res.length; i++) {
+                    axios.delete('/api/delete/allotments', {
+                        data: {
+                            id: res[i]._id,
+                        },
+                    })
+                }
+            })
+
+            fetchData("/api/get/awardType", user.sub).then((res) => {
+                let i;
+                for(i = 0; i < res.length; i++) {
+                    axios.delete('/api/delete/awardType', {
+                        data: {
+                            id: res[i]._id,
+                        },
+                    })
+                }
+            })
+
+            fetchData("/api/get/committee", user.sub).then((res) => {
+                let i;
+                for(i = 0; i < res.length; i++) {
+                    axios.delete('/api/delete/committee', {
+                        data: {
+                            id: res[i]._id,
+                        },
+                    })
+                }
+            })
+
+            fetchData("/api/get/individualAward", user.sub).then((res) => {
+                let i;
+                for(i = 0; i < res.length; i++) {
+                    axios.delete('/api/delete/individualAward', {
+                        data: {
+                            id: res[i]._id,
+                        },
+                    })
+                }
+            })
+
+            fetchData("/api/get/registrationData", user.sub).then((res) => {
+                let i;
+                for(i = 0; i < res.length; i++) {
+                    axios.delete('/api/delete/registrationData', {
+                        data: {
+                            id: res[i]._id,
+                        },
+                    })
+                }
+            })
+
+            fetchData("/api/get/settings", user.sub).then((res) => {
+                let i;
+                for(i = 0; i < res.length; i++) {
+                    axios.delete('/api/delete/settings', {
+                        data: {
+                            id: res[i]._id,
+                        },
+                    })
+                }
+            })
+
+            fetchData("/api/get/license", user.sub).then((res) => {
+                let i;
+                for(i = 0; i < res.length; i++) {
+                    axios.delete('/api/delete/license', {
+                        data: {
+                            id: res[i]._id,
+                        },
+                    })
+                }
+            })
+
+            getData().then(() => {
+                dispatch({ type: 'set', sidebarShow: false })
+                dispatch({ type: 'set', sidebarShow: true })
+    
+                window.alert("MUNWell account reset successfully!")
+            })
+        }
+    }*/
 
     async function getData() {
         await fetchData("/api/get/awardType", user.sub, 'value').then((res) => {
@@ -424,15 +516,16 @@ async  function saveSettings(event) {
             }
         })
     }
-    return !isLoading ? (
+
+    console.log(settingsState)
+
+    return !isLoading && settingsState !== undefined? (
         <>
             <CRow>
                 <CCol>
                     <CCard>
                         <CCardHeader>
                             MUNWell Settings
-        {/* <img src={`${`http://localhost:8080\uploads/1009852_568223396579267_691861760_n_small.jpg`}`}/> */}
-
                         </CCardHeader>
                         <CCardBody>
                             <div id="accordion">
@@ -571,9 +664,7 @@ async  function saveSettings(event) {
                                                     <CLabel col md="2" htmlFor="conf-logo">Conference Logo</CLabel>
                                                     <CCol xs="12" md="9">
                                                         <CInputFile name="confLogo"
-                                                        onChange={onFileChange} 
-                                                        
-                                                        
+                                                            onChange={onFileChange}
                                                         />
                                                         <CFormText className="help-block">Recommended Image With 1:1 Aspect Ratio</CFormText>
                                                     </CCol>
@@ -883,6 +974,9 @@ async  function saveSettings(event) {
                                             <CRow className="align-items-left">
                                                 <CCol lg="3">
                                                     <CButton block color="primary" onClick={() => openLicenseModal()}>Upload License</CButton>
+                                                </CCol>
+                                                <CCol lg="3">
+                                                    {/*<CButton block color="primary" onClick={() => resetAccount()}>Reset Account</CButton>*/}
                                                 </CCol>
                                             </CRow>
                                             <br></br>

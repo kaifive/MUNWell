@@ -42,7 +42,8 @@ const PositionInvoicing = () => {
   const [data, setData] = useState({
     registrationData: ["", ""],
     committeeData: ["", ""],
-    allotmentData: []
+    allotmentData: [],
+    settings: []
   });
 
   const [isLoading, setIsLoading] = useState(true)
@@ -68,6 +69,14 @@ const PositionInvoicing = () => {
       if (JSON.stringify(res) !== JSON.stringify(data.allotmentData)) {
         setData(prevState => {
           return { ...prevState, allotmentData: res }
+        })
+      }
+    })
+
+    await fetchData("/api/get/settings", user.sub).then((res) => {
+      if (JSON.stringify(res[res.length - 1]) !== JSON.stringify(data.settings)) {
+        setData(prevState => {
+          return { ...prevState, settings: res[res.length - 1] }
         })
       }
     })
@@ -117,7 +126,7 @@ const PositionInvoicing = () => {
                             Select Action
                           </CDropdownToggle>
                           <CDropdownMenu>
-                            <CDropdownItem onClick={() => downloadPositionInvoice(item, JSON.parse(data.committeeData), data.allotmentData)}>Download Position Invoice</CDropdownItem>
+                            <CDropdownItem onClick={() => downloadPositionInvoice(item, JSON.parse(data.committeeData), data.allotmentData, data.settings)}>Download Position Invoice</CDropdownItem>
                           </CDropdownMenu>
                         </CDropdown>
                       </td>

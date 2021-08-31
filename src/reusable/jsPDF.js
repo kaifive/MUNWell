@@ -130,7 +130,21 @@ export function receiptPDF(item, settings) {
     doc.save(item.delegation + " Payment Receipt.pdf");
 }
 
-export function positionPDF(item, committeeData) {
+function toDataUrl(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            callback(reader.result);
+        }
+        reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+}
+
+export function positionPDF(item, committeeData, settings) {
     const doc = new jsPDF({
         orientation: "landscape",
         unit: "in",
@@ -138,7 +152,13 @@ export function positionPDF(item, committeeData) {
     });
 
     let image = new Image();
-    image.src = logo;
+    var convertedPath = settings.logo
+
+    toDataUrl(settings.logo, function (myBase64) {
+        convertedPath = myBase64
+    });
+
+    image.src = convertedPath;
 
     let extension = image.src.split(".").pop().toUpperCase()
     doc.addImage(image, extension, .75, .75, 1.5, 1.5);

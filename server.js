@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-
+const cors = require ('cors');
 const app = express();
 const PORT = process.env.PORT || 8080
 
@@ -20,7 +20,7 @@ mongoose.connect(process.env.REACT_MONGO_URI, {
 mongoose.connection.on('connected', () => {
     console.log('MongoDB has been connected!!!')
 })
-
+app.use(cors());
 app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

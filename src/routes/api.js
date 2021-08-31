@@ -12,7 +12,6 @@ const ValidLicense = require('../models/validLicenseModel')
 const Settings = require('../models/settingsModel')
 const multer = require("multer");
 
-
 /**GETTING DATA FROM MONGODB */
 router.get('/get/allotments', (req, res) => {
     Allotments.find({})
@@ -138,6 +137,14 @@ router.delete('/delete/registrationData', (req, res) => {
 router.delete('/delete/license', (req, res) => {
     const { id } = req.body;
     License.findByIdAndDelete(id, err => {
+        if (err) return res.send(err);
+        return res.json({ success: true });
+    });
+});
+
+router.delete('/delete/settings', (req, res) => {
+    const { id } = req.body;
+    Settings.findByIdAndDelete(id, err => {
         if (err) return res.send(err);
         return res.json({ success: true });
     });
@@ -280,40 +287,46 @@ router.post('/save/license', (req, res) => {
         });
     })
 });
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "./uploads/");
+        cb(null, "./uploads/");
     },
     filename: function (req, file, cb) {
-      cb(null, file.originalname);
+        cb(null, file.originalname);
     },
-  });
-  
-  const fileFilter = async (req, file, cb) => {
+});
+
+const fileFilter = async (req, file, cb) => {
     if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
-      cb(null, true);
+        cb(null, true);
     } else {
-      cb(null, false);
+        cb(null, false);
     }
-  };
-  
-  const upload = multer({
+};
+
+const upload = multer({
     storage: storage,
     limits: { fieldSize: 1024 * 1024 * 8 },
     fileFilter: fileFilter,
-  });
-  
-router.post('/save/settings',upload.single( "file"), (req, res) => {
+});
+
+router.post('/save/settings', upload.single("file"), (req, res) => {
     let address = "http://localhost:8080/uploads/";
     const data = req.body
-    let filePath=req.file.path
-    filePath=filePath.substring(8)
-    data.logo=address.concat(filePath)
+    let filePath = ""
+
+    if(req.file !== undefined) {
+        filePath = req.file.path
+        filePath = filePath.substring(8)
+    }
+
+    data.logo = address.concat(filePath)
     const newSettings = new Settings(data)
 
     newSettings.save((error) => {
         if (error) {
-            console.log('error',error);
+            console.log('error', error);
             res.status(500).json({ msg: 'Sorry, internal server errors' })
             return;
         }

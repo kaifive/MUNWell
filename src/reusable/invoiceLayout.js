@@ -1,10 +1,27 @@
-import logo from '../assets/branding/Logo.png'
-
 const font = "times"
+
+function toDataUrl(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            callback(reader.result);
+        }
+        reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+}
 
 export function invoiceLayout(doc, item, settings) {
     let image = new Image();
-    image.src = logo;
+    var convertedPath = settings.logo
+
+    toDataUrl(settings.logo, function (myBase64) {
+        convertedPath = myBase64
+    });
+    image.src = convertedPath;
 
     let extension = image.src.split(".").pop().toUpperCase()
     doc.addImage(image, extension, 6, .75, 1.5, 1.5);
