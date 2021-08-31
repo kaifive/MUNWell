@@ -360,7 +360,7 @@ const Settings = () => {
                 } else {
                     const formData = new FormData();
                     formData.append("file", settingsState.logo);
-                    
+
                     if(settingsState.user === undefined) {
                         formData.append("user", user.sub);
                     }
@@ -697,6 +697,7 @@ const Settings = () => {
                                                     <CCol xs="12" md="9">
                                                         <CInputFile name="confLogo"
                                                             onChange={onFileChange}
+                                                            accept="image/*"
                                                         />
                                                         <CFormText className="help-block">Recommended Image With 1:1 Aspect Ratio</CFormText>
                                                     </CCol>
