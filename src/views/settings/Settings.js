@@ -116,7 +116,6 @@ const Settings = () => {
         latedelfee: '',
         lateschoolfee: '',
         terms: ''
-
     })
 
     const onFileChange = (event) => {
@@ -381,13 +380,15 @@ const Settings = () => {
             })
 
         fetchData("/api/get/settings", user.sub).then((res) => {
-            setSettingsState(res[res.length - 1])
+            if(res[res.length - 1] !== undefined) {
+                setSettingsState(res[res.length - 1])
+            }
             setSettingsState(prevState => {
                 return { ...prevState, default: true }
             })
         })
     }
-/*
+
     function resetAccount() {
         let alert = window.confirm("This action is irreversable, are you sure you want to delete all MUNWell data?")
 
@@ -457,7 +458,7 @@ const Settings = () => {
                     })
                 }
             })
-
+/*
             fetchData("/api/get/license", user.sub).then((res) => {
                 let i;
                 for(i = 0; i < res.length; i++) {
@@ -468,15 +469,43 @@ const Settings = () => {
                     })
                 }
             })
-
+*/
             getData().then(() => {
                 dispatch({ type: 'set', sidebarShow: false })
                 dispatch({ type: 'set', sidebarShow: true })
     
+                setSettingsState({
+                    default: true,
+                    name: '',
+                    abbreviation: '',
+                    organization: '',
+                    secgen: '',
+                    start: '',
+                    end: '',
+                    street: '',
+                    city: '',
+                    state: '',
+                    zipcode: '',
+                    logo: '',
+                    website: '',
+            
+                    invoiceStreet: '',
+                    invoiceCity: '',
+                    invoiceState: '',
+                    invoiceZipcode: '',
+                    earlydelfee: '',
+                    earlyschoolfee: '',
+                    regdelfee: '',
+                    regschoolfee: '',
+                    latedelfee: '',
+                    lateschoolfee: '',
+                    terms: ''
+                })
+
                 window.alert("MUNWell account reset successfully!")
             })
         }
-    }*/
+    }
 
     async function getData() {
         await fetchData("/api/get/awardType", user.sub, 'value').then((res) => {
@@ -517,9 +546,7 @@ const Settings = () => {
         })
     }
 
-    console.log(settingsState)
-
-    return !isLoading && settingsState !== undefined? (
+    return !isLoading? (
         <>
             <CRow>
                 <CCol>
@@ -976,7 +1003,7 @@ const Settings = () => {
                                                     <CButton block color="primary" onClick={() => openLicenseModal()}>Upload License</CButton>
                                                 </CCol>
                                                 <CCol lg="3">
-                                                    {/*<CButton block color="primary" onClick={() => resetAccount()}>Reset Account</CButton>*/}
+                                                    <CButton block color="primary" onClick={() => resetAccount()}>Reset Account</CButton>
                                                 </CCol>
                                             </CRow>
                                             <br></br>
