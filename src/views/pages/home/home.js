@@ -276,7 +276,9 @@ const Home = () => {
                     <li>1 Hour MUNWell Training Session</li>
                   </ul>
                   <div className="btn-wrap">
-                    <CButton color="primary" disabled>Buy Now</CButton>
+                    <CButton color="primary">
+                      <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=796MPRRQ3PH72" target="_blank" rel="noreferrer" style={{ color: "white" }}>Buy Now</a>
+                    </CButton>
                   </div>
                 </div>
               </div>
