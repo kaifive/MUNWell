@@ -359,9 +359,10 @@ const Settings = () => {
                     alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
                     const formData = new FormData();
+                    
                     formData.append("file", settingsState.logo);
 
-                    if(settingsState.user === undefined) {
+                    if (settingsState.user === undefined) {
                         formData.append("user", user.sub);
                     }
 
@@ -385,7 +386,7 @@ const Settings = () => {
             })
 
         fetchData("/api/get/settings", user.sub).then((res) => {
-            if(res[res.length - 1] !== undefined) {
+            if (res[res.length - 1] !== undefined) {
                 setSettingsState(res[res.length - 1])
             }
             setSettingsState(prevState => {
@@ -400,7 +401,7 @@ const Settings = () => {
         if (alert) {
             fetchData("/api/get/allotments", user.sub).then((res) => {
                 let i;
-                for(i = 0; i < res.length; i++) {
+                for (i = 0; i < res.length; i++) {
                     axios.delete('/api/delete/allotments', {
                         data: {
                             id: res[i]._id,
@@ -411,7 +412,7 @@ const Settings = () => {
 
             fetchData("/api/get/awardType", user.sub).then((res) => {
                 let i;
-                for(i = 0; i < res.length; i++) {
+                for (i = 0; i < res.length; i++) {
                     axios.delete('/api/delete/awardType', {
                         data: {
                             id: res[i]._id,
@@ -422,7 +423,7 @@ const Settings = () => {
 
             fetchData("/api/get/committee", user.sub).then((res) => {
                 let i;
-                for(i = 0; i < res.length; i++) {
+                for (i = 0; i < res.length; i++) {
                     axios.delete('/api/delete/committee', {
                         data: {
                             id: res[i]._id,
@@ -433,7 +434,7 @@ const Settings = () => {
 
             fetchData("/api/get/individualAward", user.sub).then((res) => {
                 let i;
-                for(i = 0; i < res.length; i++) {
+                for (i = 0; i < res.length; i++) {
                     axios.delete('/api/delete/individualAward', {
                         data: {
                             id: res[i]._id,
@@ -444,7 +445,7 @@ const Settings = () => {
 
             fetchData("/api/get/registrationData", user.sub).then((res) => {
                 let i;
-                for(i = 0; i < res.length; i++) {
+                for (i = 0; i < res.length; i++) {
                     axios.delete('/api/delete/registrationData', {
                         data: {
                             id: res[i]._id,
@@ -455,7 +456,7 @@ const Settings = () => {
 
             fetchData("/api/get/settings", user.sub).then((res) => {
                 let i;
-                for(i = 0; i < res.length; i++) {
+                for (i = 0; i < res.length; i++) {
                     axios.delete('/api/delete/settings', {
                         data: {
                             id: res[i]._id,
@@ -463,22 +464,22 @@ const Settings = () => {
                     })
                 }
             })
-/*
-            fetchData("/api/get/license", user.sub).then((res) => {
-                let i;
-                for(i = 0; i < res.length; i++) {
-                    axios.delete('/api/delete/license', {
-                        data: {
-                            id: res[i]._id,
-                        },
-                    })
-                }
-            })
-*/
+            /*
+                        fetchData("/api/get/license", user.sub).then((res) => {
+                            let i;
+                            for(i = 0; i < res.length; i++) {
+                                axios.delete('/api/delete/license', {
+                                    data: {
+                                        id: res[i]._id,
+                                    },
+                                })
+                            }
+                        })
+            */
             getData().then(() => {
                 dispatch({ type: 'set', sidebarShow: false })
                 dispatch({ type: 'set', sidebarShow: true })
-    
+
                 setSettingsState({
                     default: true,
                     name: '',
@@ -493,7 +494,7 @@ const Settings = () => {
                     zipcode: '',
                     logo: '',
                     website: '',
-            
+
                     invoiceStreet: '',
                     invoiceCity: '',
                     invoiceState: '',
@@ -551,7 +552,7 @@ const Settings = () => {
         })
     }
 
-    return !isLoading? (
+    return !isLoading ? (
         <>
             <CRow>
                 <CCol>
