@@ -59,6 +59,7 @@ const Award = ({ match: { params: { committee } } }) => {
     })
 
     const [fields, setFields] = useState([
+        '_id',
         'type',
         'position',
         'delegation',
@@ -76,13 +77,20 @@ const Award = ({ match: { params: { committee } } }) => {
 
             for (i = 0; i < res.length; i++) {
                 if (JSON.stringify(res[i].committee) === JSON.stringify(data.committee.committee)) {
-                    awards.push(res[i])
+                    let entry = JSON.stringify(res[i])
+                    console.log("THIS", entry)
+                    console.log("this", JSON.parse(entry))
+                    awards.push(JSON.parse(entry))
+                    console.log("here", awards)
+
                 }
             }
 
+            console.log("HERE", JSON.stringify(awards))
+
             if (JSON.stringify(awards) !== JSON.stringify(data.awards)) {
                 setData(prevState => {
-                    return { ...prevState, awards: awards }
+                    return { ...prevState, awards: JSON.stringify(awards) }
                 })
             }
         })
@@ -165,7 +173,6 @@ const Award = ({ match: { params: { committee } } }) => {
                 if (result === 0) {
                     alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
-
                     const payload = {
                         user: user.sub,
                         committee: data.committee.committee,
@@ -189,6 +196,8 @@ const Award = ({ match: { params: { committee } } }) => {
                                 console.log('Internal server error')
                             })
                     } else {
+                        console.log("HERE", payload)
+                        console.log("here", editItem)
                         axios.put('/api/update/individualAward', {
                             data: {
                                 id: editItem._id,
@@ -235,6 +244,8 @@ const Award = ({ match: { params: { committee } } }) => {
         header = "Edit Award"
         status = false
         editItem = item
+
+        console.log("TEST", item)
 
         setModalAdd(!modalAdd)
     }
@@ -296,7 +307,7 @@ const Award = ({ match: { params: { committee } } }) => {
                             </CRow>
                             <br></br>
                             <CDataTable
-                                items={data.awards}
+                                items={JSON.parse(data.awards)}
                                 fields={fields}
                                 hover
                                 striped

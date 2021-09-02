@@ -19,20 +19,23 @@ function toDataUrl(url, callback) {
 export function invoiceLayout(doc, item, settings) {
     let image = new Image();
 
-    if(settings.logo === "http://localhost:8080/uploads/" || settings.logo === "https://munwell.herokuapp.com/uploads/") {
-        image.src = defaultLogo
-    } else {
+    try {
         var convertedPath = settings.logo
-        
+
         toDataUrl(settings.logo, function (myBase64) {
             convertedPath = myBase64
         });
 
         image.src = convertedPath;
-    }
 
-    let extension = image.src.split(".").pop().toUpperCase()
-    doc.addImage(image, extension, 6, .75, 1.5, 1.5);
+        let extension = image.src.split(".").pop().toUpperCase()
+        doc.addImage(image, extension, 6, .75, 1.5, 1.5);
+    } catch (error) {
+        image.src = defaultLogo;
+
+        let extension = image.src.split(".").pop().toUpperCase()
+        doc.addImage(image, extension, 6, .75, 1.5, 1.5);
+    }
 
     doc.setFont(font, "bold")
     doc.setFontSize(24)

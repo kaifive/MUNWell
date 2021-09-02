@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 
-import logo from '../assets/branding/Logo.png'
+import defaultLogo from '../assets/branding/Logo.png'
 
 import { participationLayout1, committeeLayout1 } from "./awardLayouts";
 import { receiptLayout } from "./receiptLayout";
@@ -152,16 +152,24 @@ export function positionPDF(item, committeeData, settings) {
     });
 
     let image = new Image();
-    var convertedPath = settings.logo
 
-    toDataUrl(settings.logo, function (myBase64) {
-        convertedPath = myBase64
-    });
+    try {
+        var convertedPath = settings.logo
 
-    image.src = convertedPath;
+        toDataUrl(settings.logo, function (myBase64) {
+            convertedPath = myBase64
+        });
 
-    let extension = image.src.split(".").pop().toUpperCase()
-    doc.addImage(image, extension, .75, .75, 1.5, 1.5);
+        image.src = convertedPath;
+
+        let extension = image.src.split(".").pop().toUpperCase()
+        doc.addImage(image, extension, .75, .75, 1.5, 1.5);
+    } catch (error) {
+        image.src = defaultLogo;
+
+        let extension = image.src.split(".").pop().toUpperCase()
+        doc.addImage(image, extension, .75, .75, 1.5, 1.5);
+    }
 
     doc.setFont(font, "bold")
     doc.setFontSize(24)

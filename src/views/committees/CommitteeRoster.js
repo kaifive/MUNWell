@@ -264,9 +264,23 @@ const CommitteeRoster = () => {
                                 }
                             })
                                 .then(() => {
-                                    alert(item.committee + " deleted successfully!")
-                                    dispatch({ type: 'set', sidebarShow: false })
-                                    dispatch({ type: 'set', sidebarShow: true })
+                                    fetchData("/api/get/individualAward", user.sub, 'position').then((res) => {
+                                        let i;
+                            
+                                        for (i = 0; i < res.length; i++) {
+                                            if (JSON.stringify(res[i].committee) === JSON.stringify(item.committee)) {
+                                                axios.delete('/api/delete/individualAward', {
+                                                    data: {
+                                                        id: res[i]._id,
+                                                    },
+                                                })
+                                            }
+                                        }
+                                    }).then(() => {
+                                        alert(item.committee + " deleted successfully!")
+                                        dispatch({ type: 'set', sidebarShow: false })
+                                        dispatch({ type: 'set', sidebarShow: true })
+                                    })
                                 })
                         })
                         .catch(() => {

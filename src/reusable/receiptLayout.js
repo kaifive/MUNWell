@@ -1,3 +1,5 @@
+import defaultLogo from '../assets/branding/Logo.png'
+
 const font = "times"
 
 function toDataUrl(url, callback) {
@@ -16,16 +18,24 @@ function toDataUrl(url, callback) {
 
 export function receiptLayout(doc, item, settings) {
     let image = new Image();
-    var convertedPath = settings.logo
+    
+    try {
+        var convertedPath = settings.logo
 
-    toDataUrl(settings.logo, function (myBase64) {
-        convertedPath = myBase64
-    });
+        toDataUrl(settings.logo, function (myBase64) {
+            convertedPath = myBase64
+        });
 
-    image.src = convertedPath;
+        image.src = convertedPath;
 
-    let extension = image.src.split(".").pop().toUpperCase()
-    doc.addImage(image, extension, 6, .75, 1.5, 1.5);
+        let extension = image.src.split(".").pop().toUpperCase()
+        doc.addImage(image, extension, 6, .75, 1.5, 1.5);
+    } catch (error) {
+        image.src = defaultLogo;
+
+        let extension = image.src.split(".").pop().toUpperCase()
+        doc.addImage(image, extension, 6, .75, 1.5, 1.5);
+    }
 
     doc.setFont(font, "bold")
     doc.setFontSize(24)
