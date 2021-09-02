@@ -51,19 +51,6 @@ export function getRawScore(item, awardTypes, awardData) {
 export function getPerCapitaScore(item, allotmentData, awardTypes, awardData) {
     let delegations = 0
 
-    /*
-    let i;
-    for (i = 0; i < committeeData.length; i++) {
-        let assignments = committeeData[i].assignments.split(",")
-
-        let j;
-        for (j = 0; j < assignments.length; j++) {
-            if (assignments[j] === item.delegation) {
-                delegations = delegations + 1;
-            }
-        }
-    }*/
-
     if (allotmentData !== undefined || allotmentData[0].allotments !== undefined) {
         let i;
         for (i = 0; i < allotmentData.length; i++) {
@@ -81,13 +68,11 @@ export function getPerCapitaScore(item, allotmentData, awardTypes, awardData) {
 
         let calculated = (getRawScore(item, awardTypes, awardData) / delegations).toFixed(5)
 
-        if (delegations === 0) {
+        if(isNaN(delegations)) {
             calculated = "0.00000"
         }
 
-        let score = calculated
-
-        return score
+        return calculated
     }
 
     return "0.00000"
