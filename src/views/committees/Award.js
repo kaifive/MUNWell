@@ -59,7 +59,6 @@ const Award = ({ match: { params: { committee } } }) => {
     })
 
     const [fields, setFields] = useState([
-        '_id',
         'type',
         'position',
         'delegation',
@@ -80,7 +79,7 @@ const Award = ({ match: { params: { committee } } }) => {
                     let entry = JSON.stringify(res[i])
                     console.log("THIS", entry)
                     console.log("this", JSON.parse(entry))
-                    awards.push(JSON.parse(entry))
+                    awards.push(res[i])
                     console.log("here", awards)
 
                 }
@@ -90,7 +89,7 @@ const Award = ({ match: { params: { committee } } }) => {
 
             if (JSON.stringify(awards) !== JSON.stringify(data.awards)) {
                 setData(prevState => {
-                    return { ...prevState, awards: JSON.stringify(awards) }
+                    return { ...prevState, awards: awards }
                 })
             }
         })
@@ -196,8 +195,6 @@ const Award = ({ match: { params: { committee } } }) => {
                                 console.log('Internal server error')
                             })
                     } else {
-                        console.log("HERE", payload)
-                        console.log("here", editItem)
                         axios.put('/api/update/individualAward', {
                             data: {
                                 id: editItem._id,
@@ -244,8 +241,6 @@ const Award = ({ match: { params: { committee } } }) => {
         header = "Edit Award"
         status = false
         editItem = item
-
-        console.log("TEST", item)
 
         setModalAdd(!modalAdd)
     }
@@ -307,7 +302,7 @@ const Award = ({ match: { params: { committee } } }) => {
                             </CRow>
                             <br></br>
                             <CDataTable
-                                items={JSON.parse(data.awards)}
+                                items={data.awards}
                                 fields={fields}
                                 hover
                                 striped
