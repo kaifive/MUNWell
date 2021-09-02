@@ -175,6 +175,9 @@ const Settings = () => {
                     for (i = 0; i < data.awardTypes.length; i++) {
                         if (data.awardTypes[i].type === awardsState.awardType) {
                             exists = true;
+                            if(editItem !== undefined && data.awardTypes[i].type === editItem.type) {
+                                exists = false
+                            }
                         }
                     }
 
@@ -252,7 +255,7 @@ const Settings = () => {
                         },
                     })
                         .then(() => {
-                            alert("Award Type: " + item.awardType + " deleted successfully!")
+                            alert("Award Type: " + item.type + " deleted successfully!")
                         })
                         .catch(() => {
                             console.log('Internal server error')

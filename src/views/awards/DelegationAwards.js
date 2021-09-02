@@ -24,7 +24,8 @@ const DelegationAwards = () => {
         registrationData: [],
         awardData: [],
         awardType: [],
-        committeeData: []
+        committeeData: [],
+        allotmentData: []
     });
 
     const [isLoading, setIsLoading] = useState(true)
@@ -54,6 +55,14 @@ const DelegationAwards = () => {
             }
         })
 
+        await fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+            if (JSON.stringify(res) !== JSON.stringify(data.allotmentData)) {
+                setData(prevState => {
+                    return { ...prevState, allotmentData: res }
+                })
+            }
+        })
+
         await fetchData('/api/get/registrationData', user.sub, 'division').then((res) => {
             if (JSON.stringify(res) !== JSON.stringify(data.registrationData)) {
                 let response = res
@@ -61,7 +70,7 @@ const DelegationAwards = () => {
                 let i;
                 for (i = 0; i < response.length; i++) {
                     response[i]["raw"] = getRawScore(response[i], data.awardType, data.awardData)
-                    response[i]["score"] = getPerCapitaScore(response[i], data.committeeData, data.awardType, data.awardData)
+                    response[i]["score"] = getPerCapitaScore(response[i], data.allotmentData, data.awardType, data.awardData)
                 }
 
                 setData(prevState => {

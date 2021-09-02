@@ -184,11 +184,12 @@ const CommitteeAllotments = () => {
                 }
 
                 let expected = 0
+                let total = data.committeeData[i].positions.split(",").length
 
                 let k;
                 for (k = 0; k < data.allotmentData.length; k++) {
                     let allotments = data.allotmentData[k].allotments.split(",")
-
+                    
                     let l;
                     for (l = 0; l < allotments.length; l++) {
                         let arr = allotments[l].split(":")
@@ -202,7 +203,7 @@ const CommitteeAllotments = () => {
                 let item = {
                     key: name,
                     label: 
-                        <CButton block variant="outline" color="primary" onClick={() => openCommitteeModal(committee)}> {name} ({assigned}/{expected}) </CButton>
+                        <CButton block variant="outline" color="primary" onClick={() => openCommitteeModal(committee)}> {name} ({assigned}/{expected}/{total}) </CButton>
 
                 }
 
@@ -363,7 +364,7 @@ const CommitteeAllotments = () => {
                 <CCol>
                     <CCard>
                         <CCardHeader>
-                            Committee Allotments | Committee (Assigned Positions/Expected Positions)
+                            Committee Allotments | Committee (Assigned Positions/Expected Positions/Total Positions)
                             <Export data={exportTable(data.registrationData, data.committeeData, data.allotmentData)} filename="CommitteeAllotments.csv" />
                         </CCardHeader>
                         <CCardBody>

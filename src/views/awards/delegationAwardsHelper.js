@@ -48,9 +48,10 @@ export function getRawScore(item, awardTypes, awardData) {
     return score
 }
 
-export function getPerCapitaScore(item, committeeData, awardTypes, awardData) {
+export function getPerCapitaScore(item, allotmentData, awardTypes, awardData) {
     let delegations = 0
 
+    /*
     let i;
     for (i = 0; i < committeeData.length; i++) {
         let assignments = committeeData[i].assignments.split(",")
@@ -61,13 +62,36 @@ export function getPerCapitaScore(item, committeeData, awardTypes, awardData) {
                 delegations = delegations + 1;
             }
         }
+    }*/
+
+    if (allotmentData !== undefined || allotmentData[0].allotments !== undefined) {
+        let i;
+        for (i = 0; i < allotmentData.length; i++) {
+            if(allotmentData[i].delegationId === item._id) {
+                let allotments = allotmentData[i].allotments.split(",")
+
+                let j;
+                for(j = 0; j < allotments.length; j++) {
+                    let arr = allotments[j].split(":")
+
+                    delegations = delegations + Number(arr[1])
+                }
+            }
+        }
+
+        let calculated = (getRawScore(item, awardTypes, awardData) / delegations).toFixed(5)
+
+        if (delegations === 0) {
+            calculated = "0.00000"
+        }
+
+        let score = calculated
+
+        return score
     }
 
-    let calculated = (getRawScore(item, awardTypes, awardData) / delegations).toFixed(5)
+    return "0.00000"
 
-    let score = isNaN(calculated) ? "0.00000" : calculated
-
-    return score
 }
 
 export function getScopedSlots(awardTypes, awardData, committeeData) {

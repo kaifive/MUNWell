@@ -23,7 +23,7 @@ export function invoiceLayout(doc, item, settings) {
         image.src = defaultLogo
     } else {
         var convertedPath = settings.logo
-
+        
         toDataUrl(settings.logo, function (myBase64) {
             convertedPath = myBase64
         });
