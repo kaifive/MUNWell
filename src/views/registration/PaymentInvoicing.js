@@ -110,16 +110,17 @@ const PaymentInvoicing = () => {
         if (result === 0) {
           alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
         } else {
+          let registrationData = JSON.parse(data.registrationData)
           let item = invoiceState
 
           let i;
-          for (i = 0; i < data.registrationData.length; i++) {
-            if (data.registrationData[i].delegation === item.delegation) {
-              item["contact"] = data.registrationData[i].contact
-              item["street"] = data.registrationData[i].street
-              item["city"] = data.registrationData[i].city
-              item["state"] = data.registrationData[i].state
-              item["zipcode"] = data.registrationData[i].zipcode
+          for (i = 0; i < registrationData.length; i++) {
+            if (registrationData[i].delegation === item.delegation) {
+              item["contact"] = registrationData[i].contact
+              item["street"] = registrationData[i].street
+              item["city"] = registrationData[i].city
+              item["state"] = registrationData[i].state
+              item["zipcode"] = registrationData[i].zipcode
             }
           }
 
@@ -164,16 +165,17 @@ const PaymentInvoicing = () => {
         if (result === 0) {
           alert("No valid Manuel License found! \nUpload a valid Manuel License to be able to configure data.")
         } else {
+          let registrationData = JSON.parse(data.registrationData)
           let item = receiptState
 
           let i;
-          for (i = 0; i < data.registrationData.length; i++) {
-            if (data.registrationData[i].delegation === item.delegation) {
-              item["contact"] = data.registrationData[i].contact
-              item["street"] = data.registrationData[i].street
-              item["city"] = data.registrationData[i].city
-              item["state"] = data.registrationData[i].state
-              item["zipcode"] = data.registrationData[i].zipcode
+          for (i = 0; i < registrationData.length; i++) {
+            if (registrationData[i].delegation === item.delegation) {
+              item["contact"] = registrationData[i].contact
+              item["street"] = registrationData[i].street
+              item["city"] = registrationData[i].city
+              item["state"] = registrationData[i].state
+              item["zipcode"] = registrationData[i].zipcode
             }
           }
 
