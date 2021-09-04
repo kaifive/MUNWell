@@ -51,7 +51,7 @@ const Award = ({ match: { params: { committee } } }) => {
     })
 
     const [data, setData] = useState({
-        awards: [],
+        awards: ["", ""],
         committee: [],
         registrationData: [],
         awardTypes: [],
@@ -76,20 +76,13 @@ const Award = ({ match: { params: { committee } } }) => {
 
             for (i = 0; i < res.length; i++) {
                 if (JSON.stringify(res[i].committee) === JSON.stringify(data.committee.committee)) {
-                    let entry = JSON.stringify(res[i])
-                    console.log("THIS", entry)
-                    console.log("this", JSON.parse(entry))
                     awards.push(res[i])
-                    console.log("here", awards)
-
                 }
             }
 
-            console.log("HERE", JSON.stringify(awards))
-
             if (JSON.stringify(awards) !== JSON.stringify(data.awards)) {
                 setData(prevState => {
-                    return { ...prevState, awards: awards }
+                    return { ...prevState, awards: JSON.stringify(awards) }
                 })
             }
         })
@@ -222,7 +215,7 @@ const Award = ({ match: { params: { committee } } }) => {
             }
 
             setData(prevState => {
-                return { ...prevState, awards: awards }
+                return { ...prevState, awards: JSON.stringify(awards) }
             })
         })
 
@@ -276,7 +269,7 @@ const Award = ({ match: { params: { committee } } }) => {
             }
 
             setData(prevState => {
-                return { ...prevState, awards: awards }
+                return { ...prevState, awards: JSON.stringify(awards) }
             })
         })
     }
@@ -302,7 +295,7 @@ const Award = ({ match: { params: { committee } } }) => {
                             </CRow>
                             <br></br>
                             <CDataTable
-                                items={data.awards}
+                                items={JSON.parse(data.awards)}
                                 fields={fields}
                                 hover
                                 striped

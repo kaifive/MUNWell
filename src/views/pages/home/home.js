@@ -201,13 +201,10 @@ const Home = () => {
             <div className="section-title">
               <h2>Pricing</h2>
               <h3>Available <span>MUNWell Licenses</span></h3>
-              <p>MUNWell implements multiple license types for conferences to manage expenses dependent on their
-                conference size. Each license enables access to all of MUNWell’s features, however the scale a
-                conference can operate is dependent on the license.</p>
-              <p>While MUNWell is in developmental and testing stages, the web application will be available for purchase at a fixed rate. This rate however will increase and fluctuate based on the number of committees and delegates a conference contains once the software has been debugged and new features are added.</p>
+              <p>MUNWell licenses enables access to all of MUNWell’s features, at an unlimited rate on a yearly basis, utilizing a dynamic payment model to ensure affordability regardless of conference size. To receive a quote, contact our sales department at <a href="mailto:contact.munwell@gmail.com" target="_blank" rel="noreferrer">contact.munwell@gmail.com</a>.</p>
               <p>Once a plan is purchased and processed, the conference organizer will be contacted via email with their MUNWell license within 48 hours upon which the organizer can begin utilizing all of the features that MUNWell has to offer.</p>
             </div>
-
+            {/*
             <div className="row-home">
               <div className="col-lg-3 col-md-6 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="400">
                 <div className="box">
@@ -228,61 +225,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-
-            <br></br>
-            <br></br>
-
-            <div className="row-home">
-              <div className="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                <div className="box">
-                  <h3>Silver License</h3>
-                  <h4><sup>$</sup>1,000 USD<span> / year</span></h4>
-                  <ul>
-                    <li>Max. of 5 Committees</li>
-                    <li>Max. of 5 Delegations</li>
-                    <li>Max. of 30 Independent Delegates</li>
-                    <li>1 Hour MUNWell Training Session</li>
-                  </ul>
-                  <div className="btn-wrap">
-                    <CButton color="primary" disabled>Buy Now</CButton>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-lg-3 col-md-6 mt-4 mt-md-0" data-aos="fade-up" data-aos-delay="200">
-                <div className="box">
-                  <h3>Gold License</h3>
-                  <h4><sup>$</sup>1,350 USD<span> / year</span></h4>
-                  <ul>
-                    <li>Max. of 10 Committees</li>
-                    <li>Max. of 15 Delegations</li>
-                    <li>Max. of 50 Independent Delegates</li>
-                    <li>1 Hour MUNWell Training Session</li>
-                  </ul>
-                  <div className="btn-wrap">
-                    <CButton color="primary" disabled>Buy Now</CButton>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-lg-3 col-md-6 mt-4 mt-lg-0" data-aos="fade-up" data-aos-delay="400">
-                <div className="box">
-                  <h3>Platinum License</h3>
-                  <h4><sup>$</sup>1,500 USD<span> / year</span></h4>
-                  <ul>
-                    <li>Unlimited Committees</li>
-                    <li>Unlimited Delegations</li>
-                    <li>Unlimited Independent Delegates</li>
-                    <li>1 Hour MUNWell Training Session</li>
-                  </ul>
-                  <div className="btn-wrap">
-                    <CButton color="primary" disabled>Buy Now
-                      {/*<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=796MPRRQ3PH72" target="_blank" rel="noreferrer" style={{ color: "white" }}>Buy Now</a>*/}
-                    </CButton>
-                  </div>
-                </div>
-              </div>
-            </div>
+            */}
           </div>
         </section >
       </main >
