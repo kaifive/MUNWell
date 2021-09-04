@@ -175,7 +175,7 @@ const Settings = () => {
                     for (i = 0; i < data.awardTypes.length; i++) {
                         if (data.awardTypes[i].type === awardsState.awardType) {
                             exists = true;
-                            if(editItem !== undefined && data.awardTypes[i].type === editItem.type) {
+                            if (editItem !== undefined && data.awardTypes[i].type === editItem.type) {
                                 exists = false
                             }
                         }
@@ -208,7 +208,22 @@ const Settings = () => {
                                 },
                             })
                                 .then(() => {
-                                    alert("Award Type: " + awardsState.awardType + " updated successfully!")
+                                    fetchData("/api/get/individualAward", user.sub, 'position').then((res) => {
+                                        let i;
+
+                                        for (i = 0; i < res.length; i++) {
+                                            if (res[i].type === editItem.type) {
+                                                axios.put('/api/update/individualAward', {
+                                                    data: {
+                                                        id: res[i]._id,
+                                                        update: { type: awardsState.awardType }
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    }).then(() => {
+                                        alert("Award Type: " + awardsState.awardType + " updated successfully!")
+                                    })
                                 })
                                 .catch(() => {
                                     console.log('Internal server error')
@@ -362,7 +377,7 @@ const Settings = () => {
                     alert("No valid MUNWell License found! \nUpload a valid MUNWell License to be able to configure data.")
                 } else {
                     const formData = new FormData();
-                    
+
                     formData.append("file", settingsState.logo);
 
                     if (settingsState.user === undefined) {
@@ -467,18 +482,18 @@ const Settings = () => {
                     })
                 }
             })
-            /*
-                        fetchData("/api/get/license", user.sub).then((res) => {
-                            let i;
-                            for(i = 0; i < res.length; i++) {
-                                axios.delete('/api/delete/license', {
-                                    data: {
-                                        id: res[i]._id,
-                                    },
-                                })
-                            }
-                        })
-            */
+
+            fetchData("/api/get/license", user.sub).then((res) => {
+                let i;
+                for (i = 0; i < res.length; i++) {
+                    axios.delete('/api/delete/license', {
+                        data: {
+                            id: res[i]._id,
+                        },
+                    })
+                }
+            })
+
             getData().then(() => {
                 dispatch({ type: 'set', sidebarShow: false })
                 dispatch({ type: 'set', sidebarShow: true })
