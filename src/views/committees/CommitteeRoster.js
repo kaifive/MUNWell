@@ -127,76 +127,81 @@ const CommitteeRoster = () => {
                         assignments: assignments
                     }
 
-                    if (status) {
-                        axios({
-                            url: '/api/save/committee',
-                            method: 'POST',
-                            data: payload
-                        })
-                            .then(() => {
-                                fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
-                                    let j;
-                                    for (j = 0; j < res.length; j++) {
-                                        let allotments = { allotments: res[j].allotments + "," + committeeState.committee + ":0" }
-
-                                        axios.put('/api/update/allotments', {
-                                            data: {
-                                                id: res[j]._id,
-                                                update: allotments
-                                            },
-                                        })
-                                    }
-                                })
-                                    .then(() => {
-                                        alert(committeeState.committee + " added successfully")
-                                        dispatch({ type: 'set', sidebarShow: false })
-                                        dispatch({ type: 'set', sidebarShow: true })
-                                    })
+                    if (!payload.committee.includes(",")) {
+                        if (status) {
+                            axios({
+                                url: '/api/save/committee',
+                                method: 'POST',
+                                data: payload
                             })
-                            .catch(() => {
-                                console.log('Internal server error')
-                            })
-                    } else {
-                        payload.assignments = editItem.assignments
+                                .then(() => {
+                                    fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+                                        let j;
+                                        for (j = 0; j < res.length; j++) {
+                                            let allotments = { allotments: res[j].allotments + "," + committeeState.committee + ":0" }
 
-                        axios.put('/api/update/committee', {
-                            data: {
-                                id: editItem._id,
-                                update: payload
-                            },
-                        })
-                            .then(() => {
-                                fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
-                                    let j;
-                                    for (j = 0; j < res.length; j++) {
-                                        let original = res[j].allotments.split(",")
-                                        let i;
-                                        for (i = 0; i < original.length; i++) {
-                                            let arr = original[i].split(":")
-                                            if (arr[0] === editItem.committee) {
-                                                original.splice(i, 1, committeeState.committee + ":" + arr[1])
-                                            }
+                                            axios.put('/api/update/allotments', {
+                                                data: {
+                                                    id: res[j]._id,
+                                                    update: allotments
+                                                },
+                                            })
                                         }
-
-                                        let allotments = { allotments: original.join() }
-
-                                        axios.put('/api/update/allotments', {
-                                            data: {
-                                                id: res[j]._id,
-                                                update: allotments
-                                            },
+                                    })
+                                        .then(() => {
+                                            alert(committeeState.committee + " added successfully")
+                                            dispatch({ type: 'set', sidebarShow: false })
+                                            dispatch({ type: 'set', sidebarShow: true })
                                         })
-                                    }
                                 })
-                                    .then(() => {
-                                        alert(committeeState.committee + " updated successfully!")
-                                        dispatch({ type: 'set', sidebarShow: false })
-                                        dispatch({ type: 'set', sidebarShow: true })
-                                    })
-                                    .catch(() => {
-                                        console.log('Internal server error')
-                                    })
+                                .catch(() => {
+                                    console.log('Internal server error')
+                                })
+                        } else {
+                            payload.assignments = editItem.assignments
+
+                            axios.put('/api/update/committee', {
+                                data: {
+                                    id: editItem._id,
+                                    update: payload
+                                },
                             })
+                                .then(() => {
+                                    fetchData("/api/get/allotments", user.sub, 'delegation').then((res) => {
+                                        let j;
+                                        for (j = 0; j < res.length; j++) {
+                                            let original = res[j].allotments.split(",")
+                                            let i;
+                                            for (i = 0; i < original.length; i++) {
+                                                let arr = original[i].split(":")
+                                                if (arr[0] === editItem.committee) {
+                                                    original.splice(i, 1, committeeState.committee + ":" + arr[1])
+                                                }
+                                            }
+
+                                            let allotments = { allotments: original.join() }
+
+                                            axios.put('/api/update/allotments', {
+                                                data: {
+                                                    id: res[j]._id,
+                                                    update: allotments
+                                                },
+                                            })
+                                        }
+                                    })
+                                        .then(() => {
+                                            alert(committeeState.committee + " updated successfully!")
+                                            dispatch({ type: 'set', sidebarShow: false })
+                                            dispatch({ type: 'set', sidebarShow: true })
+                                        })
+                                        .catch(() => {
+                                            console.log('Internal server error')
+                                        })
+                                })
+                        }
+                    } else {
+                        alert("Committee names cannot include commas")
+                        setModalAdd(true)
                     }
                 }
             })
@@ -266,7 +271,7 @@ const CommitteeRoster = () => {
                                 .then(() => {
                                     fetchData("/api/get/individualAward", user.sub, 'position').then((res) => {
                                         let i;
-                            
+
                                         for (i = 0; i < res.length; i++) {
                                             if (JSON.stringify(res[i].committee) === JSON.stringify(item.committee)) {
                                                 axios.delete('/api/delete/individualAward', {
