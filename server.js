@@ -5,7 +5,14 @@ const mongoose = require('mongoose');
 const path = require('path');
 const cors = require ('cors');
 const app = express();
-const PORT = process.env.PORT || 8080
+
+app.get('*',function(req,res,next){
+    if(req.headers['x-forwarded-proto']!='https')
+      res.redirect('https://www.munwell.com'+req.url)
+    else
+      next() /* Continue to other routes if we're not redirecting */
+  })
+
 
 app.set('port', (process.env.PORT || 8080))
 
@@ -20,6 +27,7 @@ mongoose.connect(process.env.REACT_MONGO_URI, {
 mongoose.connection.on('connected', () => {
     console.log('MongoDB has been connected!!!')
 })
+
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
 app.use(express.json());
