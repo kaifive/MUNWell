@@ -6,6 +6,7 @@
     "name": "MUNWell",
     "url": "https://www.munwell.com"
   },
+  "type": "module",
   "homepage": ".",
   "copyright": "",
   "license": "",
