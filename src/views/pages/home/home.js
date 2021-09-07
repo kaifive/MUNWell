@@ -47,7 +47,6 @@ const Home = () => {
       <section id="hero" className="d-flex align-items-center">
         <div className="container" data-aos="zoom-out" data-aos-delay="100">
           <h1 style={{ color: "white" }}>The Future of Organizing <span>MUNWell</span></h1>
-          <h2></h2>
           <CButton style={{ width: "200px", margin: "auto" }} block color="primary" onClick={() => loginWithRedirect()}>Login / Register</CButton>
 
           {/*

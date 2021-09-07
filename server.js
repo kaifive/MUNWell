@@ -3,16 +3,15 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-const cors = require ('cors');
+const cors = require('cors');
 const app = express();
 
-app.get('*',function(req,res,next){
-    if(req.headers['x-forwarded-proto']!='https')
-      res.redirect('https://www.munwell.com'+req.url)
+app.get('*', function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] != 'https')
+        res.redirect('https://www.munwell.com' + req.url)
     else
-      next() /* Continue to other routes if we're not redirecting */
-  })
-
+        next()
+})
 
 app.set('port', (process.env.PORT || 8080))
 
