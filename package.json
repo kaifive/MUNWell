@@ -37,6 +37,7 @@
     "enzyme": "^3.11.0",
     "express": "^4.17.1",
     "glightbox": "^3.0.9",
+    "heroku-ssl-redirect": "^0.1.1",
     "jest-canvas-mock": "^2.3.1",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.15",

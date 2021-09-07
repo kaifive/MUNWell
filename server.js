@@ -1,3 +1,5 @@
+import sslRedirect from 'heroku-ssl-redirect';
+
 require('dotenv').config();
 
 const express = require('express');
@@ -8,6 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 8080
 
 app.set('port', (process.env.PORT || 8080))
+app.use(sslRedirect(['production'], 301));
+
 
 const routes = require('./src/routes/api')
 

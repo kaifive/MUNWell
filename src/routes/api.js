@@ -315,9 +315,9 @@ router.post('/save/settings', upload.single("file"), (req, res) => {
     let address = "http://localhost:8080/uploads/";
     
     if (process.env.NODE_ENV === 'production') {
-        address = "https://munwell.herokuapp.com/uploads/";
+        address = "https://www.munwell.com/uploads/";
     }    
-    
+
     const data = req.body
     let filePath = ""
 

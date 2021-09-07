@@ -201,7 +201,7 @@ const Home = () => {
             <div className="section-title">
               <h2>Pricing</h2>
               <h3>Available <span>MUNWell Licenses</span></h3>
-              <p>MUNWell licenses enables access to all of MUNWell’s features, at an unlimited rate on a yearly basis, utilizing a dynamic payment model to ensure affordability regardless of conference size. To receive a quote, contact our sales department at <a href="mailto:contact.munwell@gmail.com" target="_blank" rel="noreferrer">contact.munwell@gmail.com</a>.</p>
+              <p>MUNWell licenses enables access to all of MUNWell’s features, for unlimited committees, unlimited registration entries, unlimited access on a yearly basis, and is accompanied with a live 1-hour MUNWell training session for conference organizers. MUNWell additionally implements a dynamic pricing model to ensure affordability regardless of conference size. To receive a quote, contact our sales department at <a href="mailto:contact.munwell@gmail.com" target="_blank" rel="noreferrer">contact.munwell@gmail.com</a>.</p>
               <p>Once a plan is purchased and processed, the conference organizer will be contacted via email with their MUNWell license within 48 hours upon which the organizer can begin utilizing all of the features that MUNWell has to offer.</p>
             </div>
             {/*
