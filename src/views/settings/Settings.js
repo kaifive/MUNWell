@@ -89,6 +89,7 @@ const Settings = () => {
 
     const [modalAwards, setModalAwards] = useState(false)
     const [modalLicense, setModalLicense] = useState(false)
+    const [modalPurchase, setModalPurchase] = useState(false)
 
     const [settingsState, setSettingsState] = useState({
         default: true,
@@ -1024,10 +1025,13 @@ const Settings = () => {
                                     <CCollapse show={accordion === 3}>
                                         <CCardBody>
                                             <CRow className="align-items-left">
-                                                <CCol lg="3">
+                                                <CCol lg="2">
                                                     <CButton block color="primary" onClick={() => openLicenseModal()}>Upload License</CButton>
                                                 </CCol>
-                                                <CCol lg="3">
+                                                <CCol lg="2">
+                                                    <CButton block color="primary" onClick={() => setModalPurchase(true)}>Purchase a License</CButton>
+                                                </CCol>
+                                                <CCol lg="2">
                                                     <CButton block color="primary" onClick={() => resetAccount()}>Reset Account</CButton>
                                                 </CCol>
                                             </CRow>
@@ -1138,6 +1142,24 @@ const Settings = () => {
                 <CModalFooter>
                     <CButton color="secondary" onClick={() => setModalLicense(false)}>Cancel</CButton>
                     <CButton color="primary" onClick={event => addLicense(event)}>Submit</CButton>
+                </CModalFooter>
+            </CModal>
+
+            <CModal show={modalPurchase} onClose={setModalPurchase} size="lg">
+                <CModalHeader>
+                    <CModalTitle>Purchase a MUNWell License</CModalTitle>
+                </CModalHeader>
+                <CModalBody>
+                    <CForm action="" method="post" encType="multipart/form-data" className="form-horizontal">
+                        <CFormGroup row>
+                            <CCol md="12">
+                            MUNWell licenses enables access to all of MUNWell’s features for unlimited committees, unlimited registration entries, unlimited access on a yearly basis, and is accompanied with a live 1-hour MUNWell training session for conference organizers. MUNWell additionally implements a dynamic pricing model to ensure affordability regardless of conference size. To receive a quote, contact our sales department at <a href="mailto:contact.munwell@gmail.com" target="_blank" rel="noreferrer">contact.munwell@gmail.com</a>.
+                            </CCol>
+                        </CFormGroup>
+                    </CForm>
+                </CModalBody>
+                <CModalFooter>
+                    <CButton color="primary" onClick={() => setModalPurchase(false)}>Close</CButton>
                 </CModalFooter>
             </CModal>
         </>

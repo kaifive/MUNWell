@@ -1,9 +1,11 @@
-import React from 'react'
+import React,{useState} from 'react'
+import ModalVideo from 'react-modal-video'
 import { Link } from 'react-scroll'
-import { CButton } from '@coreui/react'
+import { CButton, CRow } from '@coreui/react'
 import { useAuth0 } from "@auth0/auth0-react";
 
 import './home.css'
+import '../../../../node_modules/react-modal-video/scss/modal-video.scss';
 
 import banner from '../../../assets/branding/Banner.svg'
 
@@ -12,9 +14,11 @@ import dashboard from "../../../assets/home/screenshots/Dashboard.png"
 import alerts from "../../../assets/home/screenshots/Alerts.png"
 import delegationAwards from "../../../assets/home/screenshots/DelegationAwards.png"
 
-
 const Home = () => {
   const { loginWithRedirect } = useAuth0();
+
+  const [isOpen, setOpen] = useState(false)
+
 
   return (
     <>
@@ -48,14 +52,13 @@ const Home = () => {
         <div className="container" data-aos="zoom-out" data-aos-delay="100">
           <h1 style={{ color: "white" }}>The Future of Organizing <span>MUNWell</span></h1>
           <br></br>
-          <CButton style={{ width: "200px", margin: "auto" }} block color="primary" onClick={() => loginWithRedirect()}>Login / Register</CButton>
+          {/*<CButton style={{ width: "200px", margin: "auto" }} block color="primary" onClick={() => loginWithRedirect()}>Login / Register</CButton>*/}
+          <ModalVideo channel='youtube' youtube={{mute:0,autoplay:1}} isOpen={isOpen} videoId="9LPFdiZRr_Y" onClose={() => setOpen(false)} />
 
-          {/*
           <CRow className="align-items-center">
             <CButton style={{ width: "200px", margin: "auto 1% auto auto" }} block color="primary" onClick={() => loginWithRedirect()}>Login / Register</CButton>
-            <CButton style={{ width: "200px", margin: "auto auto auto 1%" }} block variant="outline" color="primary"><i className="far fa-play-circle"></i>&ensp;Watch Video</CButton>
+            <CButton style={{ width: "200px", margin: "auto auto auto 1%" }} block variant="outline" color="secondary" onClick={()=> setOpen(true)}><i className="far fa-play-circle"></i>&ensp;Watch Video</CButton>
           </CRow>
-*/}
         </div>
       </section>
 
@@ -201,7 +204,7 @@ const Home = () => {
             <div className="section-title">
               <h2>Pricing</h2>
               <h3>Available <span>MUNWell Licenses</span></h3>
-              <p>MUNWell licenses enables access to all of MUNWell’s features, for unlimited committees, unlimited registration entries, unlimited access on a yearly basis, and is accompanied with a live 1-hour MUNWell training session for conference organizers. MUNWell additionally implements a dynamic pricing model to ensure affordability regardless of conference size. To receive a quote, contact our sales department at <a href="mailto:contact.munwell@gmail.com" target="_blank" rel="noreferrer">contact.munwell@gmail.com</a>.</p>
+              <p>MUNWell licenses enables access to all of MUNWell’s features for unlimited committees, unlimited registration entries, unlimited access on a yearly basis, and is accompanied with a live 1-hour MUNWell training session for conference organizers. MUNWell additionally implements a dynamic pricing model to ensure affordability regardless of conference size. To receive a quote, contact our sales department at <a href="mailto:contact.munwell@gmail.com" target="_blank" rel="noreferrer">contact.munwell@gmail.com</a>.</p>
               <p>Once a plan is purchased and processed, the conference organizer will be contacted via email with their MUNWell license within 48 hours upon which the organizer can begin utilizing all of the features that MUNWell has to offer.</p>
             </div>
             {/*

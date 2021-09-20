@@ -409,7 +409,7 @@ const Registration = () => {
                   <CButton block color="primary" onClick={() => openModal()}>Add New</CButton>
                 </CCol>
                 <CCol lg="3">
-                  <CButton block color="secondary" onClick={() => setModalEmail(!modalEmail)}>Email List</CButton>
+                  <CButton block color="primary" onClick={() => setModalEmail(!modalEmail)}>Email List</CButton>
                 </CCol>
               </CRow>
               <br></br>
