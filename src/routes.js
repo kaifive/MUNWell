@@ -1,6 +1,7 @@
 import React from 'react';
 
 const PageNotFound = React.lazy(() => import('./views/pages/page404/Page404'));
+const TermsAndConditions = React.lazy(() => import('./views/pages/terms&conditions/terms&conditions'));
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'));
 const Documentation = React.lazy(() => import('./views/documentation/Documentation'));
@@ -22,6 +23,7 @@ const ParticipationAwards = React.lazy(() => import('./views/awards/Participatio
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/404', name: '404', component: PageNotFound },
+  { path: '/termsandconditions', name: 'Terms and Conditions', component: TermsAndConditions },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/documentation', name: 'Documentation', component: Documentation },
   { path: '/settings', name: 'Settings', component: Settings },

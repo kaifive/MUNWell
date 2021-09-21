@@ -13,6 +13,7 @@ const TheLayout = React.lazy(() => import('./containers/TheLayout'));
 
 // Pages
 const PageNotFound = React.lazy(() => import('./views/pages/page404/Page404'));
+const TermsAndConditions = React.lazy(() => import('./views/pages/terms&conditions/terms&conditions'));
 const Home = React.lazy(() => import('./views/pages/home/home'));
 
 class App extends Component {
@@ -35,6 +36,7 @@ class App extends Component {
             <Route exact path="/awards/committee-awards" name="Committee Awards" render={props => <TheLayout {...props} />} />
             <Route exact path="/awards/delegation-awards" name="Delegation Awards" render={props => <TheLayout {...props} />} />
             <Route exact path="/awards/participation-awards" name="Participation Awards" render={props => <TheLayout {...props} />} />
+            <Route exact path="/termsandconditions" name="Terms and Codnitions" render={props => <TermsAndConditions {...props} />} />
 
             <Route path="*" name="Page 404" render={props => <PageNotFound {...props} />} />
           </Switch>
