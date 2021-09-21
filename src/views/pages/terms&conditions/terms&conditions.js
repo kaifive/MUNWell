@@ -39,7 +39,7 @@ const TermsAndConditions = () => {
                 </p>
                 <p>Welcome to <a href="/">munwell.com</a>!</p>
                 <p>These terms and conditions outline the rules and regulations for the use of MUNWell, LLC's Website, located at <a href="/">www.munwell.com</a>.</p>
-                <p>By creating an account on this website we assume you accept these terms and conditions. Do not continue to use munwell.com if you do not agree to take all of the terms and conditions stated on this page.</p>
+                <p>By creating an account on this website we assume you accept these terms and conditions. Do not continue to use <a href="/">www.munwell.com</a> if you do not agree to take all of the terms and conditions stated on this page.</p>
                 <p>The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: "Client", "You" and "Your" refers to you, the person logged on this website and compliant to the Company’s terms and conditions. "The Company", "Ourselves", "We", "Our" and "Us", refers to our Company. "Party", "Parties", or "Us", refers to both the Client and ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client’s needs in respect of provision of the Company’s stated services, in accordance with and subject to, prevailing law of the state of Virginia. Any use of the above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as interchangeable and therefore as referring to the same.</p>
                 <p>
                   <br></br>
@@ -53,13 +53,13 @@ const TermsAndConditions = () => {
                   <h5><strong>License</strong></h5>
                   <hr></hr>
                 </p>
-                <p>Unless otherwise stated, MUNWell, LLC and/or its licensors own the intellectual property rights for all material on munwell.com. All intellectual property rights are reserved. You may access this from munwell.com for your own personal use subject to restrictions set in these terms and conditions.</p>
+                <p>Unless otherwise stated, MUNWell, LLC and/or its licensors own the intellectual property rights for all material on <a href="/">munwell.com</a>. All intellectual property rights are reserved. You may access this from <a href="/">munwell.com</a> for your own personal use subject to restrictions set in these terms and conditions.</p>
                 <p>You must not:</p>
                 <p><ul>
-                  <li>Republish material from munwell.com</li>
-                  <li>Sell, rent or sub-license material from munwell.com</li>
-                  <li>Reproduce, duplicate or copy material from munwell.com</li>
-                  <li>Redistribute content from munwell.com</li>
+                  <li>Republish material from <a href="/">munwell.com</a></li>
+                  <li>Sell, rent or sub-license material from <a href="/">munwell.com</a></li>
+                  <li>Reproduce, duplicate or copy material from <a href="/">munwell.com</a></li>
+                  <li>Redistribute content from <a href="/">munwell.com</a></li>
                 </ul></p>
                 <p>This Agreement shall begin on the date hereof. Our Terms and Conditions were created with the help of the Terms And Conditions Generator.</p>
                 <p>Parts of this website offer an opportunity for users to upload data and information in certain areas of the website. MUNWell, LLC does not filter, edit, publish or review data prior to their presence on the website. You hereby grant MUNWell, LLC a non-exclusive license to use, reproduce, edit and authorize others to use, reproduce and edit any of your data in any and all forms, formats or media.</p>
