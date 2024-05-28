@@ -25,7 +25,7 @@ ReactDOM.render(
   <Auth0Provider
     domain={domain}
     clientId={clientId}
-    redirectUri={`${window.location.origin}/#/dashboard`}
+    redirectUri={`${window.location.origin}/MUNWell/#/dashboard`}
   >
     <Provider store={store}>
       <App />
